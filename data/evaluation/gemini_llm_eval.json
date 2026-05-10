@@ -2,15 +2,13 @@
   "detection": {
     "gt_positive_pairs": 85,
     "gt_negative_pairs": 22,
-    "predicted_positive_pairs": 4441,
+    "predicted_positive_in_gt": 91,
     "true_positives": 71,
-    "false_positives_unannotated": 4350,
-    "false_positives_on_negatives": 20,
+    "false_positives": 20,
     "false_negatives": 14,
-    "precision": 0.016,
+    "precision": 0.7802,
     "recall": 0.8353,
-    "f1": 0.0314,
-    "coverage": 0.8353
+    "f1": 0.8068
   },
   "classification": {
     "overall_accuracy": 0.1589,

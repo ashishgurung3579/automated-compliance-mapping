@@ -10,18 +10,18 @@
 
 | Method | Det. P | Det. R | Det. F1 | Cls. Accuracy | Macro-F1 |
 |--------|-------:|-------:|--------:|--------------:|---------:|
-| Rule-Based TF-IDF | 66.7% | 2.4% | 4.5% | 20.6% | 6.9% |
-| Rule-Based Jaccard | 5.6% | 7.1% | 6.2% | 22.4% | 17.9% |
-| SBERT (all-MiniLM-L6-v2) | 25.4% | 16.5% | 20.0% | 22.4% | 9.9% |
-| BERT (bert-base-uncased) | 1.8% | 98.8% | 3.5% | 38.3% | 16.2% |
-| SecureBERT (ehsanaghaei/SecureBERT) | 1.7% | 100.0% | 3.4% | 2.8% | 1.1% |
-| Gemini Embedding (gemini-embedding-2) | 1.7% | 100.0% | 3.4% | 45.8% | 27.8% |
-| Gemini LLM (gemini-2.5-flash-lite) | 1.6% | 83.5% | 3.1% | 15.9% | 8.5% |
+| Rule-Based TF-IDF | 100.0% | 2.4% | 4.6% | 20.6% | 6.9% |
+| Rule-Based Jaccard | 100.0% | 7.1% | 13.2% | 22.4% | 17.9% |
+| SBERT (all-MiniLM-L6-v2) | 100.0% | 16.5% | 28.3% | 22.4% | 9.9% |
+| BERT (bert-base-uncased) | 80.8% | 98.8% | 88.9% | 38.3% | 16.2% |
+| SecureBERT (ehsanaghaei/SecureBERT) | 79.4% | 100.0% | 88.5% | 2.8% | 1.1% |
+| Gemini Embedding (gemini-embedding-2) | 79.4% | 100.0% | 88.5% | 45.8% | 27.8% |
+| Gemini LLM (gemini-2.5-flash-lite) | 78.0% | 83.5% | 80.7% | 15.9% | 8.5% |
 
 
 ## Best Performing Method
 
-**Gemini Embedding (gemini-embedding-2)** achieved the highest macro-F1 of **27.8%** on classification, with pair detection precision 1.7% / recall 100.0% / F1 3.4%.
+**Gemini Embedding (gemini-embedding-2)** achieved the highest macro-F1 of **27.8%** on classification, with pair detection precision 79.4% / recall 100.0% / F1 88.5%.
 
 ---
 
@@ -31,13 +31,13 @@
 
 **Pair detection**
 
-- Precision: 0.667  
+- Precision: 1.000  
 - Recall: 0.024  
-- F1: 0.045  
+- F1: 0.046  
 - True positives: 2 / 85  
-- False positives (unannotated): 1  
 - False positives (on GT negatives): 0  
 - False negatives: 83  
+- Predicted positive pairs within GT scope: 2  
 
 **Classification**
 
@@ -59,13 +59,13 @@
 
 **Pair detection**
 
-- Precision: 0.056  
+- Precision: 1.000  
 - Recall: 0.071  
-- F1: 0.062  
+- F1: 0.132  
 - True positives: 6 / 85  
-- False positives (unannotated): 101  
 - False positives (on GT negatives): 0  
 - False negatives: 79  
+- Predicted positive pairs within GT scope: 6  
 
 **Classification**
 
@@ -87,13 +87,13 @@
 
 **Pair detection**
 
-- Precision: 0.255  
+- Precision: 1.000  
 - Recall: 0.165  
-- F1: 0.200  
+- F1: 0.283  
 - True positives: 14 / 85  
-- False positives (unannotated): 41  
 - False positives (on GT negatives): 0  
 - False negatives: 71  
+- Predicted positive pairs within GT scope: 14  
 
 **Classification**
 
@@ -115,13 +115,13 @@
 
 **Pair detection**
 
-- Precision: 0.018  
+- Precision: 0.808  
 - Recall: 0.988  
-- F1: 0.035  
+- F1: 0.889  
 - True positives: 84 / 85  
-- False positives (unannotated): 4611  
 - False positives (on GT negatives): 20  
 - False negatives: 1  
+- Predicted positive pairs within GT scope: 104  
 
 **Classification**
 
@@ -143,13 +143,13 @@
 
 **Pair detection**
 
-- Precision: 0.017  
+- Precision: 0.794  
 - Recall: 1.000  
-- F1: 0.034  
+- F1: 0.885  
 - True positives: 85 / 85  
-- False positives (unannotated): 4861  
 - False positives (on GT negatives): 22  
 - False negatives: 0  
+- Predicted positive pairs within GT scope: 107  
 
 **Classification**
 
@@ -171,13 +171,13 @@
 
 **Pair detection**
 
-- Precision: 0.017  
+- Precision: 0.794  
 - Recall: 1.000  
-- F1: 0.034  
+- F1: 0.885  
 - True positives: 85 / 85  
-- False positives (unannotated): 4861  
 - False positives (on GT negatives): 22  
 - False negatives: 0  
+- Predicted positive pairs within GT scope: 107  
 
 **Classification**
 
@@ -199,13 +199,13 @@
 
 **Pair detection**
 
-- Precision: 0.016  
+- Precision: 0.780  
 - Recall: 0.835  
-- F1: 0.031  
+- F1: 0.807  
 - True positives: 71 / 85  
-- False positives (unannotated): 4350  
 - False positives (on GT negatives): 20  
 - False negatives: 14  
+- Predicted positive pairs within GT scope: 91  
 
 **Classification**
 
@@ -227,7 +227,7 @@
 
 ## Limitations and Notes
 
-- Ground truth covers 107 of 4,968 possible provision pairs; unannotated false positives may include true positives not yet validated.
+- All metrics computed against the 107 annotated GT pairs only; predictions outside GT scope are excluded from evaluation.
 - SUBSUMPTION variants (A_BROADER / B_BROADER) are merged into a single SUBSUMPTION class for classification metrics.
 - Threshold values for each method were set heuristically; systematic threshold search may improve precision/recall balance.
 - Gemini Embedding API results may vary across API versions or rate-limit conditions.

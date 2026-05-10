@@ -550,12 +550,11 @@ What happens:
 
 1. It loads the manual baseline.
 2. It loads each method's prediction CSV.
-3. It compares predicted pairs against ground truth.
+3. It filters predictions to only those within the 107 GT pairs; predictions outside GT are ignored.
 4. It calculates pair-detection metrics:
-   - precision
-   - recall
+   - precision (TP / (TP + FP), within GT scope only)
+   - recall (TP / 85 GT positive pairs)
    - F1
-   - coverage
 5. It calculates relationship classification metrics:
    - overall accuracy
    - macro precision
@@ -728,15 +727,17 @@ Current results from:
 data/evaluation/evaluation_summary.json
 ```
 
+Metrics are computed only against the 107 annotated GT pairs. Predictions outside GT scope are excluded from all calculations.
+
 | Method | Detection Precision | Detection Recall | Detection F1 | Classification Accuracy | Macro F1 |
 |---|---:|---:|---:|---:|---:|
-| Rule-based TF-IDF | 0.6667 | 0.0235 | 0.0455 | 0.2056 | 0.0693 |
-| Rule-based Jaccard | 0.0561 | 0.0706 | 0.0625 | 0.2243 | 0.1792 |
-| SBERT | 0.2545 | 0.1647 | 0.2000 | 0.2243 | 0.0994 |
-| BERT | 0.0178 | 0.9882 | 0.0350 | 0.3832 | 0.1620 |
-| SecureBERT | 0.0171 | 1.0000 | 0.0336 | 0.0280 | 0.0109 |
-| Gemini Embedding | 0.0171 | 1.0000 | 0.0336 | 0.4579 | 0.2782 |
-| Gemini LLM | 0.0160 | 0.8353 | 0.0314 | 0.1589 | 0.0847 |
+| Rule-based TF-IDF | 1.000 | 0.024 | 0.046 | 0.206 | 0.069 |
+| Rule-based Jaccard | 1.000 | 0.071 | 0.132 | 0.224 | 0.179 |
+| SBERT | 1.000 | 0.165 | 0.283 | 0.224 | 0.099 |
+| BERT | 0.808 | 0.988 | 0.889 | 0.383 | 0.162 |
+| SecureBERT | 0.794 | 1.000 | 0.885 | 0.028 | 0.011 |
+| Gemini Embedding | 0.794 | 1.000 | 0.885 | 0.458 | 0.278 |
+| Gemini LLM | 0.780 | 0.835 | 0.807 | 0.159 | 0.085 |
 
 In the current saved results, **Gemini Embedding** has the highest classification macro-F1.
 

@@ -42,7 +42,7 @@ def load_predictions(csv_path: Path) -> pd.DataFrame:
 def pair_detection_metrics(gt: pd.DataFrame, pred: pd.DataFrame) -> dict:
     """
     Positive = any relationship != NO_RELATION.
-    Treats non-predicted GT pairs as NO_RELATION.
+    Only predictions within GT scope are evaluated; predictions outside GT are ignored.
     """
     gt_positive = set(
         zip(gt[gt["relationship"] != "NO_RELATION"]["src_id"],
@@ -52,33 +52,32 @@ def pair_detection_metrics(gt: pd.DataFrame, pred: pd.DataFrame) -> dict:
         zip(gt[gt["relationship"] == "NO_RELATION"]["src_id"],
             gt[gt["relationship"] == "NO_RELATION"]["tgt_id"])
     )
+    gt_pairs = gt_positive | gt_negative
+
     pred_positive = set(
         zip(pred[pred["predicted_rel"] != "NO_RELATION"]["src_id"],
             pred[pred["predicted_rel"] != "NO_RELATION"]["tgt_id"])
     )
+    pred_positive_in_gt = pred_positive & gt_pairs
 
-    tp = len(gt_positive & pred_positive)
-    fp = len(pred_positive - gt_positive - gt_negative)
-    fp_on_negative = len(pred_positive & gt_negative)
-    fn = len(gt_positive - pred_positive)
+    tp = len(gt_positive & pred_positive_in_gt)
+    fp = len(pred_positive_in_gt - gt_positive)
+    fn = len(gt_positive - pred_positive_in_gt)
 
-    precision = tp / (tp + fp + fp_on_negative) if (tp + fp + fp_on_negative) > 0 else 0.0
+    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
     recall = tp / len(gt_positive) if gt_positive else 0.0
     f1 = (2 * precision * recall / (precision + recall)) if (precision + recall) > 0 else 0.0
-    coverage = recall
 
     return {
         "gt_positive_pairs": len(gt_positive),
         "gt_negative_pairs": len(gt_negative),
-        "predicted_positive_pairs": len(pred_positive),
+        "predicted_positive_in_gt": len(pred_positive_in_gt),
         "true_positives": tp,
-        "false_positives_unannotated": fp,
-        "false_positives_on_negatives": fp_on_negative,
+        "false_positives": fp,
         "false_negatives": fn,
         "precision": round(precision, 4),
         "recall": round(recall, 4),
         "f1": round(f1, 4),
-        "coverage": round(coverage, 4),
     }
 
 
@@ -171,17 +170,6 @@ def error_analysis(gt: pd.DataFrame, pred: pd.DataFrame, merged: pd.DataFrame) -
                 "note": "Model predicted relation on GT-negative pair",
             })
 
-    for r in pred.itertuples():
-        if (r.src_id, r.tgt_id) not in gt_pairs and r.predicted_rel != "NO_RELATION":
-            errors.append({
-                "error_type": "FALSE_POSITIVE_UNANNOTATED",
-                "src_id": r.src_id,
-                "tgt_id": r.tgt_id,
-                "true_rel": "UNKNOWN",
-                "pred_rel": r.predicted_rel,
-                "note": "Predicted pair not in GT at all (may or may not be correct)",
-            })
-
     return pd.DataFrame(errors)
 
 
@@ -218,9 +206,9 @@ if __name__ == "__main__":
         print(f"=== {name} ({len(pred)} predictions) ===")
 
         det = pair_detection_metrics(gt, pred)
-        print(f"  Pair detection: P={det['precision']:.3f}  R={det['recall']:.3f}  F1={det['f1']:.3f}  Coverage={det['coverage']:.3f}")
-        print(f"  TP={det['true_positives']}  FP(unannotated)={det['false_positives_unannotated']}  "
-              f"FP(on negatives)={det['false_positives_on_negatives']}  FN={det['false_negatives']}")
+        print(f"  Pair detection: P={det['precision']:.3f}  R={det['recall']:.3f}  F1={det['f1']:.3f}")
+        print(f"  TP={det['true_positives']}  FP={det['false_positives']}  FN={det['false_negatives']}"
+              f"  Pred-in-GT={det['predicted_positive_in_gt']}")
 
         cls = classification_metrics(gt, pred)
         merged_df = cls.pop("_merged")

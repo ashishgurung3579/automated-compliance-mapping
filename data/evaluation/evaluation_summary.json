@@ -3,15 +3,13 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_pairs": 3,
+      "predicted_positive_in_gt": 2,
       "true_positives": 2,
-      "false_positives_unannotated": 1,
-      "false_positives_on_negatives": 0,
+      "false_positives": 0,
       "false_negatives": 83,
-      "precision": 0.6667,
+      "precision": 1.0,
       "recall": 0.0235,
-      "f1": 0.0455,
-      "coverage": 0.0235
+      "f1": 0.046
     },
     "classification": {
       "overall_accuracy": 0.2056,
@@ -56,15 +54,13 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_pairs": 107,
+      "predicted_positive_in_gt": 6,
       "true_positives": 6,
-      "false_positives_unannotated": 101,
-      "false_positives_on_negatives": 0,
+      "false_positives": 0,
       "false_negatives": 79,
-      "precision": 0.0561,
+      "precision": 1.0,
       "recall": 0.0706,
-      "f1": 0.0625,
-      "coverage": 0.0706
+      "f1": 0.1319
     },
     "classification": {
       "overall_accuracy": 0.2243,
@@ -109,15 +105,13 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_pairs": 55,
+      "predicted_positive_in_gt": 14,
       "true_positives": 14,
-      "false_positives_unannotated": 41,
-      "false_positives_on_negatives": 0,
+      "false_positives": 0,
       "false_negatives": 71,
-      "precision": 0.2545,
+      "precision": 1.0,
       "recall": 0.1647,
-      "f1": 0.2,
-      "coverage": 0.1647
+      "f1": 0.2828
     },
     "classification": {
       "overall_accuracy": 0.2243,
@@ -162,15 +156,13 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_pairs": 4715,
+      "predicted_positive_in_gt": 104,
       "true_positives": 84,
-      "false_positives_unannotated": 4611,
-      "false_positives_on_negatives": 20,
+      "false_positives": 20,
       "false_negatives": 1,
-      "precision": 0.0178,
+      "precision": 0.8077,
       "recall": 0.9882,
-      "f1": 0.035,
-      "coverage": 0.9882
+      "f1": 0.8889
     },
     "classification": {
       "overall_accuracy": 0.3832,
@@ -215,15 +207,13 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_pairs": 4968,
+      "predicted_positive_in_gt": 107,
       "true_positives": 85,
-      "false_positives_unannotated": 4861,
-      "false_positives_on_negatives": 22,
+      "false_positives": 22,
       "false_negatives": 0,
-      "precision": 0.0171,
+      "precision": 0.7944,
       "recall": 1.0,
-      "f1": 0.0336,
-      "coverage": 1.0
+      "f1": 0.8854
     },
     "classification": {
       "overall_accuracy": 0.028,
@@ -268,15 +258,13 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_pairs": 4968,
+      "predicted_positive_in_gt": 107,
       "true_positives": 85,
-      "false_positives_unannotated": 4861,
-      "false_positives_on_negatives": 22,
+      "false_positives": 22,
       "false_negatives": 0,
-      "precision": 0.0171,
+      "precision": 0.7944,
       "recall": 1.0,
-      "f1": 0.0336,
-      "coverage": 1.0
+      "f1": 0.8854
     },
     "classification": {
       "overall_accuracy": 0.4579,
@@ -321,15 +309,13 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_pairs": 4441,
+      "predicted_positive_in_gt": 91,
       "true_positives": 71,
-      "false_positives_unannotated": 4350,
-      "false_positives_on_negatives": 20,
+      "false_positives": 20,
       "false_negatives": 14,
-      "precision": 0.016,
+      "precision": 0.7802,
       "recall": 0.8353,
-      "f1": 0.0314,
-      "coverage": 0.8353
+      "f1": 0.8068
     },
     "classification": {
       "overall_accuracy": 0.1589,

@@ -84,4 +84,3 @@ FALSE_NEGATIVE,5.7-2,5.4.2-1,SUBSUMPTION,NO_RELATION,GT pair missed entirely by 
 FALSE_NEGATIVE,5.0-1,5.2.4-1.1,OVERLAP,NO_RELATION,GT pair missed entirely by model
 FALSE_NEGATIVE,5.5-8,5.2.4-3,OVERLAP,NO_RELATION,GT pair missed entirely by model
 FALSE_NEGATIVE,5.12-2,5.3.1-2.1,OVERLAP,NO_RELATION,GT pair missed entirely by model
-FALSE_POSITIVE_UNANNOTATED,5.5-8,5.2.3-1,UNKNOWN,COMPLEMENTARITY,Predicted pair not in GT at all (may or may not be correct)

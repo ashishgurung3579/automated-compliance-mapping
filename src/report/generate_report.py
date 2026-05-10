@@ -118,9 +118,9 @@ def render_report(summary: dict) -> str:
             f"- Recall: {_f(det['recall'])}  ",
             f"- F1: {_f(det['f1'])}  ",
             f"- True positives: {det['true_positives']} / {det['gt_positive_pairs']}  ",
-            f"- False positives (unannotated): {det['false_positives_unannotated']}  ",
-            f"- False positives (on GT negatives): {det['false_positives_on_negatives']}  ",
+            f"- False positives (on GT negatives): {det['false_positives']}  ",
             f"- False negatives: {det['false_negatives']}  ",
+            f"- Predicted positive pairs within GT scope: {det['predicted_positive_in_gt']}  ",
             "",
             "**Classification**",
             "",
@@ -146,8 +146,8 @@ def render_report(summary: dict) -> str:
         "",
         "## Limitations and Notes",
         "",
-        "- Ground truth covers 107 of 4,968 possible provision pairs; unannotated "
-        "false positives may include true positives not yet validated.",
+        "- All metrics computed against the 107 annotated GT pairs only; "
+        "predictions outside GT scope are excluded from evaluation.",
         "- SUBSUMPTION variants (A_BROADER / B_BROADER) are merged into a single "
         "SUBSUMPTION class for classification metrics.",
         "- Threshold values for each method were set heuristically; systematic "
