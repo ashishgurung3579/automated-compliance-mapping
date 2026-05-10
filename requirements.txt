@@ -1,0 +1,5 @@
+# This project only uses Python standard library modules
+# No external Python packages required
+
+# System dependency:
+# Install poppler for pdftotext: brew install poppler

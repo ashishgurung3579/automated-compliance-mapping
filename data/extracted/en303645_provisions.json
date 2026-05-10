@@ -1,0 +1,554 @@
+[
+  {
+    "provision_id": "5.0-1",
+    "standard": "EN 303 645",
+    "section_id": "5.0",
+    "title": "Reporting implementation",
+    "text": "A justification shall be recorded for each recommendation in the present document that is considered to\nbe not applicable for or not fulfilled by the consumer IoT device.\n\n\f13\n\nIt is recommended that the manufacturer conducts a threat modelling to identify, analyse and mitigate threats to the\ndevice.\nTable B.1 provides a schema to record these justifications in a structured manner. This is to allow other stakeholders\n(e.g. assurance assessors, members of the supply chain, security researchers or retailers) to determine whether\nprovisions have been applied correctly and appropriately.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.1-1",
+    "standard": "EN 303 645",
+    "section_id": "5.1",
+    "title": "No universal default passwords",
+    "text": "Where passwords are used to authenticate users against the device or for machine-to-machine\nauthentication, and in any state other than the factory default, all consumer IoT device passwords shall be unique per\ndevice or defined by the user.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.1-2",
+    "standard": "EN 303 645",
+    "section_id": "5.1",
+    "title": "No universal default passwords",
+    "text": "Where pre-installed unique per device passwords are used to authenticate users against the device or\nfor machine-to-machine authentication, these shall be generated with a mechanism that reduces the risk of automated\nattacks against a class or type of consumer IoT device.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.1-2A",
+    "standard": "EN 303 645",
+    "section_id": "5.1",
+    "title": "No universal default passwords",
+    "text": "Passwords should not be used for machine-to-machine authentication.\nUsing human-memorable passwords for machine-to-machine authentication is generally not appropriate, but pre-shared\nkeys can be appropriate when their use follows best practice.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.1-3",
+    "standard": "EN 303 645",
+    "section_id": "5.1",
+    "title": "No universal default passwords",
+    "text": "Authentication mechanisms used to authenticate users against the consumer IoT device or used for\nmachine-to-machine authentication shall use best practice cryptography, appropriate to the properties of the technology,\noperating environment, risk and usage.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.1-4",
+    "standard": "EN 303 645",
+    "section_id": "5.1",
+    "title": "No universal default passwords",
+    "text": "Where a user can authenticate against a consumer IoT device, the consumer IoT device shall provide to\nthe user or an administrator a simple mechanism to change the authentication value used.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.1-5",
+    "standard": "EN 303 645",
+    "section_id": "5.1",
+    "title": "No universal default passwords",
+    "text": "The consumer IoT device shall have a mechanism available which makes successful brute-force attacks\non authentication mechanisms via network interfaces impracticable unless the device has a resource constraint\ndetermined by the use case that prevents the implementation.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.2-1",
+    "standard": "EN 303 645",
+    "section_id": "5.2",
+    "title": "Implement a means to manage reports of vulnerabilities",
+    "text": "The manufacturer shall make a vulnerability disclosure policy publicly available. This policy shall\ninclude, at a minimum:\n•\n\ncontact information for the reporting of issues; and\n\n•\n\ntimelines for initial acknowledgement of receipt of a vulnerability report; and\n\n•\n\ntimelines for when the person who reported the issue will receive status updates until the resolution of the\nreported issues.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.2-2",
+    "standard": "EN 303 645",
+    "section_id": "5.2",
+    "title": "Implement a means to manage reports of vulnerabilities",
+    "text": "Disclosed vulnerabilities should be acted on in a timely manner.\nA \"timely manner\" for acting on vulnerabilities varies considerably and is incident-specific; however, conventionally,\nthe vulnerability management process is following a properly documented process including clear responsibilities and\ncompleted within 90 days for a software solution, including availability of patches and notification of the issue. A\nhardware fix can take considerably longer to address than a software fix. Additionally, a fix that has to be deployed to\ndevices can take time to roll out compared with a server software fix.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.2-3",
+    "standard": "EN 303 645",
+    "section_id": "5.2",
+    "title": "Implement a means to manage reports of vulnerabilities",
+    "text": "Manufacturers should continually monitor for, identify and rectify security vulnerabilities within\nconsumer IoT products they sell, produce, have produced and associated services they operate during the defined\nsupport period.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-1",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "All software components in consumer IoT devices that are not immutable due to security reasons\nshould be securely updateable.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-2",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "The consumer IoT device shall have a secure update mechanism unless the device has a resource\nconstraint determined by the use case that prevents the implementation.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.3-3",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "An update shall be simple for the user to apply.\nThe degree of simplicity depends on the design and intended usage of the consumer IoT device. Some examples can be\ngiven as follows, but are not exhaustive. An update that is simple to apply will be automatically applied, initiated using\nan associated service (such as a mobile application), or via a web interface on the consumer IoT device. If an update is\ndifficult to apply, then that increases the chance that a user will repeatedly defer updating the consumer IoT device,\nleaving it in a vulnerable state.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.3-4A",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "One secure update mechanism should be configurable to be automated.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-4B",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "During initialization the consumer IoT device should activate an automatic secure update mechanism\nafter user's consent.\nIf an automatic update fails, then a user can, in some circumstances, no longer be able to use a device. Detection\nmechanisms such as watchdogs and the use of dual-bank flash or recovery partitions can ensure that the consumer IoT\ndevice returns to either a known good version or the factory state.\nSecurity updates can be provided for consumer IoT devices in a preventative manner, as part of automatic updates,\nwhich can remove security vulnerabilities before they are exploited. Managing this can be complex, especially if there\nare parallel associated service updates, consumer IoT device updates and other service updates to deal with. Therefore,\na clear management and deployment plan is beneficial to the manufacturer, as is transparency to consumers about the\ncurrent state of update support.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-5",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "The consumer IoT device or an associated service should check after initialization whether security\nupdates are available.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-6A",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "If the consumer IoT device supports automated updates, the user should be able to enable and disable\nthe automatic update mechanism and postpone the installation of updates provided via an automatic update mechanism.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-6B",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "If the consumer IoT device supports update notifications, the user should be able to enable and\ndisable the update notifications.\n\n\f18\n\nIt is important from a consumer rights and ownership perspective that the user is in control of whether or not they\nreceive updates. There are good reasons why a user may choose not to update, including security. In addition, if an\nupdate is deployed and subsequently found to cause issues, manufacturers can ask users to not upgrade their software in\norder that those consumer IoT devices are not affected.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-7",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "The consumer IoT device shall use best practice cryptography to facilitate secure update mechanisms.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.3-8",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "Security updates shall be timely.\n\"Timely\" in the context of security updates can vary, depending on the particular issue and fix, as well as other factors\nsuch as the ability to reach a device or considerations based on other device resource constraints. It is important that a\nsecurity update that fixes a critical vulnerability (i.e. one with potentially adverse effects of a large scale) is handled\nwith appropriate priority by the manufacturer. Once a fix is made available, users can be notified through a bulletin\nprocess or other appropriate means. Due to the complex structure of modern software and the ubiquity of\ncommunication platforms, multiple stakeholders can be involved in a security update.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.3-9",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "The consumer IoT device should verify the authenticity and integrity of software updates.\nA common approach for confirming that an update is valid is to verify its integrity and authenticity. This can be done on\nthe consumer IoT device.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-10",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "Where updates are delivered over a network interface, the consumer IoT device shall verify the\nauthenticity and integrity of each update via a trust relationship.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.3-11",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "The user should be informed in a recognizable and apparent manner that a security update is required\ntogether with information on the risks mitigated by that update.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-12",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "The user should be notified when the application of a software update will disrupt the basic\nfunctioning of the consumer IoT device.\nThis notification can include extra detail, such as the approximate expected duration for which the consumer IoT device\nwill be offline.\n\n\f19",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-13",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "The manufacturer shall publish, in an accessible way that is clear and transparent to the user, the\ndefined support period.\nWhen purchasing a product and throughout its lifecycle, the consumer expects this period of software update support to\nbe made clear, e.g. publicize on the official website, etc.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.3-14",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "For consumer IoT devices that cannot have their software updated, the rationale for the absence of\nsoftware updates, the period and method of hardware replacement support should be published by the manufacturer in\nan accessible way that is clear and transparent to the user.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-15A",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "For devices that cannot have their software updated, the consumer IoT device should be isolable.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-15B",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "For devices that cannot have their software updated, the consumer IoT device hardware should be\nreplaceable.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.3-16",
+    "standard": "EN 303 645",
+    "section_id": "5.3",
+    "title": "Keep software updated",
+    "text": "The model designation of the consumer IoT device shall be clearly recognizable, either by labelling\non the consumer IoT device or via a user interface.\nThis is often performed by communicating with a consumer IoT device over a logical interface.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.4-1",
+    "standard": "EN 303 645",
+    "section_id": "5.4",
+    "title": "Securely store sensitive security parameters",
+    "text": "Sensitive security parameters in persistent storage shall be stored securely by the consumer IoT device.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.4-2",
+    "standard": "EN 303 645",
+    "section_id": "5.4",
+    "title": "Securely store sensitive security parameters",
+    "text": "Where a hard-coded unique per device identity is used in a consumer IoT device for security purposes,\nit shall be implemented in such a way that it resists tampering by means such as physical, electrical or software.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.4-3",
+    "standard": "EN 303 645",
+    "section_id": "5.4",
+    "title": "Securely store sensitive security parameters",
+    "text": "Hard-coded critical security parameters in consumer IoT device software source code shall not be used.\nReverse engineering of consumer IoT devices and applications can easily discover credentials such as hard-coded\nusernames and passwords in software. These credentials can also be API keys that allow usage of security-sensitive\nfunctions in a remote service, or private keys used in the security of protocols that the consumer IoT device uses to\ncommunicate. Such credentials will often be found within source-code, which is well-known bad practice. Simple\nobfuscation methods also used to obscure or encrypt this hard-coded information can be trivially broken.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.4-4",
+    "standard": "EN 303 645",
+    "section_id": "5.4",
+    "title": "Securely store sensitive security parameters",
+    "text": "Any critical security parameters used for integrity and authenticity checks of software updates and for\nprotection of communication with associated services in consumer IoT device software shall be unique per device and\nshall be produced with a mechanism that reduces the risk of automated attacks against classes of consumer IoT devices.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.5-1",
+    "standard": "EN 303 645",
+    "section_id": "5.5",
+    "title": "Communicate securely",
+    "text": "The consumer IoT device shall use best practice cryptography to communicate securely.\nAppropriateness of security controls and the use of best practice cryptography is dependent on many factors including\nthe properties of technology, operating environment, risk and usage context. As security is ever-evolving it is difficult\nto give prescriptive advice about cryptography or other security measures without the risk of such advice quickly\nbecoming obsolete.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.5-2",
+    "standard": "EN 303 645",
+    "section_id": "5.5",
+    "title": "Communicate securely",
+    "text": "The consumer IoT device should use reviewed or evaluated implementations to deliver network and\nsecurity functionalities, particularly in the field of cryptography.\nReviews and evaluations can involve an independent internal or external entity.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.5-3",
+    "standard": "EN 303 645",
+    "section_id": "5.5",
+    "title": "Communicate securely",
+    "text": "Cryptographic algorithms and primitives should be replaceable.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.5-4",
+    "standard": "EN 303 645",
+    "section_id": "5.5",
+    "title": "Communicate securely",
+    "text": "Access to consumer IoT device functionality via a network interface in the initialized state should only\nbe possible after authentication on that interface.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.5-5",
+    "standard": "EN 303 645",
+    "section_id": "5.5",
+    "title": "Communicate securely",
+    "text": "Consumer IoT device functionality that allows security-relevant changes in configuration via a network\ninterface shall only be accessible after authentication. The exception is for network service protocols that are relied\nupon by the consumer IoT device and where the manufacturer cannot guarantee what configuration will be required for\nthe consumer IoT device to operate.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.5-6",
+    "standard": "EN 303 645",
+    "section_id": "5.5",
+    "title": "Communicate securely",
+    "text": "Critical security parameters should be encrypted in transit, with such encryption appropriate to the\nproperties of the technology, risk and usage.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.5-7",
+    "standard": "EN 303 645",
+    "section_id": "5.5",
+    "title": "Communicate securely",
+    "text": "The consumer IoT device shall protect the confidentiality of critical security parameters that are\ncommunicated via remotely accessible network interfaces.\n\n\f22\n\nMany different methods exist for enrolment and authentication. Some authentication values are provided by out-of-band\nauthentication mechanisms, such as a QR code, and some are human-readable, such as a password.\nWhere an authentication mechanism uses unique values per authentication attempt (e.g. in a challenge-response\nmechanism or when using one time passwords as a second factor), the response is not the authentication value itself.\nHowever, it is still good practice to apply confidentiality protection to those values.\nConfidentiality protection can be achieved using an encrypted communication channel or payload encryption. This is\noften done using protocols or algorithms at least as strong as the key material transmitted, however other mitigations,\nsuch as the need for close proximity, are available.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.5-8",
+    "standard": "EN 303 645",
+    "section_id": "5.5",
+    "title": "Communicate securely",
+    "text": "The manufacturer shall follow secure management processes for critical security parameters that relate\nto the consumer IoT device and for the entire lifecycle of the critical security parameters.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.6-1",
+    "standard": "EN 303 645",
+    "section_id": "5.6",
+    "title": "Minimize exposed attack surfaces",
+    "text": "All unused network interfaces and all unused logical interfaces that are accessible through a network\ninterface shall be disabled.\nDisabling unused network and logical interfaces can significantly reduce the attack surface of a consumer IoT device.\nThese interfaces may have been used only during the development phase of the device and are no longer required for\nnormal operation, or may be specific to certain environments or purposes. By default, these interfaces are to be disabled\nbefore the device is made available to the public. The disabling can be realized for example by appropriate access\ncontrol mechanisms that are for example preventing unauthorized access to or misuse of the unused interfaces.\nHowever, users may have the ability to manually enable any disabled interface that is required for their specific usage.\nIn such a case it is to be ensured that the enabling capability cannot be misused easily, e.g. by appropriate access control\nand authentication mechanisms.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.6-2",
+    "standard": "EN 303 645",
+    "section_id": "5.6",
+    "title": "Minimize exposed attack surfaces",
+    "text": "In the initialized state, the network interfaces of the consumer IoT device shall minimize the\nunauthenticated disclosure of security-relevant information.\nSecurity-relevant information can be exposed over a network interface as part of the initialization process. When\nsecurity-relevant information is shared by a consumer IoT device when establishing a connection, it can be used by\nattackers to identify vulnerable devices.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.6-3",
+    "standard": "EN 303 645",
+    "section_id": "5.6",
+    "title": "Minimize exposed attack surfaces",
+    "text": "Consumer IoT device hardware should not unnecessarily expose physical interfaces to attack.\nPhysical interfaces can be used by an attacker to compromise firmware or memory on a consumer IoT device.\n\"Unnecessarily\" refers to the manufacturer's assessment of the benefits of an open interface, used for user functionality\nor for debugging purposes.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.6-4A",
+    "standard": "EN 303 645",
+    "section_id": "5.6",
+    "title": "Minimize exposed attack surfaces",
+    "text": "Debug interfaces shall be disabled or protected via a best practice authentication or access control\nmechanism.\nDebug interfaces are commonly used by manufacturers during the development and testing phases of the consumer IoT\ndevice's lifecycle. However, when placing the consumer IoT device on the market, it is crucial to ensure that potential\nattackers cannot misuse debug interfaces to compromise the consumer IoT device's security. To achieve this, the debug\ninterfaces are to be disabled in software by default, using any means that prevent potential attackers from operating the\ndevice in debugging mode, which would allow them to modify the device's code, including its security mechanisms. It\nis to be impossible for the user of the consumer IoT device to enable any disabled debug interface that is not considered\nto be required for the consumer IoT device's lifecycle. However, if the debug interface is intermittently required after\nthe consumer IoT device is being placed on the market, it would be enough if the interface is disabled in software by\ndefault but can be enabled, when required. In such a case it is to be ensured that the enabling capability cannot be\nmisused easily, e.g. by appropriate access control and authentication mechanisms.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.6-4B",
+    "standard": "EN 303 645",
+    "section_id": "5.6",
+    "title": "Minimize exposed attack surfaces",
+    "text": "Debug interfaces that are physical ports should be physically protected by the device.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.6-5",
+    "standard": "EN 303 645",
+    "section_id": "5.6",
+    "title": "Minimize exposed attack surfaces",
+    "text": "The manufacturer should only enable software services that are used or required for the intended use or\noperation of the consumer IoT device.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.6-6",
+    "standard": "EN 303 645",
+    "section_id": "5.6",
+    "title": "Minimize exposed attack surfaces",
+    "text": "Code should be minimized to the functionality necessary for the consumer IoT device to operate.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.6-7",
+    "standard": "EN 303 645",
+    "section_id": "5.6",
+    "title": "Minimize exposed attack surfaces",
+    "text": "Software should run with least necessary privileges, taking account of both security and functionality.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.6-8",
+    "standard": "EN 303 645",
+    "section_id": "5.6",
+    "title": "Minimize exposed attack surfaces",
+    "text": "The consumer IoT device should include a hardware-level access control mechanism for memory.\nSoftware exploits often use the lack of access control in memory to execute malicious code. Access control mechanisms\nlimit whether data in memory on the consumer IoT device can be executed. Suitable mechanisms include technologies\nsuch as MMUs or MPUs, executable space protection (e.g. NX bits), memory tagging, and trusted execution\nenvironments.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.6-9",
+    "standard": "EN 303 645",
+    "section_id": "5.6",
+    "title": "Minimize exposed attack surfaces",
+    "text": "The manufacturer should follow secure development processes for software deployed on the consumer\nIoT device.\nSecure development processes, including using version control, or enabling security-related compiler options (e.g. stack\nprotection) can help ensure software artefacts are more secure. Manufacturers can use these options when using\ntoolchains that support them.\n\n\f24\n\n5.7\n\nEnsure software integrity",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.7-1",
+    "standard": "EN 303 645",
+    "section_id": "5.7",
+    "title": "Ensure software integrity",
+    "text": "The consumer IoT device should verify its software using secure boot mechanisms.\nA hardware root of trust is one way to provide strong attestation as part of a secure boot mechanism. A hardware root of\ntrust is a component of a system from which all other components derive their \"trust\" - i.e. the source of cryptographic\ntrust within that system. To fulfil its function, the hardware root of trust is reliable and resistant to both physical and\nlogical tampering, as there is no mechanism to determine that the component has failed or been altered. By utilizing a\nhardware root of trust, a consumer IoT device can have confidence in results of cryptographic functions, such as those\nutilized for secure boot. A hardware root of trust can be either backed by mechanisms used for secure storage of\ncredentials or other alternatives providing baseline levels of security assurance proportionate to the required level of\nsecurity for a given consumer IoT device.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.7-2",
+    "standard": "EN 303 645",
+    "section_id": "5.7",
+    "title": "Ensure software integrity",
+    "text": "If an unauthorized change is detected to the software, the consumer IoT device should alert the user\nand/or administrator to the issue and should not connect to wider networks than those necessary to perform the alerting\nfunction.\nThe ability to recover remotely from unauthorized changes can rely on a known good state, such as locally storing a\nknown good version to enable safe recovery and updating of the consumer IoT device. This will avoid denial of service\nand costly recalls or maintenance visits, whilst managing the risk of potential takeover of the consumer IoT device by\nan attacker subverting update or other network communications mechanisms.\nIf a consumer IoT device detects an unauthorized change to its software, it will be able to inform the right stakeholder.\nIn some cases, consumer IoT devices can have the ability to be in administration mode.\nEXAMPLE:\n\n5.8\n\nA thermostat in a room can have a user mode; this mode prevents changing of other settings. If an\nunauthorized change to software is detected, an alert to the administrator is appropriate, as the\nadministrator has the ability to act on the alert (whereas a user does not).\n\nEnsure that personal data is secure\n\nAssociated services in the following context are typically cloud services. Moreover these services are controlled or can\nbe influenced by the manufacturer. These services typically are not operated by the user.\nThe following provisions also refer to confidentiality protection that often includes integrity protection according to best\npractice cryptography.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.8-1",
+    "standard": "EN 303 645",
+    "section_id": "5.8",
+    "title": "Ensure that personal data is secure",
+    "text": "The confidentiality of personal data transiting between the consumer IoT device and associated\nservices should be protected with best practice cryptography, appropriate to the properties of the technology, operating\nenvironment, risk and usage.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.8-2",
+    "standard": "EN 303 645",
+    "section_id": "5.8",
+    "title": "Ensure that personal data is secure",
+    "text": "The confidentiality of sensitive personal data communicated between the consumer IoT device and\nassociated services shall be protected with best practice cryptography, appropriate to the properties of the technology,\noperating environment, risk and usage.\nNOTE:\n\nIn the context of this provision, \"sensitive personal data\" is data whose disclosure has a high potential to\ncause harm to the individual. What is to be treated as \"sensitive personal data\" varies across products and\nuse cases, but examples are: video stream of a home security camera, payment information, content of\ncommunication data and timestamped location data. Carrying out security and data protection impact\nassessments can help the manufacturer make appropriate choices.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.8-3",
+    "standard": "EN 303 645",
+    "section_id": "5.8",
+    "title": "Ensure that personal data is secure",
+    "text": "All external sensing capabilities of the consumer IoT device shall be documented in an accessible way\nthat is clear and transparent for the user.\nEXAMPLE:\n\nAn external sensing capability can be an optic or acoustic sensor.\n\nClause 6 of the present document contains provisions specific to protecting personal data.\n\n\f25\n\n5.9\n\nMake systems resilient to outages\n\nThe aim of the provisions in the present clause is to ensure that IoT services are kept up and running as the adoption of\nIoT devices across all aspects of a consumer's life increases, including in functions that are relevant to personal safety. It\nis important to note that safety-related regulations can apply, but the key is to avoid making outages the cause of impact\non the user and to design products and services that provide a level of resilience to these challenges.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.9-1",
+    "standard": "EN 303 645",
+    "section_id": "5.9",
+    "title": "Make systems resilient to outages",
+    "text": "Resilience should be built in to consumer IoT products, taking into account the possibility of outages of\ndata networks and power.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.9-2",
+    "standard": "EN 303 645",
+    "section_id": "5.9",
+    "title": "Make systems resilient to outages",
+    "text": "Consumer IoT devices should remain operating and locally functional in the case of a loss of network\naccess and should recover cleanly in the case of restoration of a loss of power.\nNOTE:\n\n\"Recovering cleanly\" normally involves resuming connectivity and functionality in the same or improved\nstate.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.9-3",
+    "standard": "EN 303 645",
+    "section_id": "5.9",
+    "title": "Make systems resilient to outages",
+    "text": "The consumer IoT device should connect to networks in an expected, operational and stable state and\nin an orderly fashion, taking the capability of the infrastructure into consideration.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.10-1",
+    "standard": "EN 303 645",
+    "section_id": "5.10",
+    "title": "Examine system telemetry data",
+    "text": "If telemetry data is collected from consumer IoT products, such as usage and measurement data, it\nshould be examined for security anomalies.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.11-1",
+    "standard": "EN 303 645",
+    "section_id": "5.11",
+    "title": "Make it easy for users to delete user data",
+    "text": "Users shall be provided with functionality such that all their user data can be erased from the\nconsumer IoT device in a simple manner.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.11-2",
+    "standard": "EN 303 645",
+    "section_id": "5.11",
+    "title": "Make it easy for users to delete user data",
+    "text": "The consumer should be provided with functionality on the consumer IoT device such that personal\ndata can be deleted from associated services in a simple manner.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.11-3",
+    "standard": "EN 303 645",
+    "section_id": "5.11",
+    "title": "Make it easy for users to delete user data",
+    "text": "Users should be given clear instructions on how to delete and where possible to erase their personal\ndata from the device and associated services.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.11-4",
+    "standard": "EN 303 645",
+    "section_id": "5.11",
+    "title": "Make it easy for users to delete user data",
+    "text": "Users should be provided with clear confirmation that personal data has been deleted and where\npossible erased from devices and associated services.\n\n5.12\n\nMake installation and maintenance of devices easy",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.12-1",
+    "standard": "EN 303 645",
+    "section_id": "5.12",
+    "title": "Make installation and maintenance of devices easy",
+    "text": "Installation and maintenance of consumer IoT should involve minimal decisions by the user and\nshould follow security best practice on usability.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.12-2",
+    "standard": "EN 303 645",
+    "section_id": "5.12",
+    "title": "Make installation and maintenance of devices easy",
+    "text": "The manufacturer should provide users with guidance on how to securely set up their consumer IoT\ndevice.\nHowever, the ideal is for a process that involves the minimum of human intervention and which achieves a secure\nconfiguration automatically.\nClear guidance to users on how to configure consumer IoT devices securely can also reduce their exposure to threats.\nAn inventory of the IoT Devices in an IoT Product can be visible from the associated services including version,\napplied patches and updates for the user's convenience.",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.12-3",
+    "standard": "EN 303 645",
+    "section_id": "5.12",
+    "title": "Make installation and maintenance of devices easy",
+    "text": "The manufacturer should provide users with guidance on how to check whether their consumer IoT\ndevice is securely set up and maintained in a secure state.\nIn the general case, the average overhead of securely setting up a consumer IoT device is higher than the average\noverhead of checking whether a consumer IoT device is securely setup. The check of a secure setup, from a process\nstandpoint, can be undertaken in large part by the manufacturer through an automated process that communicates with\nthe consumer IoT device remotely. Part of such an automated process could include validation of the consumer IoT\ndevice's capacity to establish a secure communication channel.\nThe manufacturer can help consumers keep their device secure by providing or communicating updated security\ninformation (i.e. terms of service, features, guidelines, instructions and notifications, etc.), in simple language and\ntimely manner.\n\n5.13\n\nValidate input data",
+    "modality": "should"
+  },
+  {
+    "provision_id": "5.13-1A",
+    "standard": "EN 303 645",
+    "section_id": "5.13",
+    "title": "Validate input data",
+    "text": "Data input at application layer to the device via user interfaces shall be validated by the device\nregarding unexpected data input to prevent system manipulations and failures.",
+    "modality": "shall"
+  },
+  {
+    "provision_id": "5.13-1B",
+    "standard": "EN 303 645",
+    "section_id": "5.13",
+    "title": "Validate input data",
+    "text": "Data input at application layer to the device via network interfaces shall be validated by the device\nregarding unexpected data input to prevent system manipulations and failures.\nNOTE:\n\nThis includes network accessible APIs without prior authentication and network accessible APIs for\nauthentication mechanisms.",
+    "modality": "shall"
+  }
+]
