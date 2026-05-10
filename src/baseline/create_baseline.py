@@ -15,7 +15,7 @@ OUT = BASE / "data" / "baseline" / "gt.csv"
 
 # (src_id, tgt_id, relationship, justification, confidence)
 MAPPINGS = [
-    # ── §5.1 No universal default passwords / Authentication ───────────────────
+    # 5.1 No universal default passwords / authentication
     ("5.1-1", "5.2.2-1", "OVERLAP",
      "Both require authentication-related access controls; 303645 mandates unique device passwords, 304223 requires evaluating access control frameworks for APIs/models/data.", 3),
     ("5.1-3", "5.2.2-1", "OVERLAP",
@@ -27,7 +27,7 @@ MAPPINGS = [
     ("5.1-2", "5.2.1-4.2", "COMPLEMENTARITY",
      "303645 requires unique per-device pre-installed passwords; 304223 requires proportionate protections for confidential model weights/training data. Both protect critical secrets.", 2),
 
-    # ── §5.2 Vulnerability disclosure ──────────────────────────────────────────
+    # 5.2 Vulnerability disclosure
     ("5.2-1", "5.2.2-4", "EQUIVALENCE",
      "Both mandate publication of a clear, accessible vulnerability disclosure policy. Identical security objective.", 3),
     ("5.2-2", "5.2.2-4", "OVERLAP",
@@ -37,7 +37,7 @@ MAPPINGS = [
     ("5.2-3", "5.2.2-4", "COMPLEMENTARITY",
      "303645 mandates ongoing monitoring; 304223 mandates VDP. Together: detection + disclosure pipeline.", 2),
 
-    # ── §5.3 Software updates ↔ P11 Security updates / P10 Communication ──────
+    # 5.3 Software updates
     ("5.3-1", "5.4.1-1", "OVERLAP",
      "Both require components be securely updateable / receive security updates; same goal across IoT and AI lifecycles.", 3),
     ("5.3-2", "5.4.1-1", "OVERLAP",
@@ -73,7 +73,7 @@ MAPPINGS = [
     ("5.3-16", "5.2.4-1.1", "NO_RELATION",
      "303645 uses model designation to mean consumer IoT product identification; 304223 documents AI model scope, limits, and failure modes. The shared word 'model' does not indicate semantic alignment.", 3),
 
-    # ── §5.4 Securely store sensitive security parameters ──────────────────────
+    # 5.4 Securely store sensitive security parameters
     ("5.4-1", "5.2.1-4.2", "OVERLAP",
      "Both require protection of sensitive credentials/weights at rest; 303645 generic CSPs, 304223 model weights/training data.", 3),
     ("5.4-1", "5.2.1-4", "OVERLAP",
@@ -83,7 +83,7 @@ MAPPINGS = [
     ("5.4-4", "5.2.1-4.2", "COMPLEMENTARITY",
      "Unique per-device CSPs (303645) and confidential model weight protection (304223) both protect critical secrets across systems.", 1),
 
-    # ── §5.5 Communicate securely ──────────────────────────────────────────────
+    # 5.5 Communicate securely
     ("5.5-1", "5.2.2-1", "OVERLAP",
      "Best-practice cryptography for secure comms (303645) is a key control under AI infrastructure access framework (304223).", 3),
     ("5.5-4", "5.2.2-1", "OVERLAP",
@@ -97,7 +97,7 @@ MAPPINGS = [
     ("5.5-8", "5.2.4-1", "COMPLEMENTARITY",
      "Lifecycle CSP management (303645) and audit trail of system design/maintenance (304223) both support secure lifecycle governance.", 2),
 
-    # ── §5.6 Minimize attack surfaces ──────────────────────────────────────────
+    # 5.6 Minimize attack surfaces
     ("5.6-1", "5.2.2-1", "COMPLEMENTARITY",
      "Disabling unused interfaces (303645) and access control framework (304223) jointly reduce attack surface.", 2),
     ("5.6-2", "5.2.2-2", "OVERLAP",
@@ -117,7 +117,7 @@ MAPPINGS = [
     ("5.6-9", "5.1.1-2.2", "COMPLEMENTARITY",
      "Secure dev processes (303645) and secure-coding training for AI developers (304223) jointly enable secure development culture.", 2),
 
-    # ── §5.7 Software integrity ────────────────────────────────────────────────
+    # 5.7 Software integrity
     ("5.7-1", "5.2.4-1.2", "OVERLAP",
      "Secure boot / hardware root of trust verification (303645) and crypto-hash component verification (304223) both ensure software/model integrity.", 2),
     ("5.7-2", "5.4.2-2", "OVERLAP",
@@ -125,7 +125,7 @@ MAPPINGS = [
     ("5.7-2", "5.2.1-3.1", "COMPLEMENTARITY",
      "Alerting on unauthorized change (303645) and ability to restore known-good state (304223) jointly enable integrity recovery.", 3),
 
-    # ── §5.8 Personal data security ────────────────────────────────────────────
+    # 5.8 Personal data security
     ("5.8-1", "5.2.1-4", "OVERLAP",
      "Confidentiality of personal data in transit (303645) and protection of sensitive data including training/test (304223) — same goal across data types.", 3),
     ("5.8-2", "5.2.1-4", "OVERLAP",
@@ -133,7 +133,7 @@ MAPPINGS = [
     ("5.8-3", "5.3.1-1", "OVERLAP",
      "Documenting external sensing capabilities (303645) overlaps with conveying data usage/access/storage to end-users (304223).", 2),
 
-    # ── §5.9 Resilience to outages ─────────────────────────────────────────────
+    # 5.9 Resilience to outages
     ("5.9-1", "5.2.1-3", "OVERLAP",
      "Built-in resilience to outages (303645) overlaps with AI disaster recovery plans (304223).", 3),
     ("5.9-2", "5.2.1-3", "OVERLAP",
@@ -143,7 +143,7 @@ MAPPINGS = [
     ("5.9-3", "5.2.1-3", "COMPLEMENTARITY",
      "Stable network connection state (303645) complements broader AI disaster recovery planning (304223).", 1),
 
-    # ── §5.10 Examine telemetry data ───────────────────────────────────────────
+    # 5.10 Examine telemetry data
     ("5.10-1", "5.4.2-2", "EQUIVALENCE",
      "Both call for analysis of collected telemetry/logs for security anomalies. Same security objective.", 3),
     ("5.10-1", "5.4.2-1", "OVERLAP",
@@ -151,7 +151,7 @@ MAPPINGS = [
     ("5.10-1", "5.4.2-4", "OVERLAP",
      "Anomaly examination (303645) overlaps with monitoring model performance for behavior changes (304223).", 2),
 
-    # ── §5.11 Easy data deletion ───────────────────────────────────────────────
+    # 5.11 Easy data deletion
     ("5.11-1", "5.5.1-2", "OVERLAP",
      "User data erasure from device (303645) overlaps with secure deletion of applicable data on decommission (304223).", 2),
     ("5.11-2", "5.5.1-2", "OVERLAP",
@@ -161,7 +161,7 @@ MAPPINGS = [
     ("5.11-4", "5.3.1-2.2", "NO_RELATION",
      "303645 confirms that personal data was deleted; 304223 communicates security-relevant updates. Both involve user notices, but the lifecycle event and security objective are different.", 2),
 
-    # ── §5.12 Easy installation/maintenance ────────────────────────────────────
+    # 5.12 Easy installation/maintenance
     ("5.12-1", "5.1.4-1", "NO_RELATION",
      "303645 addresses secure installation and maintenance usability; 304223 addresses human oversight of AI systems. The human-factor theme is too general to count as a compliance relationship.", 2),
     ("5.12-2", "5.3.1-2", "OVERLAP",
@@ -169,7 +169,7 @@ MAPPINGS = [
     ("5.12-3", "5.3.1-2", "OVERLAP",
      "Guidance on checking secure state (303645) overlaps with end-user configuration/use guidance (304223).", 2),
 
-    # ── §5.13 Validate input data ──────────────────────────────────────────────
+    # 5.13 Validate input data
     ("5.13-1A", "5.2.1-4.1", "OVERLAP",
      "UI-level input validation (303645) overlaps with input checks/sanitization for AI models (304223).", 3),
     ("5.13-1B", "5.2.1-4.1", "OVERLAP",
@@ -179,13 +179,13 @@ MAPPINGS = [
     ("5.13-1A", "5.1.2-2", "OVERLAP",
      "UI input validation (303645) is a specific control supporting AI design to withstand unexpected inputs (304223).", 2),
 
-    # ── §5.0 Reporting / documentation ─────────────────────────────────────────
+    # 5.0 Reporting / documentation
     ("5.0-1", "5.2.4-1", "OVERLAP",
      "Recording justifications for non-applied provisions (303645) overlaps with maintaining clear audit trail of system design (304223).", 2),
     ("5.0-1", "5.2.3-2", "COMPLEMENTARITY",
      "Recording rationale for non-applicable provisions (303645) and documenting use of poorly-secured external models (304223) both require justification documentation.", 2),
 
-    # ── Filling coverage gaps ──────────────────────────────────────────────────
+    # Extra positive examples
     ("5.1-2A", "5.2.2-1", "COMPLEMENTARITY",
      "M2M auth-via-PSK guidance (303645) complements AI access control framework securing APIs/models (304223).", 1),
     ("5.3-6B", "5.3.1-2.2", "COMPLEMENTARITY",
@@ -193,7 +193,7 @@ MAPPINGS = [
     ("5.5-2", "5.2.5-2.1", "OVERLAP",
      "Reviewed/evaluated crypto implementations (303645) and use of independent security testers (304223) both rely on third-party assurance.", 2),
 
-    # ── Hard negatives (NO_RELATION) — superficially close but truly unrelated ─
+    # Negative examples
     ("5.3-15B", "5.5.1-2", "NO_RELATION",
      "303645 hardware replaceability is purely physical-product concern; 304223 model/data disposal is about secure deletion, not hardware.", 3),
     ("5.4-2", "5.2.4-1.2", "NO_RELATION",
@@ -207,7 +207,7 @@ MAPPINGS = [
     ("5.5-3", "5.4.1-1", "NO_RELATION",
      "Replaceability of cryptographic primitives (303645) is a crypto-agility design property, not the same as AI security update delivery.", 2),
 
-    # ── Additional hard negatives: 13 more to reach ~24% negative rate ──────────
+    # Additional negative examples
     ("5.9-3", "5.1.1-1", "NO_RELATION",
      "IoT stable/orderly network connection (device connectivity behavior) vs. AI staff security training programme (organizational human-factors control). Completely different domains.", 3),
     ("5.8-3", "5.1.2-3", "NO_RELATION",
@@ -234,7 +234,7 @@ MAPPINGS = [
      "UI-layer input validation (runtime technical control sanitizing user input to device) vs. AI pre-deployment business assessment (organizational strategic risk assessment before creating an AI system). Different lifecycle stage, control type, and purpose.", 2),
     ("5.8-3", "5.2.5-4", "NO_RELATION",
      "Documenting device sensing capabilities for user transparency vs. evaluating AI model outputs to prevent reverse engineering of training data. Both relate to 'what a system reveals' but differ in domain: hardware privacy disclosure vs. ML model IP protection.", 2),
-    # ── SUBSUMPTION_A_BROADER: IoT provision is broader than AI provision ─────────
+    # IoT provision is broader than AI provision
     ("5.3-2", "5.4.1-2", "SUBSUMPTION_A_BROADER",
      "303645 mandates a secure update mechanism for ALL software components (mandatory, universal); 304223 only addresses how major updates should be treated (as a new model version). The IoT universal update-mechanism requirement subsumes the AI major-update handling procedure — the AI provision covers a specific subset of update scenarios that IoT already governs broadly.", 3),
     ("5.5-4", "5.2.2-2", "SUBSUMPTION_A_BROADER",
@@ -246,7 +246,7 @@ MAPPINGS = [
     ("5.8-2", "5.2.1-4.2", "SUBSUMPTION_A_BROADER",
      "303645 mandates (SHALL) cryptographic protection for ALL sensitive personal data communicated between device and services; 304223 requires proportionate protection (conditional: 'where...could be confidential') for training data and model weights. IoT's requirement is mandatory and covers all sensitive personal data in transit; AI's is conditional and scoped to model-specific confidential assets.", 2),
 
-    # ── SUBSUMPTION_B_BROADER: AI provision is broader than IoT provision ─────────
+    # AI provision is broader than IoT provision
     ("5.2-3", "5.1.3-4", "SUBSUMPTION_B_BROADER",
      "303645 requires manufacturers to continually monitor, identify and rectify security vulnerabilities within product components; 304223 requires continuously monitoring the entire system infrastructure AND supply chain AND third-party components for security issues. The AI provision subsumes and extends the IoT requirement — both cover component vulnerability monitoring, but AI also covers supply chain, infrastructure, and third-party dependencies.", 3),
     ("5.7-1", "5.2.3-1", "SUBSUMPTION_B_BROADER",
@@ -260,7 +260,7 @@ MAPPINGS = [
     ("5.7-2", "5.4.2-1", "SUBSUMPTION_B_BROADER",
      "303645 requires alerting on detected unauthorized changes to device software; 304223 requires logging ALL system and user actions to support compliance, incident investigations, and vulnerability tracking. The AI logging mandate is broader — it captures all actions proactively for multiple purposes (compliance, forensics, incident response), whereas IoT logs only in reaction to detected unauthorized changes.", 2),
 
-    # ── Additional EQUIVALENCE pairs ───────────────────────────────────────────────
+    # Additional overlap examples
     ("5.0-1", "5.2.4-1.1", "OVERLAP",
      "Both require documenting security decision justifications: 303645 mandates recording a justification for each recommendation not applied; 304223 requires the audit trail document to include security-relevant information such as rationale for design decisions. Shared objective of traceability, but different triggers (non-applicability exceptions vs. general design rationale).", 2),
     ("5.5-8", "5.2.4-3", "OVERLAP",

@@ -12,7 +12,7 @@ from pathlib import Path
 from src.extraction.utils.pdf_parser import load_standard
 
 
-# ── Section metadata for EN 303 645 ─────────────────────────────────────────
+# Section metadata for EN 303 645.
 SECTION_TITLES_303645 = {
     "5.0": "Reporting implementation",
     "5.1": "No universal default passwords",
@@ -30,7 +30,7 @@ SECTION_TITLES_303645 = {
     "5.13": "Validate input data",
 }
 
-# ── Principle metadata for EN 304 223 ────────────────────────────────────────
+# Principle metadata for EN 304 223.
 PRINCIPLE_META_304223 = {
     "5.1.1": ("Raise awareness of AI security threats and risks", "Secure Design"),
     "5.1.2": ("Design the AI system for security as well as functionality and performance", "Secure Design"),
@@ -58,7 +58,7 @@ class Provision:
     modality: str          # "shall" | "should" | "may" | "unknown"
 
 
-# ── EN 303 645 parser ─────────────────────────────────────────────────────────
+# EN 303 645 parser.
 
 # Matches: "Provision 5.3-4A" or "Provision 5.10-1"
 _PAT_303645 = re.compile(
@@ -80,12 +80,11 @@ def _detect_modality(text: str) -> str:
 
 
 def _section_from_id(provision_id: str) -> str:
-    # "5.10-3A" -> "5.10"
     return re.match(r"(5\.\d+)", provision_id).group(1)
 
 
 def parse_303645(text: str) -> list[Provision]:
-    # Truncate at Annex B body (skip TOC — Annex B body appears after position 50000)
+    # Skip the Annex B body; the real annex appears after the table of contents.
     annex_match = re.search(r"\nAnnex B", text[50000:])
     if annex_match:
         text = text[: 50000 + annex_match.start()]
@@ -95,7 +94,7 @@ def parse_303645(text: str) -> list[Provision]:
         pid = m.group(1)
         body = m.group(2).strip()
 
-        # Remove trailing NOTE / EXAMPLE blocks for cleaner text
+        # Drop explanatory blocks so the provision text stays focused.
         body = re.sub(r"\n(NOTE|EXAMPLE)\s+\d*:.*", "", body, flags=re.DOTALL).strip()
 
         if bool(_VOID_PAT.search(body)) or "Void" in body[:20]:
@@ -113,7 +112,7 @@ def parse_303645(text: str) -> list[Provision]:
     return provisions
 
 
-# ── EN 304 223 parser ─────────────────────────────────────────────────────────
+# EN 304 223 parser.
 
 # Matches: "Provision 5.1.1-1" or "Provision 5.1.2-1.1"
 _PAT_304223 = re.compile(
@@ -121,20 +120,7 @@ _PAT_304223 = re.compile(
     re.DOTALL | re.MULTILINE,
 )
 
-_STAKEHOLDER_PAT = re.compile(
-    r"\b(Developers?|System Operators?|Data Custodians?|Organizations?|End-?users?)\b",
-    re.IGNORECASE,
-)
-
-
-def _extract_stakeholders(text: str) -> str:
-    found = _STAKEHOLDER_PAT.findall(text)
-    unique = list(dict.fromkeys(s.rstrip("s").title() for s in found))
-    return ", ".join(unique) if unique else "All"
-
-
 def _principle_key_from_id(provision_id: str) -> str:
-    # "5.1.2-3.1" -> "5.1.2"
     return re.match(r"(5\.\d+\.\d+)", provision_id).group(1)
 
 
@@ -145,7 +131,7 @@ def parse_304223(text: str) -> list[Provision]:
         body = m.group(2).strip()
 
         key = _principle_key_from_id(pid)
-        title, phase = PRINCIPLE_META_304223.get(key, ("Unknown", "Unknown"))
+        title, _phase = PRINCIPLE_META_304223.get(key, ("Unknown", "Unknown"))
 
         provisions.append(Provision(
             provision_id=pid,
@@ -158,15 +144,13 @@ def parse_304223(text: str) -> list[Provision]:
     return provisions
 
 
-# ── Save helpers ──────────────────────────────────────────────────────────────
+# Save helpers.
 
 def save_provisions(provisions: list, out_path: str | Path) -> None:
     data = [asdict(p) for p in provisions]
     Path(out_path).write_text(json.dumps(data, indent=2, ensure_ascii=False))
-    print(f"Saved {len(data)} provisions → {out_path}")
+    print(f"Saved {len(data)} provisions to {out_path}")
 
-
-# ── Main ──────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     base = Path(__file__).parents[2]
@@ -174,13 +158,11 @@ if __name__ == "__main__":
     out_dir = base / "data" / "extracted"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # EN 303 645
     text_303645 = load_standard(raw_dir / "etsi303645v030103p.pdf")
     provs_303645 = parse_303645(text_303645)
     print(f"\nEN 303 645: {len(provs_303645)} provisions")
     save_provisions(provs_303645, out_dir / "en303645_provisions.json")
 
-    # EN 304 223
     text_304223 = load_standard(raw_dir / "etsi304223v020101p.pdf")
     provs_304223 = parse_304223(text_304223)
     print(f"EN 304 223: {len(provs_304223)} total")

@@ -1,0 +1,53 @@
+{
+  "detection": {
+    "gt_positive_pairs": 85,
+    "gt_negative_pairs": 22,
+    "predicted_positive_pairs": 4968,
+    "true_positives": 85,
+    "false_positives_unannotated": 4861,
+    "false_positives_on_negatives": 22,
+    "false_negatives": 0,
+    "precision": 0.0171,
+    "recall": 1.0,
+    "f1": 0.0336,
+    "coverage": 1.0
+  },
+  "classification": {
+    "overall_accuracy": 0.4579,
+    "macro_precision": 0.3506,
+    "macro_recall": 0.2859,
+    "macro_f1": 0.2782,
+    "per_class": {
+      "COMPLEMENTARITY": {
+        "support": 22,
+        "precision": 0.2143,
+        "recall": 0.2727,
+        "f1": 0.24
+      },
+      "EQUIVALENCE": {
+        "support": 3,
+        "precision": 1.0,
+        "recall": 0.3333,
+        "f1": 0.5
+      },
+      "NO_RELATION": {
+        "support": 22,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "OVERLAP": {
+        "support": 51,
+        "precision": 0.5385,
+        "recall": 0.8235,
+        "f1": 0.6512
+      },
+      "SUBSUMPTION": {
+        "support": 9,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    }
+  }
+}

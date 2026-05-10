@@ -1,0 +1,773 @@
+# Automated Compliance Mapping - Project Notes
+
+This project compares two ETSI security standards and checks which requirements are related to each other.
+
+- **ETSI EN 303 645**: cybersecurity requirements for consumer IoT devices.
+- **ETSI EN 304 223**: cybersecurity requirements for AI systems.
+
+Main question:
+
+> "Does this IoT security requirement match, overlap with, or relate to this AI security requirement?"
+
+The project tests multiple mapping methods, compares them with a manually prepared baseline, and writes an evaluation report.
+
+---
+
+## 1. Main Folder Structure
+
+```text
+automated-compliance-mapping/
++-- requirements.txt
++-- docs/
++-- src/
+|   +-- extraction/
+|   +-- baseline/
+|   +-- mapping/
+|   +-- evaluation/
+|   +-- report/
++-- data/
+    +-- raw/
+    +-- extracted/
+    +-- baseline/
+    +-- mappings/
+    +-- evaluation/
+```
+
+What each folder means:
+
+- `data/raw/`: original PDF standards.
+- `data/extracted/`: provisions extracted from the PDFs as JSON.
+- `data/baseline/`: manually created correct answers, also called ground truth.
+- `data/mappings/`: prediction files created by different mapping methods.
+- `data/evaluation/`: evaluation metrics, error files, comparison files, and final report.
+- `src/extraction/`: code that reads PDFs and extracts provisions.
+- `src/baseline/`: code that creates the manual baseline CSV.
+- `src/mapping/`: code for all automatic mapping methods.
+- `src/evaluation/`: code that compares predictions against the baseline.
+- `src/report/`: code that creates the Markdown evaluation report.
+
+---
+
+## 2. Required Setup
+
+Python packages are listed in:
+
+```text
+requirements.txt
+```
+
+Install them with:
+
+```bash
+pip install -r requirements.txt
+```
+
+The extraction step also needs `pdftotext`, which comes from Poppler.
+
+On macOS:
+
+```bash
+brew install poppler
+```
+
+Gemini-based scripts also need:
+
+```text
+GEMINI_API_KEY
+```
+
+Usually this is stored in a `.env` file.
+
+---
+
+## 3. Raw Input Files
+
+The project starts with two PDF files:
+
+```text
+data/raw/etsi303645v030103p.pdf
+data/raw/etsi304223v020101p.pdf
+```
+
+These are the original standards.
+
+Nothing can be mapped until the provisions are extracted from these PDFs.
+
+---
+
+## 4. Step 1 - Extract Provisions From PDFs
+
+Script:
+
+```text
+src/extraction/provision_extractor.py
+```
+
+Run command:
+
+```bash
+python3 -m src.extraction.provision_extractor
+```
+
+This script uses helper code from:
+
+```text
+src/extraction/utils/pdf_parser.py
+```
+
+What happens:
+
+1. `pdf_parser.py` calls `pdftotext` to convert each PDF into plain text.
+2. It cleans the text by removing repeated ETSI headers and extra blank lines.
+3. `provision_extractor.py` searches the text for provision IDs.
+4. It extracts each provision's:
+   - provision ID
+   - standard name
+   - section ID
+   - section title
+   - provision text
+   - modality, such as `shall`, `should`, `may`, or `unknown`
+5. It saves the extracted provisions as JSON files.
+
+Created files:
+
+```text
+data/extracted/en303645_provisions.json
+data/extracted/en304223_provisions.json
+```
+
+Current extracted counts:
+
+- `en303645_provisions.json`: 69 provisions.
+- `en304223_provisions.json`: 72 provisions.
+
+Total possible pairs:
+
+```text
+69 x 72 = 4,968 possible provision pairs
+```
+
+---
+
+## 5. Step 2 - Create Manual Baseline / Ground Truth
+
+Script:
+
+```text
+src/baseline/create_baseline.py
+```
+
+Run command:
+
+```bash
+python3 -m src.baseline.create_baseline
+```
+
+What happens:
+
+1. The script contains a manually written list of provision pairs.
+2. Each pair says how one EN 303 645 provision relates to one EN 304 223 provision.
+3. The relationship labels can be:
+   - `EQUIVALENCE`
+   - `OVERLAP`
+   - `SUBSUMPTION_A_BROADER`
+   - `SUBSUMPTION_B_BROADER`
+   - `COMPLEMENTARITY`
+   - `NO_RELATION`
+4. Each row also includes:
+   - a short justification
+   - confidence score from 1 to 3
+5. The script writes everything to a CSV file.
+
+Created file:
+
+```text
+data/baseline/gt.csv
+```
+
+Current baseline count:
+
+- 107 manually annotated pairs.
+- 85 positive relation pairs.
+- 22 `NO_RELATION` negative pairs.
+
+This file is the answer key used during evaluation.
+
+---
+
+## 6. Step 3 - Run Automatic Mapping Methods
+
+The mapping scripts read:
+
+```text
+data/extracted/en303645_provisions.json
+data/extracted/en304223_provisions.json
+```
+
+Then they produce prediction files in:
+
+```text
+data/mappings/
+```
+
+Each method tries to predict related provision pairs.
+
+---
+
+## 7. Mapping Method 1 - Rule-Based Mapping
+
+Script:
+
+```text
+src/mapping/rule_based.py
+```
+
+Run command:
+
+```bash
+python3 -m src.mapping.rule_based
+```
+
+What happens:
+
+The script runs two rule-based approaches.
+
+First, **TF-IDF cosine similarity**:
+
+- Converts provision text into word vectors.
+- Compares provisions based on shared words and phrases.
+- Good for simple lexical similarity.
+
+Second, **keyword Jaccard similarity**:
+
+- Looks only for predefined cybersecurity keywords.
+- Examples: `password`, `authentication`, `encryption`, `vulnerability`, `logging`, `risk`.
+- Compares how many security keywords two provisions share.
+
+Created files:
+
+```text
+data/mappings/rule_based_tfidf.csv
+data/mappings/rule_based_jaccard.csv
+data/mappings/tfidf_similarity_matrix.npy
+```
+
+What each file means:
+
+- `rule_based_tfidf.csv`: predictions from TF-IDF only.
+- `rule_based_jaccard.csv`: predictions from cybersecurity keyword matching.
+- `tfidf_similarity_matrix.npy`: raw TF-IDF similarity scores for all provision pairs.
+
+---
+
+## 8. Mapping Method 2 - SBERT Mapping
+
+Script:
+
+```text
+src/mapping/sbert_mapping.py
+```
+
+Run command:
+
+```bash
+python3 -m src.mapping.sbert_mapping
+```
+
+Model used:
+
+```text
+all-MiniLM-L6-v2
+```
+
+What happens:
+
+1. Each provision text is converted into a sentence embedding.
+2. An embedding is a numerical meaning representation of the sentence.
+3. The script compares every EN 303 645 embedding with every EN 304 223 embedding.
+4. If the similarity score is high enough, the pair is saved as a predicted mapping.
+5. The script also assigns a relationship label using score thresholds.
+
+Created files:
+
+```text
+data/mappings/sbert_output.csv
+data/mappings/sbert_similarity_matrix.npy
+```
+
+What each file means:
+
+- `sbert_output.csv`: predicted mappings from SBERT.
+- `sbert_similarity_matrix.npy`: raw similarity matrix for all 4,968 pairs.
+
+---
+
+## 9. Mapping Method 3 - BERT Mapping
+
+Script:
+
+```text
+src/mapping/bert_mapping.py
+```
+
+Run command:
+
+```bash
+python3 -m src.mapping.bert_mapping
+```
+
+Model used:
+
+```text
+bert-base-uncased
+```
+
+Helper file:
+
+```text
+src/mapping/embeddings.py
+```
+
+What happens:
+
+1. The script loads the BERT model.
+2. It tokenizes each provision text.
+3. It creates embeddings using mean pooling over BERT's token outputs.
+4. It normalizes the embeddings.
+5. It calculates cosine similarity between every pair.
+6. Pairs above the threshold are saved.
+
+Created file:
+
+```text
+data/mappings/bert_output.csv
+```
+
+---
+
+## 10. Mapping Method 4 - SecureBERT Mapping
+
+Script:
+
+```text
+src/mapping/securebert_mapping.py
+```
+
+Run command:
+
+```bash
+python3 -m src.mapping.securebert_mapping
+```
+
+Model used:
+
+```text
+ehsanaghaei/SecureBERT
+```
+
+What happens:
+
+1. This is similar to the BERT script.
+2. The difference is that SecureBERT is trained on cybersecurity text.
+3. The script creates embeddings for all provisions.
+4. It compares every possible pair.
+5. Pairs above the threshold are saved.
+
+Created file:
+
+```text
+data/mappings/securebert_output.csv
+```
+
+Note:
+
+The first run may download the SecureBERT model from Hugging Face.
+
+---
+
+## 11. Mapping Method 5 - Gemini Embedding Mapping
+
+Script:
+
+```text
+src/mapping/gemini_embedding_mapping.py
+```
+
+Run command:
+
+```bash
+python3 -m src.mapping.gemini_embedding_mapping
+```
+
+Model used:
+
+```text
+gemini-embedding-2
+```
+
+What happens:
+
+1. The script reads the extracted provisions.
+2. It sends each provision text to the Gemini Embedding API.
+3. Gemini returns an embedding vector for each provision.
+4. The script calculates cosine similarity between all source and target embeddings.
+5. Pairs above the threshold are saved.
+
+Created files:
+
+```text
+data/mappings/gemini_embedding_output.csv
+data/mappings/gemini_embedding_similarity_matrix.npy
+```
+
+Important:
+
+This script requires `GEMINI_API_KEY`.
+
+It can run in two modes:
+
+- sync mode: sends requests directly one by one.
+- batch mode: uses Gemini Batch API.
+
+The batch helper code is in:
+
+```text
+src/mapping/gemini_batch.py
+```
+
+---
+
+## 12. Mapping Method 6 - Gemini LLM Mapping
+
+Script:
+
+```text
+src/mapping/gemini_mapping.py
+```
+
+Run command:
+
+```bash
+python3 -m src.mapping.gemini_mapping
+```
+
+Model used:
+
+```text
+gemini-2.5-flash-lite
+```
+
+What happens:
+
+1. The script creates all 4,968 possible provision pairs.
+2. For each pair, it builds a prompt asking Gemini to classify the relationship.
+3. Gemini must answer with exactly one label:
+   - `EQUIVALENCE`
+   - `SUBSUMPTION_A_BROADER`
+   - `SUBSUMPTION_B_BROADER`
+   - `OVERLAP`
+   - `COMPLEMENTARITY`
+   - `NO_RELATION`
+4. The script submits the work using the Gemini Batch API.
+5. It waits until the batch job finishes.
+6. It saves Gemini's predicted label for every pair.
+
+Created file:
+
+```text
+data/mappings/gemini_output.csv
+```
+
+Important:
+
+This script requires `GEMINI_API_KEY`.
+
+Batch polling and response parsing are handled by:
+
+```text
+src/mapping/gemini_batch.py
+```
+
+---
+
+## 13. Shared Embedding Helper
+
+Script:
+
+```text
+src/mapping/embeddings.py
+```
+
+This is not usually run directly.
+
+It provides shared functions used by SBERT, BERT, SecureBERT, and Gemini embedding scripts.
+
+What it does:
+
+- loads transformer models
+- creates embeddings
+- normalizes embeddings
+- calculates cosine similarity
+- converts similarity scores into relationship labels
+
+Relationship label thresholds:
+
+- score >= `0.85`: `EQUIVALENCE`
+- score >= `0.70`: `OVERLAP`
+- score >= `0.50`: `COMPLEMENTARITY`
+- otherwise: `NO_RELATION`
+
+---
+
+## 14. Step 4 - Evaluate Predictions
+
+Script:
+
+```text
+src/evaluation/evaluate.py
+```
+
+Run command:
+
+```bash
+python3 -m src.evaluation.evaluate
+```
+
+What this script reads:
+
+```text
+data/baseline/gt.csv
+data/mappings/rule_based_tfidf.csv
+data/mappings/rule_based_jaccard.csv
+data/mappings/sbert_output.csv
+data/mappings/bert_output.csv
+data/mappings/securebert_output.csv
+data/mappings/gemini_embedding_output.csv
+data/mappings/gemini_output.csv
+```
+
+What happens:
+
+1. It loads the manual baseline.
+2. It loads each method's prediction CSV.
+3. It compares predicted pairs against ground truth.
+4. It calculates pair-detection metrics:
+   - precision
+   - recall
+   - F1
+   - coverage
+5. It calculates relationship classification metrics:
+   - overall accuracy
+   - macro precision
+   - macro recall
+   - macro F1
+   - per-class scores
+6. It creates error-analysis files.
+
+Important detail:
+
+For evaluation, these two labels are merged into one `SUBSUMPTION` class:
+
+```text
+SUBSUMPTION_A_BROADER
+SUBSUMPTION_B_BROADER
+```
+
+Created files:
+
+```text
+data/evaluation/rule_based_tfidf_eval.json
+data/evaluation/rule_based_jaccard_eval.json
+data/evaluation/sbert_eval.json
+data/evaluation/bert_eval.json
+data/evaluation/securebert_eval.json
+data/evaluation/gemini_embedding_eval.json
+data/evaluation/gemini_llm_eval.json
+data/evaluation/evaluation_summary.json
+```
+
+Also created:
+
+```text
+data/evaluation/*_errors.csv
+data/evaluation/*_predictions_vs_gt.csv
+```
+
+What these mean:
+
+- `*_eval.json`: metrics for one method.
+- `*_errors.csv`: mistakes made by one method.
+- `*_predictions_vs_gt.csv`: side-by-side comparison between predicted and true labels.
+- `evaluation_summary.json`: combined metrics for all methods.
+
+---
+
+## 15. Step 5 - Generate Final Report
+
+Script:
+
+```text
+src/report/generate_report.py
+```
+
+Run command:
+
+```bash
+python3 -m src.report.generate_report
+```
+
+What it reads:
+
+```text
+data/evaluation/evaluation_summary.json
+```
+
+What happens:
+
+1. It loads all evaluation results.
+2. It creates a method comparison table.
+3. It identifies the best method by classification macro-F1.
+4. It writes detailed per-method metrics.
+5. It writes notes and limitations.
+
+Created file:
+
+```text
+data/evaluation/report.md
+```
+
+This is the final Markdown evaluation report.
+
+---
+
+## 16. Manual Pipeline Commands
+
+The pipeline is meant to be run one stage at a time. That makes it easier to check outputs before moving on, especially before using API-based Gemini steps.
+
+Recommended order:
+
+```bash
+python3 -m src.extraction.provision_extractor
+python3 -m src.baseline.create_baseline
+python3 -m src.mapping.rule_based
+python3 -m src.mapping.sbert_mapping
+python3 -m src.mapping.bert_mapping
+python3 -m src.mapping.securebert_mapping
+python3 -m src.evaluation.evaluate
+python3 -m src.report.generate_report
+```
+
+Optional Gemini commands:
+
+```bash
+python3 -m src.mapping.gemini_embedding_mapping
+python3 -m src.mapping.gemini_mapping
+```
+
+Only run the Gemini commands when `GEMINI_API_KEY` is configured and external API calls are intended.
+
+---
+
+## 17. Full End-to-End Order
+
+If starting from the raw PDFs, the full order is:
+
+```bash
+python3 -m src.extraction.provision_extractor
+python3 -m src.baseline.create_baseline
+python3 -m src.mapping.rule_based
+python3 -m src.mapping.sbert_mapping
+python3 -m src.mapping.bert_mapping
+python3 -m src.mapping.securebert_mapping
+python3 -m src.evaluation.evaluate
+python3 -m src.report.generate_report
+```
+
+If you also want Gemini results, run these before evaluation:
+
+```bash
+python3 -m src.mapping.gemini_embedding_mapping
+python3 -m src.mapping.gemini_mapping
+```
+
+---
+
+## 18. Complete File Flow
+
+```text
+Raw PDFs
+  |
+  | src/extraction/provision_extractor.py
+  v
+Extracted provision JSON files
+  |
+  | src/baseline/create_baseline.py
+  v
+Manual ground truth CSV
+  |
+  | src/mapping/*.py
+  v
+Automatic mapping CSV files
+  |
+  | src/evaluation/evaluate.py
+  v
+Evaluation JSON, error CSV, prediction-vs-ground-truth CSV
+  |
+  | src/report/generate_report.py
+  v
+Final Markdown report
+```
+
+---
+
+## 19. Current Evaluation Summary
+
+Current results from:
+
+```text
+data/evaluation/evaluation_summary.json
+```
+
+| Method | Detection Precision | Detection Recall | Detection F1 | Classification Accuracy | Macro F1 |
+|---|---:|---:|---:|---:|---:|
+| Rule-based TF-IDF | 0.6667 | 0.0235 | 0.0455 | 0.2056 | 0.0693 |
+| Rule-based Jaccard | 0.0561 | 0.0706 | 0.0625 | 0.2243 | 0.1792 |
+| SBERT | 0.2545 | 0.1647 | 0.2000 | 0.2243 | 0.0994 |
+| BERT | 0.0178 | 0.9882 | 0.0350 | 0.3832 | 0.1620 |
+| SecureBERT | 0.0171 | 1.0000 | 0.0336 | 0.0280 | 0.0109 |
+| Gemini Embedding | 0.0171 | 1.0000 | 0.0336 | 0.4579 | 0.2782 |
+| Gemini LLM | 0.0160 | 0.8353 | 0.0314 | 0.1589 | 0.0847 |
+
+In the current saved results, **Gemini Embedding** has the highest classification macro-F1.
+
+---
+
+## 20. Simple Explanation of the Whole Project
+
+This project starts with two security-standard PDFs.
+
+First, it extracts individual security provisions from both PDFs and saves them as JSON.
+
+Then, a manual answer key is created in `gt.csv`. This answer key says which provision pairs are truly related and what kind of relationship they have.
+
+After that, several automatic methods try to find related provision pairs:
+
+- simple word matching
+- cybersecurity keyword matching
+- SBERT embeddings
+- BERT embeddings
+- SecureBERT embeddings
+- Gemini embeddings
+- Gemini LLM classification
+
+Each method writes its predictions to `data/mappings/`.
+
+Then the evaluation script compares those predictions against the manual answer key. It measures how many true pairs were found, how many wrong pairs were predicted, and how accurate the relationship labels were.
+
+Finally, the report script creates a readable Markdown report at:
+
+```text
+data/evaluation/report.md
+```
+
+That report is the final output of the project.

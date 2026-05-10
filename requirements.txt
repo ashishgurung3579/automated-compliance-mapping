@@ -1,5 +1,11 @@
-# This project only uses Python standard library modules
-# No external Python packages required
+scikit-learn
+pandas
+numpy
+sentence-transformers
+transformers
+torch
+google-genai>=1.28.0
+python-dotenv
 
 # System dependency:
 # Install poppler for pdftotext: brew install poppler
