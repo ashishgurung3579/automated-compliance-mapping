@@ -7,7 +7,9 @@ This project compares two ETSI security standards and checks which requirements 
 
 Main question:
 
-> "Does this IoT security requirement match, overlap with, or relate to this AI security requirement?"
+> RQ1: Does this IoT security requirement match, overlap with, or relate to this AI security requirement? To what extent can NLP and AI techniques automati- cally identify semantic relationships (equivalence, overlap, sub Sumption, complementarity) between security requirements in ETSI EN 303 645 and EN 304 223? What are the fundamental challenges and limitations?
+> RQ2:How do different automated approaches (Rule-based NLP, Semantic (BERT-based, sentence embedding), LLM (GPT, Claude)) perform for compliance mapping tasks? Which methods achieve the best balance of accuracy, completeness, and interpretability?
+> RQ3: How does automated mapping compare to manual expert mapping in terms of: Accuracy, coverage, efficiency and interpretability.
 
 The project tests multiple mapping methods, compares them with a manually prepared baseline, and writes an evaluation report.
 
@@ -33,22 +35,22 @@ automated-compliance-mapping/
     +-- evaluation/
 ```
 
-What each folder means:
+ Short Description of the each folder containing the file to understand the layout/idea of the project.
 
-- `data/raw/`: original PDF standards.
-- `data/extracted/`: provisions extracted from the PDFs as JSON.
-- `data/baseline/`: manually created correct answers, also called ground truth.
-- `data/mappings/`: prediction files created by different mapping methods.
-- `data/evaluation/`: evaluation metrics, error files, comparison files, and final report.
-- `src/extraction/`: code that reads PDFs and extracts provisions.
-- `src/baseline/`: code that creates the manual baseline CSV.
-- `src/mapping/`: code for all automatic mapping methods.
-- `src/evaluation/`: code that compares predictions against the baseline.
-- `src/report/`: code that creates the Markdown evaluation report.
+- `data/raw/`: It contains original PDF standards.
+- `data/extracted/`: It contains provisions extracted from the PDFs as JSON.
+- `data/baseline/`: It contains manually created correct answers, also called ground truth.
+- `data/mappings/`: It contains prediction files created by different mapping methods.
+- `data/evaluation/`: It contains evaluation metrics, error files, comparison files, and final report.
+- `src/extraction/`: It contains code that reads PDFs and extracts provisions.
+- `src/baseline/`: It contains code that creates the manual baseline CSV.
+- `src/mapping/`: It contains code for all automatic mapping methods.
+- `src/evaluation/`:  It contains code that compares predictions against the baseline.
+- `src/report/`: It contains code that creates the Markdown evaluation report.
 
 ---
 
-## 2. Required Setup
+## 2. Required setup for the project 
 
 Python packages are listed in:
 
@@ -64,7 +66,7 @@ pip install -r requirements.txt
 
 The extraction step also needs `pdftotext`, which comes from Poppler.
 
-On macOS:
+The project is done On macOS:
 
 ```bash
 brew install poppler
@@ -82,22 +84,20 @@ Usually this is stored in a `.env` file.
 
 ## 3. Raw Input Files
 
-The project starts with two PDF files:
+The project starts with two PDF files from the ETSI reprosotries. 
 
 ```text
 data/raw/etsi303645v030103p.pdf
 data/raw/etsi304223v020101p.pdf
 ```
 
-These are the original standards.
-
-Nothing can be mapped until the provisions are extracted from these PDFs.
+These are the original standards. Nothing can be mapped until the provisions are extracted from these PDFs.
 
 ---
 
 ## 4. Step 1 - Extract Provisions From PDFs
 
-Script:
+Used Script:
 
 ```text
 src/extraction/provision_extractor.py
@@ -151,7 +151,7 @@ Total possible pairs:
 
 ## 5. Step 2 - Create Manual Baseline / Ground Truth
 
-Script:
+Used Script:
 
 ```text
 src/baseline/create_baseline.py
@@ -216,7 +216,7 @@ Each method tries to predict related provision pairs.
 
 ## 7. Mapping Method 1 - Rule-Based Mapping
 
-Script:
+Used Script:
 
 ```text
 src/mapping/rule_based.py
@@ -232,17 +232,17 @@ What happens:
 
 The script runs two rule-based approaches.
 
-First, **TF-IDF cosine similarity**:
+First, we used TF-IDF cosine similarity:
 
-- Converts provision text into word vectors.
-- Compares provisions based on shared words and phrases.
-- Good for simple lexical similarity.
+- It converts provision text into word vectors.
+- It compares provisions based on shared words and phrases.
+- It is good for simple lexical similarity.
 
-Second, **keyword Jaccard similarity**:
+Second, we used keyword Jaccard similarity:
 
-- Looks only for predefined cybersecurity keywords.
-- Examples: `password`, `authentication`, `encryption`, `vulnerability`, `logging`, `risk`.
-- Compares how many security keywords two provisions share.
+- To looks only for predefined cybersecurity keywords.
+- For Examples: `password`, `authentication`, `encryption`, `vulnerability`, `logging`, `risk`.
+- It compares how many security keywords two provisions share within the standards.
 
 Created files:
 
@@ -252,17 +252,17 @@ data/mappings/rule_based_jaccard.csv
 data/mappings/tfidf_similarity_matrix.npy
 ```
 
-What each file means:
+Short Description of the created file.
 
-- `rule_based_tfidf.csv`: predictions from TF-IDF only.
-- `rule_based_jaccard.csv`: predictions from cybersecurity keyword matching.
-- `tfidf_similarity_matrix.npy`: raw TF-IDF similarity scores for all provision pairs.
+- `rule_based_tfidf.csv`: It is generated for the predictions from TF-IDF only.
+- `rule_based_jaccard.csv`: It is generated for the predictions from cybersecurity keyword matching.
+- `tfidf_similarity_matrix.npy`: It is generated for the raw TF-IDF similarity scores for all provision pairs.
 
 ---
 
 ## 8. Mapping Method 2 - SBERT Mapping
 
-Script:
+Used Script:
 
 ```text
 src/mapping/sbert_mapping.py
@@ -282,7 +282,7 @@ all-MiniLM-L6-v2
 
 What happens:
 
-1. Each provision text is converted into a sentence embedding.
+1. With this model each provision text is converted into a sentence embedding.
 2. An embedding is a numerical meaning representation of the sentence.
 3. The script compares every EN 303 645 embedding with every EN 304 223 embedding.
 4. If the similarity score is high enough, the pair is saved as a predicted mapping.
@@ -295,16 +295,16 @@ data/mappings/sbert_output.csv
 data/mappings/sbert_similarity_matrix.npy
 ```
 
-What each file means:
+Short Description of the created file.
 
-- `sbert_output.csv`: predicted mappings from SBERT.
-- `sbert_similarity_matrix.npy`: raw similarity matrix for all 4,968 pairs.
+- `sbert_output.csv`: it is for predicted mappings from SBERT.
+- `sbert_similarity_matrix.npy`: It is for raw similarity matrix for all 4,968 pairs.
 
 ---
 
 ## 9. Mapping Method 3 - BERT Mapping
 
-Script:
+Used Script:
 
 ```text
 src/mapping/bert_mapping.py
@@ -347,7 +347,7 @@ data/mappings/bert_output.csv
 
 ## 10. Mapping Method 4 - SecureBERT Mapping
 
-Script:
+Used Script:
 
 ```text
 src/mapping/securebert_mapping.py
@@ -387,7 +387,7 @@ The first run may download the SecureBERT model from Hugging Face.
 
 ## 11. Mapping Method 5 - Gemini Embedding Mapping
 
-Script:
+Used Script:
 
 ```text
 src/mapping/gemini_embedding_mapping.py
@@ -439,7 +439,7 @@ src/mapping/gemini_batch.py
 
 ## 12. Mapping Method 6 - Gemini LLM Mapping
 
-Script:
+Used Script:
 
 ```text
 src/mapping/gemini_mapping.py
@@ -492,7 +492,7 @@ src/mapping/gemini_batch.py
 
 ## 13. Shared Embedding Helper
 
-Script:
+Used Script:
 
 ```text
 src/mapping/embeddings.py
@@ -521,7 +521,7 @@ Relationship label thresholds:
 
 ## 14. Step 4 - Evaluate Predictions
 
-Script:
+Used Script:
 
 ```text
 src/evaluation/evaluate.py
@@ -594,16 +594,16 @@ data/evaluation/*_predictions_vs_gt.csv
 
 What these mean:
 
-- `*_eval.json`: metrics for one method.
-- `*_errors.csv`: mistakes made by one method.
-- `*_predictions_vs_gt.csv`: side-by-side comparison between predicted and true labels.
-- `evaluation_summary.json`: combined metrics for all methods.
+- `*_eval.json`: It is a file containing a metrics for one method.
+- `*_errors.csv`: It is a file containing mistakes made by one method.
+- `*_predictions_vs_gt.csv`: It is a side-by-side comparison between predicted and true labels.
+- `evaluation_summary.json`: It combined metrics for all methods.
 
 ---
 
 ## 15. Step 5 - Generate Final Report
 
-Script:
+Used Script:
 
 ```text
 src/report/generate_report.py
@@ -627,7 +627,6 @@ What happens:
 2. It creates a method comparison table.
 3. It identifies the best method by classification macro-F1.
 4. It writes detailed per-method metrics.
-5. It writes notes and limitations.
 
 Created file:
 
@@ -743,32 +742,3 @@ In the current saved results, **Gemini Embedding** has the highest classificatio
 
 ---
 
-## 20. Simple Explanation of the Whole Project
-
-This project starts with two security-standard PDFs.
-
-First, it extracts individual security provisions from both PDFs and saves them as JSON.
-
-Then, a manual answer key is created in `gt.csv`. This answer key says which provision pairs are truly related and what kind of relationship they have.
-
-After that, several automatic methods try to find related provision pairs:
-
-- simple word matching
-- cybersecurity keyword matching
-- SBERT embeddings
-- BERT embeddings
-- SecureBERT embeddings
-- Gemini embeddings
-- Gemini LLM classification
-
-Each method writes its predictions to `data/mappings/`.
-
-Then the evaluation script compares those predictions against the manual answer key. It measures how many true pairs were found, how many wrong pairs were predicted, and how accurate the relationship labels were.
-
-Finally, the report script creates a readable Markdown report at:
-
-```text
-data/evaluation/report.md
-```
-
-That report is the final output of the project.
