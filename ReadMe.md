@@ -638,35 +638,8 @@ This is the final Markdown evaluation report.
 
 ---
 
-## 16. Manual Pipeline Commands
 
-The pipeline is meant to be run one stage at a time. That makes it easier to check outputs before moving on, especially before using API-based Gemini steps.
-
-Recommended order:
-
-```bash
-python3 -m src.extraction.provision_extractor
-python3 -m src.baseline.create_baseline
-python3 -m src.mapping.rule_based
-python3 -m src.mapping.sbert_mapping
-python3 -m src.mapping.bert_mapping
-python3 -m src.mapping.securebert_mapping
-python3 -m src.evaluation.evaluate
-python3 -m src.report.generate_report
-```
-
-Optional Gemini commands:
-
-```bash
-python3 -m src.mapping.gemini_embedding_mapping
-python3 -m src.mapping.gemini_mapping
-```
-
-Only run the Gemini commands when `GEMINI_API_KEY` is configured and external API calls are intended.
-
----
-
-## 17. Full End-to-End Order
+## 16. Full End-to-End Order
 
 If starting from the raw PDFs, the full order is:
 
@@ -681,7 +654,7 @@ python3 -m src.evaluation.evaluate
 python3 -m src.report.generate_report
 ```
 
-If you also want Gemini results, run these before evaluation:
+If we want Gemini results, we run these before evaluation:
 
 ```bash
 python3 -m src.mapping.gemini_embedding_mapping
