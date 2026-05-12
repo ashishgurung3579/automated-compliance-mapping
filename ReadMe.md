@@ -8,7 +8,7 @@ This project compares two ETSI security standards and checks which requirements 
 Main question:
 
 > RQ1: Does this IoT security requirement match, overlap with, or relate to this AI security requirement? To what extent can NLP and AI techniques automati- cally identify semantic relationships (equivalence, overlap, sub Sumption, complementarity) between security requirements in ETSI EN 303 645 and EN 304 223? What are the fundamental challenges and limitations?
-> RQ2:How do different automated approaches (Rule-based NLP, Semantic (BERT-based, sentence embedding), LLM (GPT, Claude)) perform for compliance mapping tasks? Which methods achieve the best balance of accuracy, completeness, and interpretability?
+> RQ2:How do different automated approaches (Rule-based NLP, Semantic (BERT-based, sentence embedding), LLM models perform for compliance mapping tasks? Which methods achieve the best balance of accuracy, completeness, and interpretability?
 > RQ3: How does automated mapping compare to manual expert mapping in terms of: Accuracy, coverage, efficiency and interpretability.
 
 The project tests multiple mapping methods, compares them with a manually prepared baseline, and writes an evaluation report.
