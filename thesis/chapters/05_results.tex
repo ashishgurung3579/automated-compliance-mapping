@@ -1,0 +1,605 @@
+\chapter{Results and Discussion}\label{ch:results}
+
+This chapter reports the experimental results. Section~\ref{sec:setup} recalls
+the setup, Sections~\ref{sec:detectionresults}--\ref{sec:classresults} present
+pair detection, similarity structure, threshold sensitivity, and relationship
+classification, Section~\ref{sec:agreementresults} covers the ground-truth
+validation study, and Sections~\ref{sec:efficiency}--\ref{sec:threats} discuss
+the findings against the research questions and the threats to their validity.
+
+\section{Experimental setup}\label{sec:setup}
+
+All seven methods were run on the full cross product of 69 \standardA{}
+provisions and 72 \standardB{} provisions (4{,}968 pairs) and evaluated on
+the 107 annotated pairs: 85 related pairs and 22 annotated negatives
+(Figure~\ref{fig:gtdist}). The distribution is dominated by \textsc{Overlap}
+(51 pairs), with \textsc{Equivalence} rare (3 pairs) --- the two standards
+describe different system layers, so identical requirements barely occur.
+Metrics outside the annotated scope are not computable and are not claimed.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\textwidth]{figures/gt_distribution}
+\caption{Distribution of relationship labels in the 107-pair ground truth.}
+\label{fig:gtdist}
+\end{figure}
+
+\section{Pair detection}\label{sec:detectionresults}
+
+Table~\ref{tab:detection} and Figure~\ref{fig:detectionbars} show the
+detection results; Figure~\ref{fig:cis} adds bootstrap confidence intervals.
+
+\begin{table}[htbp]
+\centering
+\caption{Pair detection on the annotated scope. $P^{+}$ is the number of
+pairs the method marks as related among the 107 annotated pairs. Precision
+counts false positives only on the 22 annotated negatives, which is why
+sparse methods show precision 1.00 despite very low recall.}
+\label{tab:detection}
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Method & $P^{+}$ & TP & FP & FN & Precision & Recall & F1\\
+\midrule
+TF--IDF            &   3 &  3 &  0 & 82 & 1.000 & 0.035 & 0.068\\
+Keyword Jaccard    &   6 &  6 &  0 & 79 & 1.000 & 0.071 & 0.132\\
+Sentence-BERT      &  15 & 15 &  0 & 70 & 1.000 & 0.176 & 0.300\\
+BERT               & 105 & 85 & 20 &  0 & 0.809 & 1.000 & 0.895\\
+SecureBERT         & 107 & 85 & 22 &  0 & 0.794 & 1.000 & 0.885\\
+Gemini embeddings  & 107 & 85 & 22 &  0 & 0.794 & 1.000 & 0.885\\
+Gemini LLM         &  94 & 73 & 21 & 12 & 0.777 & 0.859 & 0.816\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/detection_metrics}
+\caption{Pair-detection precision, recall, and F1 per method.}
+\label{fig:detectionbars}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/f1_confidence_intervals}
+\caption{Bootstrap 95\% confidence intervals (2{,}000 resamples) for
+pair-detection F1 and classification macro-F1.}
+\label{fig:cis}
+\end{figure}
+
+The table splits the methods into two regimes. The lexical baselines and
+Sentence-BERT at its default operating point predict very few relations; what
+they do predict is correct (no false positives), but recall between 0.02 and
+0.17 makes them useless as stand-alone detectors. The remaining methods sit at
+the opposite extreme. SecureBERT and Gemini embeddings mark \emph{every}
+annotated pair as related, and BERT marks all but two. Their high F1
+($\approx$0.89) must therefore be read with care: with 85 of 107 annotated
+pairs being positives, the trivial strategy ``call everything related''
+already achieves F1 = 0.885. BERT, SecureBERT, and Gemini embeddings
+essentially implement that strategy, and the Gemini LLM (F1 = 0.816) stays
+below it. Detection F1 within the annotated scope, in other words, barely
+distinguishes these methods; the informative differences appear in the
+similarity structure and in classification.
+
+\section{Similarity structure}\label{sec:simstructure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/similarity_distributions}
+\caption{Distributions of cosine similarity for annotated related pairs
+(blue) and annotated negatives (orange), per embedding model.}
+\label{fig:simdist}
+\end{figure}
+
+Figure~\ref{fig:simdist} explains the degenerate behaviour. BERT concentrates
+all pairs --- related or not --- between roughly 0.6 and 0.9; SecureBERT is
+even more extreme, packing everything above 0.9. With such compressed score
+ranges, the fixed label thresholds of Section~\ref{sec:thresholds} land every
+pair in the same band: SecureBERT assigns \textsc{Equivalence} to all 4{,}968
+possible pairs. This matches the known anisotropy of contextual embedding
+spaces~\cite{ethayarajh2019contextual}: mean-pooled vectors from models never
+trained for sentence similarity crowd into a narrow cone, and cosine
+similarity loses its discriminative meaning. Sentence-BERT, trained precisely
+to spread sentence meanings out, shows the widest score range and visibly
+separates the two distributions --- yet even there the overlap is
+substantial, confirming that annotated negatives (chosen to share surface
+vocabulary) are genuinely hard. Gemini embeddings sit between the extremes:
+compressed range, but with related pairs shifted consistently above
+negatives.
+
+\section{Threshold sensitivity}\label{sec:thresholdresults}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{figures/threshold_sweep}
+\caption{Pair-detection F1 as a function of the similarity threshold, computed
+from the stored similarity matrices on the annotated scope.}
+\label{fig:sweep}
+\end{figure}
+
+Figure~\ref{fig:sweep} separates representation quality from the choice of
+operating point. Three observations stand out. First, the plateaus of BERT,
+SecureBERT, and Gemini embeddings coincide with the all-positive baseline
+(F1 $\approx$ 0.885) across most of the threshold range --- confirming that
+their default-threshold results reflect saturation, not discrimination.
+Second, with an optimally chosen threshold Sentence-BERT becomes the
+\emph{best} detector (F1 = 0.909 at $t=0.120$), despite being the worst
+non-trivial one at its default operating point; its published default entry
+threshold is simply far too high for cross-standard requirement text. Choosing a
+threshold on the same pairs the score is reported on inflates it, so the sweep
+was repeated under 5-fold cross-validation with 20 repetitions: the threshold is
+selected on four folds and scored on the fifth. Held-out F1 is
+$0.903 \pm 0.021$, an optimism of only 0.006, because a single tuned parameter
+over 107 points has little room to overfit.
+Figure~\ref{fig:cvthreshold} shows the same comparison for every method with a
+continuous score, together with the spread of the selected threshold itself. The
+two panels carry different news: held-out F1 tracks the in-sample optimum closely
+everywhere, but the threshold that produces it is stable only for some models.
+Gemini embeddings settle on $0.658 \pm 0.023$ across all 100 fits, whereas
+SecureBERT ranges over $0.265 \pm 0.375$ --- its folds disagree about the
+operating point by more than the width of the useful range, which is the same
+brittleness the sweep curve shows from a different angle.
+Calibration gain is therefore real,
+though Section~\ref{sec:prevalence} shows it is measured at a positive rate the
+corpus does not share. Third,
+the sharp cliffs on the right show how brittle threshold-based labelling is:
+for SecureBERT the entire working range collapses within a few hundredths.
+For practice this means thresholds must be calibrated per corpus and per
+model --- fixed literature values do not transfer.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/cv_threshold}
+\caption[Cross-validated threshold calibration]{Left: pair-detection F1 with the
+threshold tuned on the same pairs it is scored on, against the held-out mean of
+20 repeats of stratified 5-fold cross-validation (error bars, one standard
+deviation). Right: the threshold each set of training folds selected.}
+\label{fig:cvthreshold}
+\end{figure}
+
+\section{Corpus-level performance}\label{sec:prevalence}
+
+Every figure reported so far describes the 107 pilot pairs, of which 85 are
+related --- a positive rate of 79.4\%. That set was assembled purposively, so it
+carries no inclusion probabilities and its precision cannot be reweighted to the
+corpus it was drawn from. Because precision and F1 both move with the positive
+rate, this matters: a method evaluated where four pairs in five are related is
+being asked an easier question than the one it would face in use.
+
+To measure rather than assume the difference, a stratified probability sample of
+the full $69\times72$ space was drawn and annotated independently
+(Section~\ref{sec:sampling}). Each pair carries a known inclusion probability, so
+Horvitz--Thompson estimation recovers corpus-level quantities with correct
+variance.
+
+\paragraph{How common are related pairs?} The sample puts the corpus rate at
+\textbf{12.4\%} (95\% CI [10.0, 15.0]) for any relationship, and \textbf{5.9\%}
+(95\% CI [4.3, 7.7]) counting only equivalence, overlap and subsumption. Applied
+to 4{,}968 candidates that implies roughly 617 and 295 related pairs
+respectively. The pilot's 85 was never a measurement of this quantity --- it was
+the number of pairs that study examined.
+
+The unequal sampling fractions cost some precision of their own. With weights
+ranging from 1.99 to 14.91, Kish's design effect is 1.49, so the 650 annotated
+pairs carry the information of roughly 437 drawn with equal probability. Every
+interval reported below already accounts for this, because the bootstrap
+resamples within stratum.
+
+\begin{table}[htbp]
+\centering
+\caption[Corpus-level detection performance]{Detection performance estimated over
+all 4{,}968 candidate pairs from the weighted sample, at each method's shipped
+operating point. Specificity is the fraction of unrelated pairs correctly
+rejected. The final row is a classifier that labels every pair related.}
+\label{tab:weighted}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Method & Precision & Recall & Specificity & F1\\
+\midrule
+Sentence-BERT           & \textbf{0.905} & 0.061 & 0.999 & 0.115\\
+Keyword Jaccard         & 0.101 & 0.019 & 0.976 & 0.033\\
+TF--IDF                 & 0.000 & 0.000 & 1.000 & 0.000\\
+BERT                    & 0.128 & 1.000 & 0.038 & 0.228\\
+Gemini LLM              & 0.121 & 0.886 & 0.092 & 0.214\\
+SecureBERT              & 0.124 & 1.000 & 0.000 & 0.221\\
+Gemini embeddings       & 0.124 & 1.000 & 0.000 & 0.221\\
+\midrule
+\emph{Label every pair related} & \emph{0.124} & \emph{1.000} & \emph{0.000} & \emph{0.221}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{The ranking inverts.} Table~\ref{tab:weighted} does not rearrange the
+pilot ordering so much as contradict it. SecureBERT and Gemini embeddings reach
+specificity 0.000: across the weighted sample they reject no unrelated pair at
+all, and their scores match the all-positive baseline to three decimals. BERT,
+which led the pilot benchmark at detection F1 0.895, rejects 3.8\% of unrelated
+pairs. A paired bootstrap on the difference in F1 --- both methods scored on the
+same resampled pairs, which is the comparison the overlap of two marginal
+intervals does not make --- puts SecureBERT, Gemini embeddings and the Gemini
+LLM within the baseline's interval, and BERT ahead of it by 0.007 [0.003, 0.011],
+a margin with no practical content.
+
+Sentence-BERT moves the other way. It looked worst among the non-degenerate
+methods on the pilot set (F1 0.300) and is the only method here with precision of
+practical interest: 0.905, meaning nine in ten of the pairs it surfaces are
+genuinely related. It pays for this with recall of 0.061.
+
+Sensitivity and specificity are properties of a classifier alone; precision also
+depends on how common the positive class is. Fixing the first two therefore fixes
+precision as a function of prevalence, plotted in
+Figure~\ref{fig:precprev}. Three of the four methods shown lie on the diagonal
+$\text{precision} = \text{prevalence}$, the locus of a classifier that carries no
+information about the label: at the pilot's 0.79 they return 0.79, which reads as
+strong performance, and at the corpus rate of 0.12 they return 0.12. Only
+Sentence-BERT's curve stands away from the diagonal, and it is the separation
+between curve and diagonal --- not the height of either --- that measures
+discrimination.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{figures/precision_vs_prevalence}
+\caption[Precision as a function of prevalence]{Precision implied by each
+method's estimated sensitivity and specificity as the share of related pairs
+varies. Dotted lines mark the pilot set's positive rate and the corpus estimate;
+the shaded band is the 95\% interval on the latter.}
+\label{fig:precprev}
+\end{figure}
+
+\paragraph{How much of the collapse is the threshold?} Table~\ref{tab:weighted}
+scores each method at the operating point Chapter~\ref{ch:prototype} shipped, and
+those thresholds were chosen on the pilot set. Selecting a cut-off where 79\% of
+pairs are related and then applying it where 12\% are confounds the method with
+its calibration, so the comparison was repeated with the operating point selected
+on the probability sample itself: weighted F1 maximised on four folds and scored
+on the fifth, 20 repeats, stratified so every fold carries all three strata, with
+the reported threshold the median of the 100 selections rather than the in-sample
+optimum. Candidate cut-offs are quantiles of each method's own scores, since the
+methods occupy very different ranges --- TF--IDF tops out at 0.14 while SecureBERT
+never drops below 0.91, and a shared absolute grid would give one of them a
+hundred candidate thresholds and the other three.
+
+\begin{table}[htbp]
+\centering
+\caption[Corpus performance at a corpus-calibrated operating point]{Detection
+performance when the threshold is selected on the probability sample instead of
+the pilot set. Held-out F1 is the cross-validated mean; the gap to the point
+estimate is the remaining optimism.}
+\label{tab:calibrated}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Method & Threshold & Precision & Recall & F1 & Held-out F1\\
+\midrule
+Gemini embeddings & 0.719 & \textbf{0.446} & 0.571 & \textbf{0.501} & 0.485\\
+Sentence-BERT     & 0.324 & 0.327 & 0.571 & 0.416 & 0.378\\
+TF--IDF           & 0.017 & 0.281 & 0.367 & 0.319 & 0.285\\
+BERT              & 0.824 & 0.233 & 0.477 & 0.313 & 0.289\\
+SecureBERT        & 0.939 & 0.178 & 0.508 & 0.264 & 0.252\\
+\midrule
+\emph{Label every pair related} & --- & \emph{0.124} & \emph{1.000} & \emph{0.221} & ---\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The result changes the diagnosis (Figure~\ref{fig:calibgap}). At a threshold
+fitted to the corpus, four of the five continuous methods clear the all-positive
+baseline, and two clear it by a margin the paired bootstrap separates from zero:
+Gemini embeddings by 0.280 [0.199, 0.365] and Sentence-BERT by 0.195
+[0.123, 0.263]. TF--IDF and BERT beat it by about 0.09 each, intervals excluding
+zero but only just. SecureBERT does not clear it at all
+($+0.043$, [$-0.011$, 0.096]). The two leaders are not separable from one another
+($-0.085$, [$-0.184$, 0.013]), so the honest statement is that they are tied at
+the top, not that one wins.
+
+What collapsed in Table~\ref{tab:weighted}, then, was mostly calibration rather
+than representation. The embedding spaces do carry enough signal to reject
+unrelated pairs; the thresholds inherited from a 79\%-positive development set
+did not let them. That is a sharper version of the same warning: the cost of a
+development set at the wrong base rate is not a mild optimism in the reported
+score, it is an operating point that turns a usable model into a constant
+function. SecureBERT is the exception, and the informative one --- its scores
+occupy a band 0.06 wide across the entire corpus, so no threshold placed anywhere
+in that band separates the classes.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/calibration_gap}
+\caption[Effect of recalibrating the operating point]{Corpus pair-detection F1 at
+the shipped, pilot-calibrated threshold against a threshold cross-validated on
+the probability sample. Error bars are stratified bootstrap 95\% intervals.}
+\label{fig:calibgap}
+\end{figure}
+
+\paragraph{What this supports.} Even recalibrated, no method here supports an
+automated accept/reject decision: the best F1 is 0.50, with precision 0.45, so
+more than half of what the system proposes is wrong. The defensible use is the
+one Section~\ref{sec:discussion} describes --- ranking candidates for a human
+reviewer --- and the choice of configuration depends on which end of the trade-off
+matters. Sentence-BERT at its shipped threshold surfaces few pairs but is right
+about nine times in ten; Gemini embeddings recalibrated recover 57\% of the
+related pairs at under half precision. Neither removes the reviewer.
+
+\section{Relationship classification}\label{sec:classresults}
+
+Detecting that two provisions relate is only half the task; compliance work
+needs to know \emph{how} they relate. Table~\ref{tab:classification}
+summarises classification performance.
+
+\begin{table}[htbp]
+\centering
+\caption{Relationship classification over all 107 annotated pairs, five-label
+scheme (subsumption directions merged). CIs are bootstrap 95\% intervals.}
+\label{tab:classification}
+\small
+\begin{tabular}{lccc}
+\toprule
+Method & Accuracy & Macro-F1 & Macro-F1 95\% CI\\
+\midrule
+TF--IDF            & 0.215 & 0.086 & [0.053, 0.128]\\
+Keyword Jaccard    & 0.224 & 0.179 & [0.059, 0.288]\\
+Sentence-BERT      & 0.224 & 0.099 & [0.064, 0.137]\\
+BERT               & 0.411 & 0.172 & [0.116, 0.237]\\
+SecureBERT         & 0.028 & 0.011 & [0.000, 0.025]\\
+Gemini embeddings  & \textbf{0.477} & \textbf{0.279} & [0.148, 0.391]\\
+Gemini LLM         & 0.187 & 0.088 & [0.053, 0.127]\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/confusion_matrices}
+\caption{Row-normalised confusion matrices (counts printed) for the three most
+instructive methods. EQV = equivalence, OVL = overlap, SUB = subsumption,
+CMP = complementarity, NONE = no relation.}
+\label{fig:confusion}
+\end{figure}
+
+Classification is where every method struggles. The best result --- Gemini
+embeddings at 0.477 accuracy and 0.279 macro-F1 --- would still mislabel every
+second pair. The comparison that matters is against the trivial classifier
+that assigns the majority label to everything: \textsc{Overlap} accounts for
+51 of the 107 pairs, so always predicting it yields 0.477 accuracy. The best
+method matches that figure exactly and none exceeds it. The same baseline
+scores 0.129 macro-F1, which three methods do beat --- keyword Jaccard, BERT and
+Gemini embeddings --- so the methods are not uniformly worthless; but the
+headline conclusion has to be stated plainly. On the five-label task, none of the seven methods learns the
+distinction the task is about. The confusion matrices in
+Figure~\ref{fig:confusion} show how each one fails:
+
+\begin{itemize}
+  \item \textbf{Gemini embeddings} funnel most predictions into
+  \textsc{Overlap}. That matches the majority class (hence the comparatively
+  high accuracy) and yields reasonable per-class scores for \textsc{Overlap}
+  (F1 = 0.65) and \textsc{Equivalence} (precision 1.00 at recall 0.33), but
+  \textsc{Subsumption} and \textsc{No relation} are never predicted
+  correctly.
+  \item \textbf{BERT} spreads slightly more but shows the same collapse;
+  \textsc{Complementarity} and \textsc{Subsumption} both go to zero.
+  \item \textbf{The Gemini LLM} is the only method that predicts labels from
+  provision content rather than a score band, and it does recognise
+  complementarity (recall 0.59) --- but it heavily overuses it, pushing 41 of
+  the 51 \textsc{Overlap} pairs into \textsc{Complementarity} and ending with
+  the lowest accuracy of the non-degenerate methods. Notably, it also assigns
+  a relation to 20 of the 22 annotated negatives.
+  \item \textbf{SecureBERT}'s uniform \textsc{Equivalence} output produces
+  0.028 accuracy --- exactly the 3 equivalence pairs in the ground truth.
+\end{itemize}
+
+Two error examples illustrate the pattern. Provision 5.3-11 of \standardA{}
+(inform the user that a security update is required, with its risks) and
+provision 5.3.1-2.2 of \standardB{} (proactively inform end-users of
+security-relevant updates with clear explanations) are annotated
+\textsc{Equivalence}; Gemini embeddings scored the pair into the
+\textsc{Overlap} band --- a near-miss that a human reviewer would accept as a
+shortlist hit. By contrast, the Gemini LLM labelled the pair of provision
+5.1-1 (unique per-device passwords) and provision 5.2.2-1 (evaluate access
+control frameworks for APIs, models, and data) as \textsc{Complementarity}
+where the annotation says \textsc{Overlap}: both provisions govern
+authentication-related access control, but the model read the difference in
+system layer as a difference in objective. The boundary between overlap and
+complementarity is exactly where the annotation itself is hardest, a point
+the validation study below quantifies.
+
+\section{Ground-truth validation}\label{sec:agreementresults}
+
+A reference set is only as good as the consistency of the judgements behind it.
+The pilot pairs were mixed unmarked into the annotation stream for the
+probability sample, so re-labelling them was blind: at the time of judging, there
+was no way to tell a pilot pair from a newly sampled one. Comparing the two label
+sets afterwards gives an agreement figure against annotations that two authors
+reviewed months earlier.
+
+\begin{table}[htbp]
+\centering
+\caption[Reference-set agreement against the pilot and the LLM contrast]{%
+Agreement of the annotated reference sample with the earlier author-reviewed
+pilot labels, against the same statistic computed for the evaluated LLM on two
+runs over identical input.}
+\label{tab:agreement}
+\small
+\begin{tabular}{lccccc}
+\toprule
+ & & \multicolumn{2}{c}{Six labels} & \multicolumn{2}{c}{Related vs.\ not}\\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Comparison & $n$ & Agreement & $\kappa$ & Agreement & $\kappa$\\
+\midrule
+Reference sample vs.\ author-reviewed pilot & 107 & 0.61 & 0.40 & 0.82 & 0.51\\
+Evaluated LLM vs.\ itself, identical input & 4\,968 & 0.69 & 0.02 & 0.81 & $-$0.03\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Agreement with the pilot reaches $\kappa = 0.51$ on the detection decision and
+$\kappa = 0.40$ on the six-label scheme --- moderate on both counts on the
+Landis--Koch scale~\cite{landis1977kappa}. This is weaker than it looked partway
+through annotation, when the 47 pilot pairs reached so far gave 0.68 and 0.44;
+the figures above are over all 107 and are the ones that should be read. A
+reference set at $\kappa = 0.51$ on its central decision is usable for comparing
+methods against each other, since every method is scored against the same labels,
+but it is not precise enough to certify an absolute performance level, and the
+method rankings in Section~\ref{sec:prevalence} should be read with that ceiling
+in mind.
+
+Disagreements are not scattered across the label space. They cluster on the
+overlap/complementarity boundary, which Section~\ref{sec:threats} identifies as
+the least determinate distinction in the taxonomy, and on the general-process
+provisions covered by the codebook amendment recorded during annotation. Recorded
+confidence tracks them: pairs marked confidence 3 agree with the pilot 77\% of
+the time against 46\% for confidence 2. The scale collapsed in practice to those
+two values --- no pair was recorded at 1, 4 or 5 --- so this is a two-level
+contrast rather than a calibration curve, but it does show the field carries
+information rather than noise.
+
+The second row of Table~\ref{tab:agreement} is the more instructive one. The
+evaluated LLM was run twice at temperature 0 over byte-identical prompts. The two
+runs agree on 69\% of pairs --- \emph{higher} raw agreement than the human comparison
+--- yet reach $\kappa = 0.02$. The explanation is that the model assigns
+\textsc{Complementarity} to 81\% of all pairs, so two runs coincide frequently
+without either run carrying information. Raw agreement rewards a degenerate
+marginal; $\kappa$ does not. This is why the reliability of an annotation source
+cannot be read off its agreement percentage, and it is the clearest single
+demonstration in this study of why the LLM classifier's headline scores should
+not be taken at face value.
+
+Recorded annotation confidence behaves as intended: pairs marked confidence~3
+agree with the pilot 82\% of the time ($n = 22$), against 48\% for those marked
+confidence~2 ($n = 25$). The field predicts where judgement is contestable, so
+it is retained rather than discarded.
+
+\section{Efficiency and interpretability}\label{sec:efficiency}
+
+\begin{table}[htbp]
+\centering
+\caption{Wall-clock runtime per stage on a CPU-only laptop (Apple silicon),
+including model loading. Gemini stages run through the batch API; their
+end-to-end time is dominated by queueing (minutes to hours) rather than
+computation.}
+\label{tab:runtime}
+\small
+\begin{tabular}{lr}
+\toprule
+Stage & Runtime\\
+\midrule
+Provision extraction (both PDFs) & 0.9 s\\
+TF--IDF + keyword mapping        & 3.5 s\\
+Sentence-BERT mapping            & 56 s\\
+BERT mapping                     & 104 s\\
+SecureBERT mapping               & 195 s\\
+Gemini embeddings                & API batch\\
+Gemini LLM classification (4{,}968 prompts) & API batch\\
+Evaluation                       & 1.4 s\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Every local method runs in minutes on commodity hardware
+(Table~\ref{tab:runtime}); by comparison, drafting and reviewing the 107 pilot
+pairs occupied several working days even with LLM assistance, and the 650
+sampled pairs took several times that again. Interpretability differs more than
+runtime: the keyword baseline can show \emph{which} terms matched, embedding
+methods offer only an opaque score, and the LLM can produce a textual
+rationale on request --- though its rationale quality was not separately
+evaluated here.
+
+\section{Discussion}\label{sec:discussion}
+
+\paragraph{RQ1 --- feasibility and limits.}
+Automated methods can reliably \emph{shortlist} related provisions: the better
+embedding models place genuinely related pairs high in their rankings, and
+with a calibrated threshold Sentence-BERT reaches detection F1 above 0.9 on
+the annotated scope --- although, as Section~\ref{sec:prevalence} shows, that
+figure reflects the benchmark's high positive rate more than deployable
+accuracy. Identifying the \emph{type} of relationship is a
+different matter. The best classification result (macro-F1 0.279) is far from
+usable autonomy, and structural limits are visible: symmetric similarity
+scores cannot express directional subsumption at all, and the
+overlap/complementarity boundary requires judging \emph{objectives}, not
+surface meaning. The fundamental limitation is that a scalar similarity
+collapses precisely the distinctions the taxonomy is designed to capture.
+
+\paragraph{RQ2 --- method comparison.}
+No method family wins outright; they fail differently. Lexical baselines are
+precise but nearly blind (recall $\leq$ 0.07). General-purpose transformer
+embeddings saturate --- anisotropy makes their cosine scores unusable without
+calibration, and domain pretraining (SecureBERT) makes this worse rather than
+better, refuting the intuition that cybersecurity vocabulary is what is
+missing. The purpose-built sentence encoder (Sentence-BERT) has the best
+underlying representation once its threshold is calibrated. Gemini embeddings
+give the best label quality overall (macro-F1 0.279, accuracy 0.477), and the
+prompted LLM is the only method with non-trivial recall on complementarity but
+over-predicts it massively. The pilot and corpus views disagree about which
+method to prefer, and where they disagree the corpus view should win: Gemini
+embeddings and Sentence-BERT lead once the operating point is fitted to the
+corpus rather than to the pilot, and the paired bootstrap cannot separate them
+($-0.085$, [$-0.184$, 0.013]). Since accuracy does not decide between the two, the
+practical grounds do: Sentence-BERT runs locally in under a minute with no
+per-query cost and reproduces bit-identically, whereas the Gemini embeddings
+depend on a hosted model that can change under the same name. Calibrated
+Sentence-BERT for ranking, plus human labelling of the shortlist, is the
+defensible configuration, with Gemini embeddings the better choice where recall
+matters more than reproducibility.
+
+\paragraph{RQ3 --- automated versus human mapping.}
+Against the author-reviewed reference, automation is dramatically faster
+(seconds versus days) and consistent, but its label agreement
+(at best 46\%) remains far below what compliance documentation requires.
+These findings support the same conclusion Bar-Haim et
+al.~\cite{barhaim2023cloud} reached for control mapping: automated compliance
+mapping is a decision-support technology. Concretely, the evidence here
+supports a workflow where an embedding model ranks all 4{,}968 pairs, a
+human reviews the top of the ranking, and the relationship label is always
+assigned by the human.
+
+\section{Threats to validity}\label{sec:threats}
+
+\paragraph{Construct validity.} The six-label taxonomy compresses a
+continuum of relationships between requirements into discrete classes; the
+overlap/complementarity boundary in particular is partly a judgement call.
+Section~\ref{sec:agreementresults} puts a number on the cost: agreement on the
+binary related/unrelated question reaches $\kappa = 0.51$, and resolving
+\emph{which} of the six relations holds falls to $\kappa = 0.40$, so the typed
+labels are the noisier construct and the classification results in
+Section~\ref{sec:classresults} are measured against a correspondingly noisier
+target.
+
+\paragraph{Internal validity.} Both reference sets were drafted with LLM
+assistance, which risks favouring LLM-family methods. Three things bound the
+risk. The drafting model (Claude) belongs to a different family from the
+evaluated ones (Gemini); the pilot's 107 pairs were reviewed by the authors; and
+the evaluated LLM performed \emph{worst} of the non-degenerate methods, so the
+circularity, if any, did not manifest as an advantage. The probability sample was
+not author-reviewed pair by pair, and its reliability rests instead on the blind
+comparison with the reviewed pilot reported in
+Section~\ref{sec:agreementresults}. Fixed shared thresholds avoid per-method
+tuning bias; the sweep and the cross-validated calibration show what tuning
+would and would not change.
+
+\paragraph{Statistical conclusion validity.} Three limits constrain how far the
+numbers can be pushed. First, the pilot-set intervals in Figure~\ref{fig:cis}
+overlap widely across the stronger methods; with 107 pairs, and with
+\textsc{Equivalence} supported by only three of them, the ranking between
+neighbouring methods on that set is not established. Corpus-scale comparisons are
+made instead with a paired bootstrap on the difference, which is the test that
+matches the design, and only differences whose interval excludes zero are
+reported as orderings. Second, \textsc{Equivalence} does not occur in the
+probability sample at all, so no weighted per-class estimate exists for it and the
+classification results remain confined to the pilot set. Third, the corpus
+operating points are selected by cross-validation on the same sample they are
+scored on. The residual optimism is measured rather than assumed --- 0.016 for
+Gemini embeddings, 0.048 for Sentence-BERT --- and is small relative to the gap
+between those methods and the baseline, but the point estimates in
+Table~\ref{tab:calibrated} sit slightly above what a fully independent test set
+would give.
+
+\paragraph{External validity.} Results cover one standard pair and specific model
+versions; hosted models additionally evolve over time, and
+\texttt{gemini-2.5-flash-lite} is scheduled for retirement in October 2026, after
+which the LLM results here cannot be reproduced exactly. Generalisation to other
+standards or model generations is plausible for the structural findings
+(anisotropy, similarity-versus-taxonomy mismatch) but must be assumed with
+caution for the specific numbers. The prevalence gap between the two reference
+sets is itself the clearest warning: a benchmark assembled by looking for
+interesting pairs measured something the deployed setting does not share.

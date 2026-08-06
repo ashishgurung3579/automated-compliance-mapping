@@ -1,0 +1,77 @@
+% Degree project report — University West, Department of Engineering Science
+% Structure follows the IV-Master template (v2.10) layout.
+% Build: latexmk -pdf main.tex
+\documentclass[a4paper,11pt,twoside,openany]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[margin=30mm,top=28mm,bottom=30mm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[expansion=false]{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\captionsetup{font=small,labelfont=bf}
+
+% ---- chapter heading style:  "3 | Research Methodology"
+\titleformat{\chapter}[block]
+  {\normalfont\huge\bfseries\centering}
+  {\thechapter\hspace{0.6em}\rule[-0.35em]{1.2pt}{1.5em}\hspace{0.6em}}{0pt}{}
+\titlespacing*{\chapter}{0pt}{40pt}{30pt}
+
+% ---- headers
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\small Degree Project for Master of Computer Science with specialization in Cybersecurity\\\textit{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\setlength{\headheight}{26pt}
+
+\newcommand{\standardA}{ETSI EN 303 645}
+\newcommand{\standardB}{ETSI EN 304 223}
+
+\begin{document}
+
+% =========================== front matter ===========================
+\pagenumbering{roman}
+\input{frontmatter}
+
+\tableofcontents
+\clearpage
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+\clearpage
+
+% =========================== main matter ===========================
+\pagenumbering{arabic}
+\input{chapters/01_introduction}
+\input{chapters/02_background}
+\input{chapters/03_methodology}
+\input{chapters/04_prototype}
+\input{chapters/05_results}
+\input{chapters/06_conclusion}
+
+% =========================== back matter ===========================
+\bibliographystyle{ieeetr}
+\bibliography{bibliography}
+\addcontentsline{toc}{chapter}{Bibliography}
+
+\input{glossary}
+
+\appendix
+\input{chapters/appendix_labels}
+\input{chapters/appendix_survey}
+\input{chapters/appendix_reproduction}
+
+\end{document}

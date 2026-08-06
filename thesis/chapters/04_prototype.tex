@@ -1,0 +1,105 @@
+\chapter{The Mapping Pipeline}\label{ch:prototype}
+
+The methods of Chapter~\ref{ch:methodology} are implemented as a five-stage
+pipeline, released as an open repository so that every number in
+Chapter~\ref{ch:results} can be regenerated from the raw standard documents.
+This chapter describes the system's structure, what was built for the project
+and what was reused, and the artefacts each stage produces.
+
+\section{Architecture}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  node distance=5mm and 7mm,
+  stage/.style={draw, rounded corners=2pt, minimum height=9mm, minimum width=24mm,
+                align=center, font=\small},
+  art/.style={font=\scriptsize\itshape, align=center},
+  arr/.style={-{Stealth[length=2.4mm]}, thick}
+]
+\node[stage] (ex) {Extraction};
+\node[stage, right=of ex] (gt) {Ground\\truth};
+\node[stage, right=of gt] (map) {Mapping\\(7 methods)};
+\node[stage, right=of map] (ev) {Evaluation};
+\node[stage, right=of ev] (rep) {Reporting};
+\draw[arr] (ex) -- (gt);
+\draw[arr] (gt) -- (map);
+\draw[arr] (map) -- (ev);
+\draw[arr] (ev) -- (rep);
+\node[art, below=2.5mm of ex] {provision\\JSON};
+\node[art, below=2.5mm of gt] {gt.csv\\(107 pairs)};
+\node[art, below=2.5mm of map] {predictions,\\similarity matrices};
+\node[art, below=2.5mm of ev] {metrics, errors,\\confidence intervals};
+\node[art, below=2.5mm of rep] {tables,\\figures};
+\end{tikzpicture}
+\caption{Pipeline stages and the artefact each stage produces. Every stage is
+a separate command, so intermediate outputs can be inspected before the next
+stage runs.}
+\label{fig:pipeline}
+\end{figure}
+
+Figure~\ref{fig:pipeline} shows the five stages. The pipeline is a set of
+Python modules run stage by stage from the command line; each stage reads the
+files of the previous one and writes its results to a versioned data
+directory. This staged design was a deliberate choice over a single
+end-to-end script: extraction errors are cheaper to catch before mapping runs,
+and the API-based methods (which cost money per call) are only invoked once
+their inputs are verified.
+
+\section{Stage descriptions}
+
+\paragraph{Extraction.} Converts both standard PDFs to text with
+\texttt{pdftotext} (Poppler), removes recurring ETSI page furniture, locates
+provision identifiers with pattern matching, and writes one JSON record per
+provision with identifier, section, title, text, and modality. Output: 69
+records for \standardA{}, 72 for \standardB{}.
+
+\paragraph{Ground truth.} Materialises the reviewed annotation of
+Section~\ref{sec:gt} as \texttt{gt.csv}: source and target provision
+identifiers, one of six relationship labels, a one-sentence justification,
+and a confidence score. A companion module draws the stratified probability
+sample, emits and ingests the annotation batches, and computes the agreement
+statistics of Section~\ref{sec:gtvalidation}.
+
+\paragraph{Mapping.} One module per method. The rule-based module computes
+TF--IDF cosine similarity (scikit-learn) and security-keyword Jaccard scores.
+The three local transformer modules share a common embedding helper that
+loads the model (Hugging Face), embeds all provisions, normalises the
+vectors, and computes the full $69 \times 72$ cosine similarity matrix. The
+Gemini embedding module obtains vectors through the Google GenAI API; the
+Gemini classification module builds one prompt per pair and submits them
+through the batch API, then parses the returned labels. Every
+similarity-based module stores both its thresholded predictions (CSV) and its
+raw similarity matrix (NumPy), the latter enabling the threshold sweep of
+Section~\ref{sec:thresholdresults} without re-running any model.
+
+\paragraph{Evaluation.} Loads the ground truth and every prediction file,
+computes detection and classification metrics
+(Section~\ref{sec:evaluation}), bootstrap confidence intervals, per-method
+confusion matrices, and threshold sweeps, and writes per-method error files
+listing every missed pair and every wrong label with its provision
+identifiers.
+
+\paragraph{Reporting.} Renders the summary tables and the figures used in
+Chapter~\ref{ch:results} (matplotlib), in print-ready PDF form.
+
+\section{Built versus reused}
+
+The extraction logic, the keyword baseline, the ground-truth tooling, the
+evaluation harness with its bootstrap and sweep analyses, and the reporting
+layer were developed for this project. The heavy lifting inside the mapping
+methods deliberately reuses standard components: scikit-learn's TF--IDF
+vectoriser, pretrained models from Hugging Face (MiniLM Sentence-BERT, BERT
+base, SecureBERT), and Google's hosted Gemini models. No model was trained or
+fine-tuned; assembling and evaluating existing components under controlled,
+identical conditions is precisely the contribution.
+
+\section{Reproducibility}
+
+All randomised steps (sampling, bootstrap) use fixed seeds. A verification run
+during the project reproduced every stored evaluation metric exactly;
+individual embedding scores vary in the fourth decimal between runs because of
+CPU thread scheduling in the tensor library, which never crosses a label
+threshold. The API-based methods depend on hosted models and are archived
+through their stored outputs instead. Appendix~\ref{app:reproduction} lists the exact commands, software
+versions, and expected runtimes for a full reproduction.

@@ -1,0 +1,102 @@
+\chapter{Expert Validation Survey Instrument}\label{app:survey}
+
+This appendix contains the complete instrument and analysis plan for the
+proposed expert validation of the ground truth
+(Section~\ref{sec:gtvalidation}). The study was designed but not executed
+within the degree project; it is specified here so it can be run without
+further design work. A distribution-ready copy is maintained in the project
+repository (\texttt{docs/expert\_survey.md}).
+
+\section{Purpose}
+
+Measure (i) how consistently practising cybersecurity professionals assign
+the six relationship labels to provision pairs, and (ii) how well their
+majority judgement agrees with the project's ground truth. High agreement
+validates the ground truth as an evaluation reference; disagreement localises
+contestable annotations.
+
+\section{Participants and recruitment}
+
+Target group: professionals with at least two years of experience in
+cybersecurity engineering, compliance/GRC, or security assurance, familiar
+with at least one of the two standards or an equivalent framework (ISO/IEC
+27001, IEC 62443). Target sample: 5--10 respondents recruited through
+professional networks and university industry contacts. Participation is
+anonymous and uncompensated.
+
+\section{Ethics and data handling}
+
+No personal data is collected beyond role category, years of experience, and
+self-rated familiarity. Responses are stored pseudonymously (R1, R2, \ldots).
+Participants consent via a checkbox after reading a description of the study
+purpose and the intended publication of aggregated results. The design
+collects anonymous professional judgements and no sensitive data;
+supervisor confirmation is obtained before deployment.
+
+\section{Screening questions}
+
+\begin{enumerate}[label=S\arabic*.]
+  \item Current role: security engineer / compliance-GRC / auditor /
+  researcher / other (single choice).
+  \item Years of professional experience in cybersecurity (number;
+  respondents under 2 years excluded from the main analysis).
+  \item Familiarity with \standardA{} (Likert 1--5).
+  \item Familiarity with \standardB{} or other AI-security guidance
+  (Likert 1--5).
+  \item Familiarity with compliance or standards mapping as an activity
+  (Likert 1--5).
+\end{enumerate}
+
+\section{Main task}
+
+Each respondent rates the same 30 provision pairs, drawn from the annotated
+sample and stratified over all six labels, in per-respondent random order. For each pair the full
+text of both provisions is shown together with the label definitions of
+Appendix~\ref{app:labels}, and the respondent answers:
+
+\begin{enumerate}[label=Q\arabic*.]
+  \item \textbf{Relationship} --- exactly one of the six labels.
+  \item \textbf{Confidence} --- 1 (guessing) to 5 (certain).
+  \item \textbf{Justification} --- optional free text.
+\end{enumerate}
+
+Estimated completion time is 35--45 minutes. One duplicated pair with
+reversed presentation order serves as an attention check; inconsistent
+answers flag the respondent for review rather than automatic exclusion.
+
+\section{Post-task questions}
+
+\begin{enumerate}[label=P\arabic*.]
+  \item Clarity of the six label definitions (Likert 1--5).
+  \item Which pair of labels was hardest to distinguish? (choice among label
+  pairs).
+  \item Would a tool proposing candidate mappings with these labels help
+  your compliance work? (Likert 1--5 plus free text).
+\end{enumerate}
+
+\section{Analysis plan}
+
+\begin{enumerate}
+  \item \textbf{Inter-expert agreement:} Fleiss' kappa over all respondents,
+  on the six-label and the merged five-label scheme, interpreted with the
+  Landis--Koch bands~\cite{landis1977kappa}.
+  \item \textbf{Expert vs.\ ground truth:} per-item majority vote compared
+  with the stored label; percent agreement and Cohen's
+  kappa~\cite{cohen1960kappa}. Items without a majority are reported as
+  contested.
+  \item \textbf{Confidence:} mean confidence per label; point-biserial
+  correlation between low confidence and disagreement.
+  \item \textbf{Ground-truth revision:} items where the expert majority
+  disagrees with the stored label are re-examined; convincing corrections
+  enter the ground truth through a documented change log, and the full
+  evaluation is re-run to test whether the method ranking of
+  Chapter~\ref{ch:results} is stable under the revised reference.
+\end{enumerate}
+
+\section{Expected outcomes}
+
+Based on comparable annotation studies, moderate inter-expert agreement
+($\kappa \approx 0.4$--$0.6$) is expected on the six-label scheme, higher
+after merging, with the overlap/complementarity boundary as the main source
+of disagreement. The ground truth is considered validated for its purpose if
+majority agreement reaches at least 70\% on the merged scheme.

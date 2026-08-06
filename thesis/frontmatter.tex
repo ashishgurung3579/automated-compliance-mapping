@@ -1,0 +1,120 @@
+% ---------------------------------------------------------------- title page
+\begin{titlepage}
+\begin{center}
+{\small\scshape Degree Project for Master of Computer Science with\\
+Specialization in Cybersecurity\\
+Department of Engineering Science\\
+University West\par}
+
+\vspace{3cm}
+\rule{\textwidth}{1pt}\par\vspace{0.6em}
+{\LARGE\bfseries Automated Compliance Mapping for IoT and AI
+Security Standards: An NLP-Based Approach for
+ETSI EN 303 645 and EN 304 223\par}
+\vspace{0.6em}
+{\large A case study\par}
+\vspace{0.4em}
+\rule{\textwidth}{1pt}\par
+
+\vfill
+\begin{flushleft}
+Ashish Gurung\\
+Bivishan Dhungana
+\end{flushleft}
+\vspace{1.5cm}
+\includegraphics[width=0.35\textwidth]{figures/hv_logo}\par
+\end{center}
+\end{titlepage}
+
+% ------------------------------------------------------------ thesis data page
+\thispagestyle{empty}
+\begin{center}
+{\small\scshape A thesis submitted to the Department of Engineering Science\\
+in partial fulfilment of the requirements for the degree of\\
+Master of Computer Science with specialization in Cybersecurity\\
+at University West\\[0.3em]
+August 2026\par}
+\end{center}
+\vfill
+\noindent\fbox{\begin{minipage}{0.92\textwidth}\small
+\begin{tabular}{@{}p{0.28\textwidth}p{0.62\textwidth}@{}}
+\textbf{Author(s):} & Ashish Gurung\\
+                    & Bivishan Dhungana\\
+\textbf{Supervisor:} & Fatiha Djebbar\\
+\textbf{Examiner:} & Eleftherios Vlahakis\\
+\textbf{Program:} & Master Programme in Cybersecurity\\
+\textbf{Main field of study:} & Computer Science\\
+% NOTE: confirm with supervisor — degree project plan states a 15 HEC
+% one-year-master project; the earlier draft title page said 60 HEC.
+\textbf{Credits:} & 15 Higher Education credits\\
+\textbf{Keywords:} & compliance mapping, semantic similarity, large language models, IoT security, AI security\\
+\textbf{Template:} & University West, IV-Master 2.10\\
+\textbf{Publisher:} & University West, Department of Engineering Science\\
+ & S-461 86 Trollhättan, SWEDEN\\
+ & Phone: +46 520 22 30 00  Web: www.hv.se\\
+\end{tabular}
+\end{minipage}}
+\clearpage
+
+% ------------------------------------------------------------------- summary
+\chapter*{Summary}
+\addcontentsline{toc}{chapter}{Summary}
+\markboth{Summary}{}
+
+Organizations building AI-enabled IoT products must show compliance with several
+security standards at once, and aligning their overlapping requirements by hand is
+slow and demands expertise in both domains. This thesis examines how far that
+alignment can be automated for two ETSI standards: EN~303~645 for consumer IoT
+security and EN~304~223 for AI system security. A pipeline was built that extracts
+141 normative provisions from the two standards (69 and 72 respectively) and maps
+them to each other with seven methods: TF--IDF similarity, security-keyword
+matching, three transformer embedding models (Sentence-BERT, BERT, SecureBERT),
+Gemini text embeddings, and a Gemini LLM prompted to classify each of the 4{,}968
+possible pairs into one of six relationship types. Predictions were evaluated
+against two reference sets, both built by LLM-assisted annotation: a purposive
+pilot of 107 pairs reviewed by the authors, and a stratified probability sample
+of 650 pairs drawn from the full candidate space with known inclusion
+probabilities.
+
+Results depend sharply on how the reference set is built. Measured on the
+purposively assembled pilot set, where 79\% of pairs are related, BERT reaches a
+pair-detection F1 of 0.89 --- which is also what labelling every pair as related
+achieves, because general-purpose embedding spaces score nearly all provisions as
+highly similar. The probability sample puts the true rate of related pairs at
+12.4\%, and at that rate four of the seven methods score exactly the all-positive
+baseline, rejecting almost no unrelated pair. Most of that collapse is
+calibration rather than capability: re-selecting each threshold by
+cross-validation on the sample lifts Gemini embeddings to F1 0.50 and
+Sentence-BERT to 0.42 against a baseline of 0.22, differences a paired bootstrap
+separates from zero, while SecureBERT clears the baseline at no threshold at all.
+Assigning the correct relationship type is harder still: the best method reaches
+0.48 accuracy, matching but not exceeding the majority-class baseline. A separate
+finding concerns the LLM classifier, whose labels agree with themselves at
+$\kappa = 0.02$ across two runs on identical input, so its reported scores are
+not stable properties of the method. The results support automated mapping as a
+candidate-ranking aid for human reviewers, not as a replacement for expert
+judgement.
+\clearpage
+
+% ---------------------------------------------------------------- affirmation
+\chapter*{Affirmation}
+\addcontentsline{toc}{chapter}{Affirmation}
+\markboth{Affirmation}{}
+
+This master degree report, \textit{Automated Compliance Mapping for IoT and AI
+Security Standards: An NLP-Based Approach for ETSI EN 303 645 and EN 304 223},
+was written as part of the master degree work needed to obtain a Master of
+Computer Science with specialization in Cybersecurity degree at University West.
+All material in this report that is not our own is clearly identified and used in
+an appropriate and correct way. The main part of the work included in this degree
+project has not previously been published or used for obtaining another degree.
+
+\vspace{2.5cm}
+\noindent
+\begin{tabular}{@{}p{0.45\textwidth}p{0.08\textwidth}p{0.35\textwidth}@{}}
+\rule{\linewidth}{0.4pt} & & \rule{\linewidth}{0.4pt}\\
+Ashish Gurung & & Date\\[2.5cm]
+\rule{\linewidth}{0.4pt} & & \rule{\linewidth}{0.4pt}\\
+Bivishan Dhungana & & Date\\
+\end{tabular}
+\clearpage

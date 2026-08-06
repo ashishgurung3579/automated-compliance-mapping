@@ -1,0 +1,116 @@
+\chapter{Introduction}\label{ch:introduction}
+
+Industrial automation is shifting from traditional rule-based control towards
+systems that incorporate artificial intelligence and, increasingly, agentic
+behaviour~\cite{aslam2025industrial}. At the same time, the number of connected
+IoT devices keeps growing, and each device widens the attack surface: weak
+authentication, unprotected update channels, and exposure of personal data are
+recurring problems~\cite{alotaibi2023iiot,meziane2023survey}. Standardization
+bodies have responded with security baselines for these technologies. Two of
+them are central to this thesis. \standardA{} defines baseline cybersecurity
+provisions for consumer IoT devices, covering areas such as password policy,
+secure communication, software updates, and protection of personal
+data~\cite{etsi303645}. \standardB{}, published by the ETSI committee on
+Securing Artificial Intelligence, defines baseline security requirements for AI
+models and systems across their life cycle, from secure design to secure end of
+life~\cite{etsi304223}.
+
+A company that ships an AI-enabled IoT product falls under both documents.
+Demonstrating compliance then means working out how the two sets of
+requirements relate: which provisions say essentially the same thing, which
+overlap partially, which cover different aspects of a shared objective, and
+which have no counterpart at all. Both standards express their requirements in
+natural language, at different levels of abstraction and with
+domain-specific vocabulary, so this mapping work is done manually today. It is
+slow, error-prone, and requires expertise in both IoT and AI
+security~\cite{kosenkov2025systematic,djebbar2023comparative}. The burden grows
+with every additional regulation --- the EU Cyber Resilience Act and the AI Act
+add their own requirement catalogues on top of the sector
+standards~\cite{canavese2026uncovering}.
+
+Recent progress in natural language processing offers a way to reduce this
+effort. Embedding models built on transformers can measure semantic similarity
+between sentences even when the wording differs~\cite{devlin2019bert,
+reimers2019sbert}, and large language models can be prompted to judge the
+relationship between two requirements directly~\cite{rodriguez2024llm}. Whether
+these techniques are accurate enough for security standards --- where precision
+and traceability matter --- is still an open question, and that question is what
+this thesis investigates.
+
+\section{Motivation}\label{sec:motivation}
+
+Compliance mapping sits in an awkward middle ground. It is too language-heavy
+for classical rule-based tooling, yet too consequential to hand over to an
+opaque model without evidence of its reliability. Published work on automated
+compliance analysis reports promising results in neighbouring domains ---
+privacy policies, GDPR data processing agreements, cloud security
+posture~\cite{rodriguez2024llm,cejas2023gdpr,barhaim2023cloud} --- but the
+specific task of mapping one security standard onto another has received little
+systematic evaluation. By implementing a spectrum of methods, from keyword
+matching to LLM classification, and scoring them against a common expert
+reference on a real standard pair, this project produces evidence about where
+automation helps, where it fails, and where human expertise remains
+indispensable. The results are relevant both to researchers working on NLP for
+requirements engineering and to practitioners who need to decide whether
+AI-assisted compliance tools can be trusted in their processes.
+
+\section{Aim}\label{sec:aim}
+
+The project builds and evaluates an NLP-based pipeline that identifies semantic
+relationships between the provisions of \standardA{} and \standardB{}. The aim
+is not to develop new model architectures but to establish, empirically, how
+well existing techniques perform on this task. Concretely, the project (i)
+extracts the normative provisions of both standards into a structured dataset,
+(ii) applies seven automated mapping methods spanning rule-based, embedding-based,
+and LLM-based approaches, (iii) evaluates them against an expert-reviewed ground
+truth of annotated provision pairs, and (iv) analyses the errors to
+characterise the limitations of each method family. The outcome is a grounded
+assessment of the feasibility of automated compliance mapping between IoT and
+AI security standards, together with a reusable dataset and evaluation
+framework.
+
+\section{Research questions}\label{sec:rqs}
+
+\begin{enumerate}[label=\textbf{RQ\arabic*.},leftmargin=3.2em]
+  \item To what extent can NLP and AI techniques automatically identify
+  semantic relationships (equivalence, overlap, subsumption, complementarity)
+  between security requirements in \standardA{} and \standardB{}, and what are
+  the fundamental challenges and limitations?
+  \item How do different automated approaches --- rule-based methods,
+  transformer embedding models (Sentence-BERT, BERT, SecureBERT), and
+  LLM-based methods (Gemini embeddings and Gemini prompt classification) ---
+  compare on the compliance mapping task?
+  \item How does automated mapping compare to expert judgement in terms of
+  accuracy, coverage, efficiency, and interpretability?
+\end{enumerate}
+
+\section{Contributions}\label{sec:contributions}
+
+The main contributions of this degree project are:
+
+\begin{itemize}
+  \item A structured dataset of 141 normative provisions extracted from
+  \standardA{} and \standardB{}, and a ground-truth mapping of 107 provision
+  pairs annotated with six relationship types, justifications, and confidence
+  scores.
+  \item An open, reproducible pipeline implementing seven mapping methods ---
+  TF--IDF, security-keyword Jaccard matching, Sentence-BERT, BERT, SecureBERT,
+  Gemini embeddings, and Gemini LLM classification --- with a common evaluation
+  harness.
+  \item An empirical comparison of these methods on pair detection and
+  relationship classification, including confidence intervals, threshold
+  sensitivity analysis, and qualitative error analysis.
+  \item Evidence-based observations on why general-purpose embedding models
+  overestimate similarity between security requirements, and on the practical
+  role automated mapping can play in compliance work today.
+\end{itemize}
+
+\section{Outline}
+
+Chapter~\ref{ch:background} introduces the two standards and reviews related
+work on automated compliance analysis. Chapter~\ref{ch:methodology} describes
+the research design: data extraction, the relationship taxonomy, ground-truth
+construction and validation, the mapping methods, and the evaluation metrics.
+Chapter~\ref{ch:prototype} presents the implemented pipeline.
+Chapter~\ref{ch:results} reports and discusses the experimental results, and
+Chapter~\ref{ch:conclusion} concludes and outlines future work.

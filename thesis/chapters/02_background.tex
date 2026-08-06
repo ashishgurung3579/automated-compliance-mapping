@@ -1,0 +1,179 @@
+\chapter{Background and Related Work}\label{ch:background}
+
+This chapter gives the technical and regulatory context for the project. It
+first introduces the two standards and the security challenges they respond
+to, then describes compliance mapping as an activity, summarises the NLP and
+LLM techniques the project builds on, and finally reviews prior studies on
+automated compliance analysis.
+
+\section{Background}
+
+\subsection{IoT security and \standardA{}}
+
+Consumer IoT devices are network-connected by design, often built on
+constrained hardware, and frequently shipped with weak defaults. Recurring
+weaknesses include poor authentication mechanisms, unprotected software
+updates, unencrypted communication, unnecessarily exposed interfaces, and
+insufficient protection of personal
+data~\cite{sicari2015security,vardakis2024smarthome}. Because such devices sit
+in homes and workplaces, even small security failures translate into concrete
+privacy and safety risks~\cite{mocrii2018smarthomes}.
+
+\standardA{} (\textit{Cyber Security for Consumer Internet of Things: Baseline
+Requirements}) addresses these weaknesses with thirteen groups of provisions,
+including no universal default passwords, vulnerability disclosure, keeping
+software updated, secure communication, minimising attack surfaces, and
+ensuring the protection of personal data~\cite{etsi303645}. The standard is
+outcome-focused: it states what a device must achieve rather than prescribing
+implementations, and it distinguishes mandatory provisions (``shall'') from
+recommendations (``should''). Its provisions are organised in numbered clauses
+(e.g., provision~5.3-3 on update mechanisms), which makes it a practical anchor
+for systematic mapping.
+
+\subsection{AI system security and \standardB{}}
+
+AI systems face threats that classical software security does not fully cover:
+training data poisoning, model manipulation and theft, adversarial inputs, and
+prompt injection in systems built on large models~\cite{chen2024mlsecurity,
+he2025aisecurity}. Security work for AI must therefore address the model
+life cycle --- data collection, training, deployment, maintenance, and
+disposal --- rather than only the running system.
+
+\standardB{} (\textit{Securing Artificial Intelligence: Baseline Cyber
+Security Requirements}) structures its provisions along exactly that life
+cycle: secure design (clause 5.1), secure development (5.2), secure deployment
+(5.3), secure maintenance (5.4), and secure end of life (5.5)~\cite{etsi304223}.
+Within these phases it covers AI-specific control areas such as threat and risk
+management, documentation and auditability of models, protection of datasets
+and prompts, supply-chain security, security testing, behavioural monitoring,
+and secure disposal of data and models. The provision-based, life-cycle
+structure parallels the clause organisation of \standardA{}, which is what
+makes a pairwise mapping between the two documents feasible in the first
+place.
+
+\subsection{Compliance mapping}
+
+Compliance mapping is the activity of relating the requirements of one
+framework to those of another, so that evidence collected for one can be
+reused for the other and gaps become visible. Studies of security standards
+report that overlapping controls, inconsistent terminology, and fragmented
+requirements are common across frameworks, and that mapping them requires
+interpretation of purpose and security objective, not just wording
+~\cite{djebbar2023comparative,mussmann2020mappings}. Similar observations come
+from the GDPR domain, where manual compliance checking is described as
+time-consuming and dependent on scarce legal-technical
+expertise~\cite{cejas2023gdpr,negri2024gdpr}. Castellanos Ardila et
+al.~\cite{castellanos2022compliance} likewise find that manual compliance
+checking of software processes is labour-intensive and hard to scale.
+
+Automated approaches try to reduce this effort by extracting requirements from
+the documents and comparing them algorithmically, classifying pairs as
+identical, related, partially overlapping, or unrelated~\cite{sleimi2021legal}.
+Beyond saving effort, automation promises consistency: the same criteria are
+applied to every pair, which manual mapping cannot guarantee. The open question
+is accuracy, and that is the subject of this thesis.
+
+\subsection{NLP and LLM techniques for requirement analysis}
+
+\paragraph{Semantic similarity.}
+Standards frequently express similar objectives with different terminology ---
+device-focused language in \standardA{}, life-cycle and governance language in
+\standardB{}. Keyword matching fails on such vocabulary mismatch, a problem
+long recognised in requirements traceability
+research~\cite{mahmoud2015semantics,rajpathak2022linking}. Semantic approaches
+map text into vector spaces where related meanings land close together, and
+have been shown to outperform lexical matching for requirement tracing
+~\cite{mahmoud2015semantics}.
+
+\paragraph{NLP pipelines.}
+NLP has been applied across requirements engineering tasks: extracting domain
+concepts, detecting language defects, and establishing traceability links
+~\cite{zhao2021nlp4re,sonbol2022representation}. A typical pipeline extracts
+normative statements, normalises the text, and converts each requirement into
+a numerical representation suitable for comparison. Legal and regulatory text
+adds difficulties of its own --- context-dependent terminology, implicit
+meaning, and complex cross-references~\cite{ariai2025legal}.
+
+\paragraph{Transformer models.}
+Transformer architectures learn contextual representations of language through
+self-attention. BERT~\cite{devlin2019bert} provides bidirectional contextual
+embeddings that transfer well to many NLP tasks. For sentence-level
+comparison, Sentence-BERT~\cite{reimers2019sbert} fine-tunes a Siamese
+architecture so that cosine similarity between sentence embeddings reflects
+semantic relatedness, making large-scale pairwise comparison cheap.
+SecureBERT~\cite{aghaei2022securebert} adapts a RoBERTa-based model to
+cybersecurity text, motivating its inclusion here as a domain-tuned
+alternative. One caveat known from the literature is that the embedding spaces
+of contextual models are anisotropic --- vectors concentrate in a narrow cone,
+so unrelated sentences can still receive high cosine
+similarity~\cite{ethayarajh2019contextual}. This property turns out to matter
+for the results in Chapter~\ref{ch:results}.
+
+\paragraph{Large language models.}
+LLMs can be prompted to compare two requirements directly and output a
+relationship judgement, capturing nuances that similarity scores flatten.
+Reported drawbacks include computational cost, limited reproducibility, and
+sensitivity to prompt design~\cite{jamshidi2025llmiot,rodriguez2024llm}.
+
+\paragraph{Gap analysis.}
+Mapping two standards also serves gap analysis: identifying objectives covered
+by one document but not the other. \standardA{} concentrates on device-level
+baseline security while \standardB{} concentrates on the AI life cycle, so
+their relationship is expected to consist mostly of partial overlaps and
+complementary provisions rather than one-to-one equivalences
+~\cite{etsi303645,etsi304223}. The task definition therefore covers partial and
+absent alignment as well as strong matches.
+
+\section{Related work}
+
+\subsection{Automated compliance mapping in cybersecurity}
+
+Bar-Haim et al.~\cite{barhaim2023cloud} automate the assessment of
+organizational cybersecurity posture in cloud environments by mapping
+free-text security requirements to control frameworks --- a NIST-based
+framework of 280 controls in 22 families and a finer-grained three-level risk
+framework of 169 categories. They formulate mapping as supervised text-pair
+classification with RoBERTa and SBERT models and use hard negative sampling to
+force the models to separate semantically close but non-equivalent controls.
+Their best combined model reaches about 72\% precision@1 for control-family
+mapping and 55\% for individual controls, degrading as granularity increases.
+The authors conclude the approach suits a human-in-the-loop workflow rather
+than autonomous operation --- a conclusion this thesis revisits for the
+standard-to-standard setting.
+
+\subsection{NLP and semantic techniques for requirement mapping}
+
+Sapkota et al.~\cite{sapkota2016regcmantic} present RegCMantic, a framework
+that maps regulatory guidelines to organizational processes. Regulatory
+documents are parsed into a uniform XML structure, requirement entities
+(subject, obligation, action) are extracted into an ontology, and mapping uses
+three similarity measures over topics, core entities, and auxiliary entities.
+In a pharmaceutical case study the extended framework improves extraction
+F-measure from 0.83 to 0.91 and performs mapping evaluated against
+expert-created references at a 0.85 similarity threshold. The study
+demonstrates that ontology-supported NLP can automate requirement mapping,
+while noting that ambiguity and implicit, domain-specific meaning remain the
+hard part --- the same difficulties observed with the standards studied here.
+
+\subsection{LLM-based compliance analysis}
+
+Rodríguez et al.~\cite{rodriguez2024llm} investigate LLMs for large-scale
+privacy policy analysis, comparing ChatGPT and Llama~2 against earlier
+symbolic and machine-learning baselines on the MAPP and OPP-115 datasets.
+With a two-shot prompt design their best configuration exceeds 93\% F1,
+outperforming prior techniques while requiring less annotated data and
+engineering effort. The study is limited to privacy policies, but it provides
+strong evidence that prompted LLMs can support compliance-oriented text
+analysis, motivating the inclusion of an LLM classification method in this
+project.
+
+\subsection{Positioning of this thesis}
+
+Prior work automates mapping between requirements and control frameworks
+~\cite{barhaim2023cloud}, between regulations and business processes
+~\cite{sapkota2016regcmantic}, and classification within privacy policies
+~\cite{rodriguez2024llm}. Mapping two security standards to each other ---
+with a typed relationship taxonomy rather than a binary match --- has not, to
+our knowledge, been evaluated systematically for the IoT/AI standard pair.
+This project fills that gap with a controlled comparison of seven methods
+against a common expert-reviewed reference.

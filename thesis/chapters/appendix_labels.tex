@@ -1,0 +1,42 @@
+\chapter{Relationship Label Definitions}\label{app:labels}
+
+The definitions below were used both for ground-truth annotation and in the
+prompt of the LLM classification method. $a$ denotes a provision from
+\standardA{}, $b$ a provision from \standardB{}.
+
+\section*{Equivalence}
+$a$ and $b$ express the same security objective with comparable scope.
+Compliance with one gives strong evidence of compliance with the other.
+\emph{Decision aid:} if an auditor would accept evidence for $a$ as evidence
+for $b$ without further argument, the pair is equivalent.
+
+\section*{Subsumption (A broader)}
+$a$'s objective fully contains $b$'s: everything $b$ requires is required by
+$a$, but $a$ requires more. \emph{Decision aid:} compliance with $a$ implies
+compliance with $b$, not conversely.
+
+\section*{Subsumption (B broader)}
+The mirror case: compliance with $b$ implies compliance with $a$.
+
+\section*{Overlap}
+The objectives intersect: part of what $a$ requires is also required by $b$,
+but each provision also covers ground the other does not. Evidence can be
+partially reused; a gap analysis is still needed for the uncovered parts.
+
+\section*{Complementarity}
+$a$ and $b$ address different aspects of a common security goal without
+overlapping scope --- for example, one requires a technical mechanism and the
+other requires user-facing guidance about it. Implementing both is what
+produces the protection; neither substitutes for the other.
+
+\section*{No relation}
+No meaningful connection between the objectives. Used both for obviously
+unrelated pairs and --- more importantly for evaluation --- for pairs that
+share vocabulary but not objective.
+
+\section*{Annotation rules}
+Each pair receives exactly one label, a one-sentence justification, and a
+confidence score: 1 (uncertain), 2 (reasonably confident), 3 (certain). When
+several labels seem defensible, the annotator picks the most specific one
+that the provision \emph{texts} (not assumed intent) support, and records the
+doubt in the justification.
