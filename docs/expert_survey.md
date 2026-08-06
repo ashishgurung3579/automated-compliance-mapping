@@ -98,7 +98,7 @@ with swapped order) is included; inconsistent answers flag the respondent for re
    re-examined and, where the experts are convincing, the ground truth is revised in
    a documented change log before final evaluation runs.
 5. **Method ranking stability:** re-run the full evaluation with the expert-revised
-   ground truth and report whether the ranking of the seven automated methods
+   ground truth and report whether the ranking of the eleven automated methods
    changes.
 
 ## 8. Expected outcomes

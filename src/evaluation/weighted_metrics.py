@@ -16,11 +16,12 @@ between methods is at least made at comparable operating points.
 Writes data/evaluation/weighted_metrics.json.
 """
 import json
-from itertools import combinations
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from src.methods import METHODS, with_matrix
 
 BASE = Path(__file__).parents[2]
 DATA = BASE / "data"
@@ -34,28 +35,13 @@ CANDIDATE_SPACE = 4968
 
 # Rows follow EN 303 645 provision order, columns EN 304 223, matching the
 # extracted JSON files. Same matrices analysis.py sweeps on the pilot set.
-SIM_MATRICES = {
-    "rule_based_tfidf": MAP_DIR / "tfidf_similarity_matrix.npy",
-    "sbert": MAP_DIR / "sbert_similarity_matrix.npy",
-    "bert": MAP_DIR / "bert_similarity_matrix.npy",
-    "securebert": MAP_DIR / "securebert_similarity_matrix.npy",
-    "gemini_embedding": MAP_DIR / "gemini_embedding_similarity_matrix.npy",
-}
+SIM_MATRICES = {k: m.matrix for k, m in with_matrix().items()}
 
-PREDICTION_FILES = {
-    "rule_based_tfidf": "rule_based_tfidf.csv",
-    "rule_based_jaccard": "rule_based_jaccard.csv",
-    "sbert": "sbert_output.csv",
-    "bert": "bert_output.csv",
-    "securebert": "securebert_output.csv",
-    "gemini_embedding": "gemini_embedding_output.csv",
-    "gemini_llm": "gemini_output.csv",
-}
+PREDICTION_FILES = {k: m.predictions for k, m in METHODS.items()}
 
 
-def load_predictions(filename: str) -> set[tuple[str, str]]:
+def load_predictions(path: Path) -> set[tuple[str, str]]:
     """Pairs a method calls related. Absent pairs count as NO_RELATION."""
-    path = MAP_DIR / filename
     if not path.exists():
         return None
     df = pd.read_csv(path)
@@ -209,8 +195,29 @@ def design_effect(sample: pd.DataFrame) -> dict:
     }
 
 
+def contrast_set(preds: dict[str, np.ndarray], reference: str) -> list[tuple[str, str]]:
+    """The comparisons that get reported, fixed by rule rather than exhaustive.
+
+    All pairs of eleven methods and their recalibrated variants is over two
+    hundred intervals, and reporting two hundred uncorrected 95% intervals
+    guarantees false findings among them. Two questions carry the argument --
+    does a method beat the all-positive baseline, and does anything beat the best
+    method -- so those are the contrasts computed.
+
+    The rule is fixed, but the reference is not: it is whichever method scores
+    highest on this sample. Differences measured against a selected maximum are
+    biased in that maximum's favour, because the selection absorbs some of the
+    sampling noise. The intervals here are therefore read as descriptive rather
+    than as a test that the reference is best.
+    """
+    names = [n for n in preds if n != "all_positive"]
+    pairs = [(n, "all_positive") for n in names]
+    pairs += [(n, reference) for n in names if n != reference]
+    return pairs
+
+
 def paired_differences(sample: pd.DataFrame, preds: dict[str, np.ndarray],
-                       rng) -> dict:
+                       rng, contrasts: list[tuple[str, str]]) -> dict:
     """Bootstrap CIs for between-method differences, both methods on the same draw.
 
     Comparing two marginal intervals for overlap is not a test of the difference:
@@ -246,7 +253,7 @@ def paired_differences(sample: pd.DataFrame, preds: dict[str, np.ndarray],
 
     point = rates(np.arange(len(sample)))
     out = {}
-    for a, b in combinations(names, 2):
+    for a, b in contrasts:
         entry = {}
         for metric in ("f1", "specificity"):
             diffs = [d[a][metric] - d[b][metric] for d in draws]
@@ -309,7 +316,7 @@ if __name__ == "__main__":
     print(f"{'method':<22}{'thresh.':>9}{'precision':>11}{'recall':>9}"
           f"{'specif.':>9}{'F1':>8}")
     for method, path in SIM_MATRICES.items():
-        if not path.exists():
+        if not path.exists() or method not in results["methods"]:
             continue
         scores = sample_scores(np.load(path), sample, src_ids, tgt_ids)
         cal = corpus_threshold(scores, sample)
@@ -335,11 +342,20 @@ if __name__ == "__main__":
           f"{b['specificity']:>9.3f}{b['f1']:>8.3f}")
 
     paired_preds["all_positive"] = np.ones(len(sample), dtype=bool)
-    results["paired_differences"] = paired_differences(sample, paired_preds, rng)
+
+    reference = max((n for n in paired_preds if n != "all_positive"),
+                    key=lambda n: weighted_rates(sample.assign(
+                        actual=(sample.relationship != "NO_RELATION").astype(int),
+                        pred=paired_preds[n].astype(int)))["f1"])
+    contrasts = contrast_set(paired_preds, reference)
+    results["paired_reference"] = reference
+    results["paired_differences"] = paired_differences(
+        sample, paired_preds, rng, contrasts)
 
     significant = [k for k, v in results["paired_differences"].items()
                    if v["f1"]["excludes_zero"]]
-    print(f"\nPaired F1 differences excluding zero: {len(significant)} of "
+    print(f"\nReference for paired comparisons: {reference}")
+    print(f"Paired F1 differences excluding zero: {len(significant)} of "
           f"{len(results['paired_differences'])} comparisons")
 
     (EVAL_DIR / "weighted_metrics.json").write_text(json.dumps(results, indent=2))

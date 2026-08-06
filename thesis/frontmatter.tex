@@ -67,10 +67,13 @@ slow and demands expertise in both domains. This thesis examines how far that
 alignment can be automated for two ETSI standards: EN~303~645 for consumer IoT
 security and EN~304~223 for AI system security. A pipeline was built that extracts
 141 normative provisions from the two standards (69 and 72 respectively) and maps
-them to each other with seven methods: TF--IDF similarity, security-keyword
-matching, three transformer embedding models (Sentence-BERT, BERT, SecureBERT),
-Gemini text embeddings, and a Gemini LLM prompted to classify each of the 4{,}968
-possible pairs into one of six relationship types. Predictions were evaluated
+them to each other with eleven methods spanning five families: TF--IDF
+similarity and security-keyword matching; three sentence-embedding models
+(Sentence-BERT, MPNet, BGE); three contextual-embedding models pooled from
+masked language models (BERT, SecureBERT, CySecBERT); an NLI cross-encoder that
+reads each pair in both directions and is the only method able to express
+subsumption; Gemini text embeddings; and a Gemini LLM prompted to classify each
+of the 4{,}968 possible pairs into one of six relationship types. Predictions were evaluated
 against two reference sets, both built by LLM-assisted annotation: a purposive
 pilot of 107 pairs reviewed by the authors, and a stratified probability sample
 of 650 pairs drawn from the full candidate space with known inclusion
@@ -81,12 +84,17 @@ purposively assembled pilot set, where 79\% of pairs are related, BERT reaches a
 pair-detection F1 of 0.89 --- which is also what labelling every pair as related
 achieves, because general-purpose embedding spaces score nearly all provisions as
 highly similar. The probability sample puts the true rate of related pairs at
-12.4\%, and at that rate four of the seven methods score exactly the all-positive
-baseline, rejecting almost no unrelated pair. Most of that collapse is
-calibration rather than capability: re-selecting each threshold by
-cross-validation on the sample lifts Gemini embeddings to F1 0.50 and
-Sentence-BERT to 0.42 against a baseline of 0.22, differences a paired bootstrap
-separates from zero, while SecureBERT clears the baseline at no threshold at all.
+12.4\%, and at that rate four of the eleven methods are statistically
+indistinguishable from the all-positive baseline, rejecting almost no unrelated
+pair. Most of that collapse is calibration rather than capability: re-selecting
+each threshold by cross-validation on the sample lifts Gemini embeddings to F1
+0.50, BGE to 0.44, MPNet to 0.43 and Sentence-BERT to 0.42 against a baseline of
+0.22, differences a paired bootstrap separates from zero --- but not from each
+other, so the best freely available local model matches the hosted commercial
+one within the resolution of this sample. Domain-adapted cybersecurity models
+fare worst: SecureBERT clears the baseline at no threshold at all, and CySecBERT,
+adapted independently by another group, finishes below the general-purpose BERT
+both were built from.
 Assigning the correct relationship type is harder still: the best method reaches
 0.48 accuracy, matching but not exceeding the majority-class baseline. A separate
 finding concerns the LLM classifier, whose labels agree with themselves at

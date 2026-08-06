@@ -3,8 +3,9 @@
 This thesis asked how far the mapping of security requirements between
 \standardA{} and \standardB{} can be automated with current NLP and LLM
 techniques. A five-stage pipeline was built that extracts 141 normative
-provisions from the two standards, maps them with seven methods spanning
-lexical, embedding, and LLM approaches, and evaluates all of them against two
+provisions from the two standards, maps them with eleven methods spanning
+lexical, sentence-embedding, contextual-embedding, cross-encoder and hosted API
+approaches, and evaluates all of them against two
 reference sets: an author-reviewed pilot of 107 pairs and a stratified
 probability sample of 650 pairs drawn from the full candidate space.
 
@@ -14,30 +15,39 @@ largely feasible: with a calibrated threshold the best model reaches
 pair-detection F1 above 0.9, and cross-validation confirms that figure is not an
 artefact of tuning. Estimated over the whole candidate space from the probability
 sample, the picture changes. Related pairs make up 12.4\% of the space rather
-than the pilot's 79\%, and at that base rate four of the seven methods score
+than the pilot's 79\%, and at that base rate four of the eleven methods score
 what a classifier that labels every pair related would score.
 
 Most of that collapse turns out to be calibration rather than capability. The
 thresholds were selected on the pilot set, and re-selecting them by
-cross-validation on the probability sample lifts Gemini embeddings to F1 0.501
-and Sentence-BERT to 0.416 against an all-positive baseline of 0.221, margins
-that a paired bootstrap separates from zero. The two leaders are not separable
-from each other. SecureBERT does not clear the baseline under any threshold,
-because its scores span a band 0.06 wide across the entire corpus. The practical
+cross-validation on the probability sample lifts Gemini embeddings to F1 0.501,
+BGE to 0.441, MPNet to 0.434 and Sentence-BERT to 0.416 against an all-positive
+baseline of 0.221, margins that a paired bootstrap separates from zero. Those
+four leaders are not separable from one another, which is the more useful
+finding: three freely available local models match a hosted commercial one on
+this task. SecureBERT does not clear the baseline under any threshold, because
+its scores span a band 0.10 wide across the entire corpus, and CySecBERT --- a
+second, independently built cybersecurity model --- clears it only barely and
+still finishes below the plain BERT it was adapted from. The practical
 lesson is sharper than a warning about optimistic benchmarks: a development set
 at the wrong base rate does not merely inflate the reported score, it fixes an
 operating point that turns a working model into a constant function.
 Determining \emph{how}
 two provisions relate is not solved: the best method (Gemini embeddings)
 reaches 47.7\% label accuracy and 0.279 macro-F1, only matching the accuracy of
-simply labelling every pair with the majority class, and no similarity-based
-method can represent directional subsumption even in principle. Two failure
-mechanisms recur across the experiments --- the anisotropy of general-purpose
-embedding spaces, which drives BERT-family models into degenerate
-``everything is similar'' behaviour, and the mismatch between scalar
-similarity and a typed relationship taxonomy. Notably, cybersecurity-specific
-pretraining (SecureBERT) did not help; task-specific training for sentence
-comparison (Sentence-BERT) did.
+simply labelling every pair with the majority class. No similarity-based method
+can represent directional subsumption even in principle, and the cross-encoder
+added here to test that limit confirms both halves of it: reading each pair in
+both directions does recover subsumption, producing 123 such labels where the
+other ten methods produce none, but at a recall too low to be useful and at
+roughly sixty times the compute. Two failure mechanisms recur across the
+experiments --- the anisotropy of general-purpose embedding spaces, which drives
+BERT-family models into degenerate ``everything is similar'' behaviour, and the
+mismatch between scalar similarity and a typed relationship taxonomy. Notably,
+cybersecurity-specific pretraining did not help in either of the two independent
+attempts tested (SecureBERT, CySecBERT), while task-specific training for
+sentence comparison did in all three (Sentence-BERT, MPNet, BGE). What the model
+was trained to do predicts its behaviour here; what it was trained on does not.
 
 For practice, the results position automated compliance mapping as
 decision support: rank candidates automatically, let humans assign the
@@ -78,9 +88,11 @@ documents with identifiable normative clauses can be substituted.
 Four directions follow naturally. First, execute the expert validation survey
 designed in Appendix~\ref{app:survey} to put the ground truth on a
 multi-rater footing and to calibrate the human agreement ceiling. Second,
-replace fixed thresholds with learned classifiers over embedding pairs
-(concatenation or cross-encoders), which could recover subsumption direction
-from asymmetric features. Third, revisit the prompt given to the LLM
+pursue the cross-encoder result. Entailment scoring is the only approach here
+that recovers subsumption direction, and it does so untrained; a cross-encoder
+fine-tuned on requirement pairs, rather than borrowed from general natural
+language inference, is the obvious next step, and the annotated reference sets
+are the training data for it. Third, revisit the prompt given to the LLM
 classifier. Its overuse of complementarity tracks the wording of the label
 definition rather than the difficulty of the pairs --- ``related but different
 concerns that work together'' admits almost any two security requirements ---

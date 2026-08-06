@@ -10,20 +10,14 @@ import re
 import sys
 from pathlib import Path
 
+from src.methods import THESIS_ROWS
+
 BASE = Path(__file__).parents[2]
 EVAL = BASE / "data" / "evaluation"
 RESULTS_TEX = BASE / "thesis" / "chapters" / "05_results.tex"
 
 # thesis row label -> method key in the JSON files
-ROWS = {
-    "TF--IDF": "rule_based_tfidf",
-    "Keyword Jaccard": "rule_based_jaccard",
-    "Sentence-BERT": "sbert",
-    "BERT": "bert",
-    "SecureBERT": "securebert",
-    "Gemini embeddings": "gemini_embedding",
-    "Gemini LLM": "gemini_llm",
-}
+ROWS = THESIS_ROWS
 
 
 def strip_tex(cell: str) -> str:
@@ -56,10 +50,16 @@ if __name__ == "__main__":
     tex = RESULTS_TEX.read_text()
     summary = json.loads((EVAL / "evaluation_summary.json").read_text())
     analysis = json.loads((EVAL / "analysis.json").read_text())
+    weighted = json.loads((EVAL / "weighted_metrics.json").read_text())
     errors: list[str] = []
+    checked = 0
+
+    # A method that has been run but has no thesis row is the drift this guard
+    # exists to catch, so only methods absent from the data are skipped.
+    evaluated = {label: key for label, key in ROWS.items() if key in summary}
 
     det = parse_rows(tex, "tab:detection")
-    for label, key in ROWS.items():
+    for label, key in evaluated.items():
         d = summary[key]["detection"]
         cells = det.get(label)
         if cells is None:
@@ -71,9 +71,10 @@ if __name__ == "__main__":
             ("precision", ".3f"), ("recall", ".3f"), ("f1", ".3f"),
         ]):
             check(f"detection/{label}/{field}", cells[i], d[field], fmt, errors)
+            checked += 1
 
     cls = parse_rows(tex, "tab:classification")
-    for label, key in ROWS.items():
+    for label, key in evaluated.items():
         c = summary[key]["classification"]
         b = analysis[key]["bootstrap"]["macro_f1"]
         cells = cls.get(label)
@@ -88,12 +89,10 @@ if __name__ == "__main__":
         if cells[2] != expected_ci:
             errors.append(f"classification/{label}/CI: thesis says {cells[2]!r}, "
                           f"data says {expected_ci!r}")
-
-    weighted = json.loads((EVAL / "weighted_metrics.json").read_text())
-    checked = len(ROWS) * 10
+        checked += 3
 
     wt = parse_rows(tex, "tab:weighted")
-    for label, key in ROWS.items():
+    for label, key in evaluated.items():
         p = weighted["methods"][key]["point"]
         cells = wt.get(label)
         if cells is None:
@@ -104,10 +103,13 @@ if __name__ == "__main__":
             checked += 1
 
     cal = parse_rows(tex, "tab:calibrated")
-    for label, key in ROWS.items():
+    for label, key in evaluated.items():
         c = weighted["methods"][key].get("corpus_calibrated")
+        if c is None:
+            continue
         cells = cal.get(label)
-        if c is None or cells is None:
+        if cells is None:
+            errors.append(f"calibrated table: row {label!r} missing")
             continue
         check(f"calibrated/{label}/threshold", cells[0], c["threshold"], ".3f", errors)
         for i, field in enumerate(["precision", "recall", "f1"], start=1):

@@ -1,0 +1,30 @@
+\chapter{Predicted Provision Mapping}\label{app:mapping}
+
+The table below is the mapping this project produces: every pair of provisions
+that the best-scoring method flags as related at its corpus-calibrated
+threshold, with the similarity score that produced the flag. It is included
+because it is the artefact a compliance practitioner would actually use, and
+because a comparative mapping study is expected to show its mapping rather than
+only summary statistics of it.
+
+\medskip
+\noindent\textbf{This is a predicted mapping, not a verified one.} Every row is
+the output of an automated method whose precision was measured on a probability
+sample of the candidate space and found to be well below one; the measured
+value and its confidence interval are printed in
+Table~\ref{tab:calibrated} and in the caption of
+Figure~\ref{fig:coverage}. A substantial fraction of the rows below are
+therefore wrong, and the table is not a claim about how the two standards
+relate. It is a shortlist: the pairs an analyst would examine first, in the
+order the method ranks them. The verified statements in this thesis are the
+estimates in Section~\ref{sec:prevalence}, which carry intervals; nothing in
+this appendix does.
+
+\medskip
+\noindent Rows are grouped by \standardA{} provision and ordered within a group
+by descending score. The table is generated directly from the evaluation
+outputs by the \texttt{coverage} module, so it cannot drift from the data
+it summarises.
+
+\bigskip
+\input{tables/predicted_mapping}

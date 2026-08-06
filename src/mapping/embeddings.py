@@ -1,10 +1,23 @@
 """
 Shared embedding utilities for BERT-family models and SBERT.
 """
+import json
+from pathlib import Path
+
 import numpy as np
 import torch
 from transformers import AutoTokenizer, AutoModel
 from sentence_transformers import SentenceTransformer
+
+DATA = Path(__file__).parents[2] / "data"
+
+
+def load_provisions() -> tuple[list[dict], list[dict]]:
+    """The extracted provisions of both standards, in the order every similarity
+    matrix is indexed by: rows EN 303 645, columns EN 304 223."""
+    p1 = json.loads((DATA / "extracted" / "en303645_provisions.json").read_text())
+    p2 = json.loads((DATA / "extracted" / "en304223_provisions.json").read_text())
+    return p1, p2
 
 
 def embed_with_transformers(

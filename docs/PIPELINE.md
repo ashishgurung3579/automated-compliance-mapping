@@ -214,7 +214,7 @@ Each method tries to predict related provision pairs.
 
 ---
 
-## 7. Mapping Method 1 - Rule-Based Mapping
+## 7. Mapping Methods 1-2 - Rule-Based Mapping
 
 Script:
 
@@ -260,132 +260,104 @@ What each file means:
 
 ---
 
-## 8. Mapping Method 2 - SBERT Mapping
+## 8. Mapping Methods 3-8 - Embedding Models
 
 Script:
 
 ```text
-src/mapping/sbert_mapping.py
+src/mapping/run_embedding.py
+```
+
+Run commands:
+
+```bash
+python3 -m src.mapping.run_embedding sbert
+python3 -m src.mapping.run_embedding --all
+```
+
+The three original entry points still work and simply call the runner:
+
+```bash
+python3 -m src.mapping.sbert_mapping
+python3 -m src.mapping.bert_mapping
+python3 -m src.mapping.securebert_mapping
+```
+
+Models used:
+
+```text
+sbert       all-MiniLM-L6-v2                  sentence-embedding
+mpnet       sentence-transformers/all-mpnet-base-v2   sentence-embedding
+bge         BAAI/bge-base-en-v1.5             sentence-embedding
+bert        bert-base-uncased                 contextual-embedding
+securebert  ehsanaghaei/SecureBERT            contextual-embedding
+cysecbert   markusbayer/CySecBERT             contextual-embedding
+```
+
+Every model, its threshold, its output filenames and its family live in one
+place, `src/methods.py`. Adding a model means adding one entry there; nothing
+else in the pipeline needs to change.
+
+What happens:
+
+1. Each provision text is converted into an embedding.
+2. Sentence-embedding models use their SentenceTransformer head; contextual-embedding models are mean-pooled over token outputs and L2-normalized.
+3. The script compares every EN 303 645 embedding with every EN 304 223 embedding.
+4. The full similarity matrix is saved before thresholding, because the sensitivity analysis and the corpus recalibration need the scores of pairs no threshold kept.
+5. Pairs above the family threshold are written with a relationship label.
+
+Created files, one pair per model:
+
+```text
+data/mappings/<key>_output.csv
+data/mappings/<key>_similarity_matrix.npy
+```
+
+The first run of each new model downloads it from Hugging Face.
+
+---
+
+## 9. Mapping Method 9 - NLI Cross-Encoder
+
+Script:
+
+```text
+src/mapping/nli_mapping.py
 ```
 
 Run command:
 
 ```bash
-python3 -m src.mapping.sbert_mapping
+python3 -m src.mapping.nli_mapping
 ```
 
 Model used:
 
 ```text
-all-MiniLM-L6-v2
+cross-encoder/nli-deberta-v3-base
 ```
 
 What happens:
 
-1. Each provision text is converted into a sentence embedding.
-2. An embedding is a numerical meaning representation of the sentence.
-3. The script compares every EN 303 645 embedding with every EN 304 223 embedding.
-4. If the similarity score is high enough, the pair is saved as a predicted mapping.
-5. The script also assigns a relationship label using score thresholds.
+1. Unlike every embedding method, this one reads both provisions together instead of embedding them separately.
+2. Each pair is scored twice: does provision A entail provision B, and does B entail A.
+3. Entailment in both directions means equivalence; entailment in one direction means subsumption, with the entailed provision as the narrower one.
+4. Weak entailment in either direction means overlap; none means no relation.
+5. This is the only method in the study that can express direction, so it is the only one that can predict subsumption at all.
 
 Created files:
 
 ```text
-data/mappings/sbert_output.csv
-data/mappings/sbert_similarity_matrix.npy
+data/mappings/nli_output.csv
+data/mappings/nli_similarity_matrix.npy
+data/mappings/nli_entailment_directions.npy
 ```
 
-What each file means:
-
-- `sbert_output.csv`: predicted mappings from SBERT.
-- `sbert_similarity_matrix.npy`: raw similarity matrix for all 4,968 pairs.
+Cost: 2 x 4,968 forward passes, a few minutes on Apple Silicon.
 
 ---
 
-## 9. Mapping Method 3 - BERT Mapping
-
-Script:
-
-```text
-src/mapping/bert_mapping.py
-```
-
-Run command:
-
-```bash
-python3 -m src.mapping.bert_mapping
-```
-
-Model used:
-
-```text
-bert-base-uncased
-```
-
-Helper file:
-
-```text
-src/mapping/embeddings.py
-```
-
-What happens:
-
-1. The script loads the BERT model.
-2. It tokenizes each provision text.
-3. It creates embeddings using mean pooling over BERT's token outputs.
-4. It normalizes the embeddings.
-5. It calculates cosine similarity between every pair.
-6. Pairs above the threshold are saved.
-
-Created file:
-
-```text
-data/mappings/bert_output.csv
-```
-
----
-
-## 10. Mapping Method 4 - SecureBERT Mapping
-
-Script:
-
-```text
-src/mapping/securebert_mapping.py
-```
-
-Run command:
-
-```bash
-python3 -m src.mapping.securebert_mapping
-```
-
-Model used:
-
-```text
-ehsanaghaei/SecureBERT
-```
-
-What happens:
-
-1. This is similar to the BERT script.
-2. The difference is that SecureBERT is trained on cybersecurity text.
-3. The script creates embeddings for all provisions.
-4. It compares every possible pair.
-5. Pairs above the threshold are saved.
-
-Created file:
-
-```text
-data/mappings/securebert_output.csv
-```
-
-Note:
-
-The first run may download the SecureBERT model from Hugging Face.
-
----
-
-## 11. Mapping Method 5 - Gemini Embedding Mapping
+## 10. Mapping Method 10 - Gemini Embedding Mapping
 
 Script:
 
@@ -437,7 +409,7 @@ src/mapping/gemini_batch.py
 
 ---
 
-## 12. Mapping Method 6 - Gemini LLM Mapping
+## 11. Mapping Method 11 - Gemini LLM Mapping
 
 Script:
 
@@ -490,7 +462,7 @@ src/mapping/gemini_batch.py
 
 ---
 
-## 13. Shared Embedding Helper
+## 12. Shared Embedding Helper
 
 Script:
 
@@ -723,15 +695,15 @@ Recommended order:
 python3 -m src.extraction.provision_extractor
 python3 -m src.baseline.create_baseline
 python3 -m src.mapping.rule_based
-python3 -m src.mapping.sbert_mapping
-python3 -m src.mapping.bert_mapping
-python3 -m src.mapping.securebert_mapping
+python3 -m src.mapping.run_embedding --all
+python3 -m src.mapping.nli_mapping
 python3 -m src.evaluation.evaluate
 python3 -m src.evaluation.analysis
 python3 -m src.baseline.sample_reference
 python3 -m src.evaluation.weighted_metrics
 python3 -m src.validation.agreement
 python3 -m src.report.generate_report
+python3 -m src.evaluation.coverage
 python3 -m src.report.figures
 ```
 
@@ -754,15 +726,15 @@ If starting from the raw PDFs, the full order is:
 python3 -m src.extraction.provision_extractor
 python3 -m src.baseline.create_baseline
 python3 -m src.mapping.rule_based
-python3 -m src.mapping.sbert_mapping
-python3 -m src.mapping.bert_mapping
-python3 -m src.mapping.securebert_mapping
+python3 -m src.mapping.run_embedding --all
+python3 -m src.mapping.nli_mapping
 python3 -m src.evaluation.evaluate
 python3 -m src.evaluation.analysis
 python3 -m src.baseline.sample_reference
 python3 -m src.evaluation.weighted_metrics
 python3 -m src.validation.agreement
 python3 -m src.report.generate_report
+python3 -m src.evaluation.coverage
 python3 -m src.report.figures
 ```
 

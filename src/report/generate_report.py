@@ -13,25 +13,10 @@ DATA = BASE / "data"
 SUMMARY_PATH = DATA / "evaluation" / "evaluation_summary.json"
 REPORT_PATH = DATA / "evaluation" / "report.md"
 
-METHOD_ORDER = [
-    "rule_based_tfidf",
-    "rule_based_jaccard",
-    "sbert",
-    "bert",
-    "securebert",
-    "gemini_embedding",
-    "gemini_llm",
-]
+from src.methods import METHODS
 
-METHOD_LABELS = {
-    "rule_based_tfidf":     "Rule-Based TF-IDF",
-    "rule_based_jaccard":   "Rule-Based Jaccard",
-    "sbert":                "SBERT (all-MiniLM-L6-v2)",
-    "bert":                 "BERT (bert-base-uncased)",
-    "securebert":           "SecureBERT (ehsanaghaei/SecureBERT)",
-    "gemini_embedding":     "Gemini Embedding (gemini-embedding-2)",
-    "gemini_llm":           "Gemini LLM (gemini-2.5-flash-lite)",
-}
+METHOD_ORDER = list(METHODS)
+METHOD_LABELS = {k: m.long_label for k, m in METHODS.items()}
 
 
 def _pct(v: float) -> str:

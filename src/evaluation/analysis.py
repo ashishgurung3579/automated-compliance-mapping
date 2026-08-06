@@ -13,6 +13,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from src.methods import keys as method_keys, with_matrix
+
 BASE = Path(__file__).parents[2]
 DATA = BASE / "data"
 EVAL_DIR = DATA / "evaluation"
@@ -20,25 +22,11 @@ MAP_DIR = DATA / "mappings"
 
 LABELS = ["EQUIVALENCE", "OVERLAP", "SUBSUMPTION", "COMPLEMENTARITY", "NO_RELATION"]
 
-METHODS = [
-    "rule_based_tfidf",
-    "rule_based_jaccard",
-    "sbert",
-    "bert",
-    "securebert",
-    "gemini_embedding",
-    "gemini_llm",
-]
+METHODS = method_keys()
 
-# similarity matrices available for threshold sweeps (rows = EN 303 645 order,
-# cols = EN 304 223 order, matching the extracted provision JSON files)
-SIM_MATRICES = {
-    "rule_based_tfidf": MAP_DIR / "tfidf_similarity_matrix.npy",
-    "sbert": MAP_DIR / "sbert_similarity_matrix.npy",
-    "bert": MAP_DIR / "bert_similarity_matrix.npy",
-    "securebert": MAP_DIR / "securebert_similarity_matrix.npy",
-    "gemini_embedding": MAP_DIR / "gemini_embedding_similarity_matrix.npy",
-}
+# Similarity matrices available for threshold sweeps (rows = EN 303 645 order,
+# cols = EN 304 223 order, matching the extracted provision JSON files).
+SIM_MATRICES = {k: m.matrix for k, m in with_matrix().items()}
 
 N_BOOT = 2000
 N_REPEATS = 20

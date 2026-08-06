@@ -22,16 +22,29 @@ Run from the repository root, in order:
 python3 -m src.extraction.provision_extractor   # ~1 s
 python3 -m src.baseline.create_baseline         # <1 s
 python3 -m src.mapping.rule_based               # ~4 s
-python3 -m src.mapping.sbert_mapping            # ~1 min
-python3 -m src.mapping.bert_mapping             # ~2 min
-python3 -m src.mapping.securebert_mapping       # ~3 min
+python3 -m src.mapping.run_embedding --all      # ~2 min, six models
+python3 -m src.mapping.nli_mapping              # ~20 min
 python3 -m src.evaluation.evaluate              # ~1 s
-python3 -m src.evaluation.analysis              # ~1 min
-python3 -m src.report.figures                   # ~10 s
+python3 -m src.evaluation.analysis              # ~2 min
+python3 -m src.evaluation.coverage              # ~2 s
+python3 -m src.report.figures                   # ~15 s
 \end{verbatim}
 
+\noindent The cross-encoder stage is the memory-sensitive one: it holds a batch
+of token activations on the accelerator, and on the 8\,GB machine used here a
+batch larger than eight pushes the system into swap, where throughput falls by
+an order of magnitude. \texttt{NLI\_BATCH\_SIZE} and \texttt{NLI\_DEVICE}
+override the defaults on hardware with more headroom.
+
+\noindent Each embedding model can also be run on its own,
+\texttt{run\_embedding <key>}; the keys are the ones listed in
+\texttt{src/methods.py}, which is the single place any method is defined. The
+earlier per-model entry points (\texttt{sbert\_mapping},
+\texttt{bert\_mapping}, \texttt{securebert\_mapping}) still work and call the
+same runner.
+
 First runs of the transformer stages download the models from Hugging Face
-(SecureBERT is about 500\,MB). The two Gemini stages,
+(about 2\,GB in total; SecureBERT alone is 500\,MB). The two Gemini stages,
 
 \begin{verbatim}
 python3 -m src.mapping.gemini_embedding_mapping

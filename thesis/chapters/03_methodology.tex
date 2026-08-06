@@ -12,7 +12,7 @@ differences in the results can be attributed to the methods themselves.
 The design addresses the research questions directly. RQ1 (feasibility and
 limits of automated relationship identification) is answered by the absolute
 performance levels and the error analysis. RQ2 (comparison of method families)
-is answered by evaluating all seven methods under identical conditions. RQ3
+is answered by evaluating all eleven methods under identical conditions. RQ3
 (automated vs.\ expert mapping) is answered by treating the reference annotation
 as the standard of comparison and additionally measuring how consistently the
 task is performed on repetition. The expert role in that comparison is filled by
@@ -232,8 +232,14 @@ protocol for future work.
 
 \section{Automated mapping methods}\label{sec:methods}
 
-Seven methods are evaluated, chosen to span three families: lexical
-rule-based baselines, transformer embedding models, and LLM-based approaches.
+Eleven methods are evaluated, grouped into five families. The grouping is not
+housekeeping: it is what the comparison is about. Lexical baselines match
+words. Sentence-embedding models are trained so that cosine similarity means
+something. Contextual-embedding models are masked language models pooled into a
+vector without any such training. A cross-encoder reads both provisions at once
+and answers a directional question. Hosted API models are the commercial
+current generation. Differences within a family isolate the effect of the
+model; differences between families isolate the effect of the approach.
 
 \subsection{Rule-based baselines}
 
@@ -248,25 +254,66 @@ and others) is matched against each provision; a pair is scored by the Jaccard
 overlap of the keyword sets. This baseline mimics how a checklist-driven
 analyst might shortlist related provisions.
 
-\subsection{Transformer embedding models}
+\subsection{Sentence-embedding models}
 
-Three pretrained encoders embed each provision text into a dense vector;
-pairs are scored by cosine similarity of the embeddings:
+Three encoders trained so that cosine similarity between sentence embeddings
+tracks semantic relatedness. Each provision is embedded once and every pair is
+scored by the cosine of the two vectors.
 
 \begin{itemize}
   \item \textbf{Sentence-BERT} (\texttt{all-MiniLM-L6-v2})
-  ~\cite{reimers2019sbert}, trained specifically to make cosine similarity
-  meaningful at sentence level;
-  \item \textbf{BERT} (\texttt{bert-base-uncased})~\cite{devlin2019bert},
-  with mean pooling over token embeddings and L2 normalisation --- a
-  general-purpose encoder not tuned for sentence similarity, included to test
-  whether such tuning matters;
-  \item \textbf{SecureBERT}~\cite{aghaei2022securebert}, a
-  cybersecurity-domain RoBERTa model, embedded the same way, included to test
-  whether domain vocabulary helps.
+  ~\cite{reimers2019sbert}, the compact model that made this style of
+  comparison cheap enough to run over a full pair space;
+  \item \textbf{MPNet} (\texttt{all-mpnet-base-v2})~\cite{song2020mpnet}, the
+  strongest general-purpose model of the same family, included so that the
+  effect of model capacity can be separated from the effect of the task;
+  \item \textbf{BGE} (\texttt{bge-base-en-v1.5})~\cite{xiao2024bge}, a
+  retrieval-trained embedder a generation newer than the other two, included as
+  the current state of the open embedding literature.
 \end{itemize}
 
-\subsection{LLM-based methods}
+\subsection{Contextual-embedding models}
+
+Three masked language models with no sentence-similarity training, mean-pooled
+over token embeddings and L2-normalised. They are included to separate two
+explanations for embedding performance that are easily confused --- the size of
+the model, and whether it was ever trained to make its geometry mean something.
+
+\begin{itemize}
+  \item \textbf{BERT} (\texttt{bert-base-uncased})~\cite{devlin2019bert}, the
+  general-purpose baseline;
+  \item \textbf{SecureBERT}~\cite{aghaei2022securebert}, a
+  cybersecurity-domain RoBERTa model;
+  \item \textbf{CySecBERT}~\cite{bayer2024cysecbert}, a second, independently
+  built cybersecurity-domain model. One domain-adapted model that behaves oddly
+  is an anecdote about that model; two, adapted by different groups from
+  different base models, make it a statement about domain adaptation for this
+  task.
+\end{itemize}
+
+\subsection{Cross-encoder inference}\label{sec:nlimethod}
+
+Every method above reduces a pair to one symmetric number, and a symmetric
+number cannot say which of two provisions is the broader one. Subsumption is
+therefore unreachable for all of them by construction. The
+\textbf{NLI cross-encoder} (\texttt{nli-deberta-v3-base}, a DeBERTa-v3
+model~\cite{he2023debertav3} fine-tuned on natural language inference
+data~\cite{williams2018mnli}) reads both provisions together and returns
+whether the first entails the second, which is a directional question.
+
+Each pair is scored twice, once in each direction, and the two entailment
+probabilities decide the label: entailment both ways is
+\textsc{Equivalence}; entailment one way only is \textsc{Subsumption} with the
+entailed provision as the narrower one; some entailment but not enough in
+either direction is \textsc{Overlap}; and no entailment either way is
+\textsc{No relation}. A direction counts as entailed at probability $0.50$, and
+$0.20$ is the floor below which the method emits nothing at all. Both cut-offs
+were fixed before any evaluation. The stored score is the larger of the two
+entailment probabilities, so this method can be swept and recalibrated on the
+same footing as the others. The cost is two forward passes per pair, 9{,}936 in
+total, against one embedding pass per provision for the bi-encoders.
+
+\subsection{Hosted API methods}
 
 \paragraph{Gemini embeddings.} Each provision is embedded with Google's
 \texttt{gemini-embedding-2} model via API; pairs are scored by cosine
@@ -285,15 +332,30 @@ overlap from complementarity --- something a scalar similarity cannot.
 The similarity-based methods produce scores in $[0,1]$, not labels. Scores are
 mapped to relationship types with fixed thresholds: $\geq 0.85$
 \textsc{Equivalence}, $\geq 0.70$ \textsc{Overlap}, $\geq 0.50$
-\textsc{Complementarity}, otherwise \textsc{No relation} (the rule-based
-methods use lower entry thresholds reflecting their score distributions).
-These cut-offs follow the operating points reported in related mapping work
-~\cite{sapkota2016regcmantic} and are deliberately kept identical across
-methods so that differences in results reflect the representations, not
-per-method tuning. The threshold sensitivity analysis in
-Section~\ref{sec:thresholdresults} examines how much this choice matters.
-Subsumption cannot be expressed as a symmetric similarity band at all --- a
-structural limitation of similarity-based methods that the results quantify.
+\textsc{Complementarity}, otherwise \textsc{No relation}. A second, lower
+threshold decides whether a pair is emitted as a candidate at all, and it is
+set per family rather than per model: $0.10$ and $0.05$ for the two lexical
+baselines, $0.30$ for the sentence-embedding models, $0.70$ for the
+contextual-embedding models, $0.50$ for the Gemini embeddings, and the
+entailment floor of Section~\ref{sec:nlimethod} for the cross-encoder. These
+cut-offs follow the operating points reported in related mapping work
+~\cite{sapkota2016regcmantic}, and they are fixed per family rather than tuned
+per model so that a difference between two models in the same family reflects
+the representation and not the calibration.
+
+That decision has a consequence worth stating in advance rather than
+discovering in the results. A threshold chosen a priori is a threshold chosen
+without knowing the base rate of related pairs, and
+Section~\ref{sec:prevalence} shows the base rate is far lower than the pilot
+set suggests. Several methods therefore ship at operating points that are badly
+wrong for the corpus, which is why every method with a continuous score is also
+reported at a threshold recalibrated on the probability sample. The threshold
+sensitivity analysis in Section~\ref{sec:thresholdresults} shows how much of
+each method's performance is representation and how much is calibration.
+
+Subsumption cannot be expressed as a symmetric similarity band at all, so ten
+of the eleven methods cannot predict it by construction. Only the cross-encoder
+can, which is the reason it is in the study.
 
 \section{Evaluation framework}\label{sec:evaluation}
 
@@ -356,6 +418,18 @@ methods are scored on the same within-stratum resample, and only differences
 whose interval excludes zero are reported as orderings. Two marginal intervals
 overlapping is not evidence that the methods are equivalent, because the
 methods are scored on identical pairs and their errors are correlated.
+
+Which comparisons are made is decided by a rule, not by inspection. Eleven
+methods and their recalibrated variants admit more than two hundred pairwise
+contrasts, and two hundred uncorrected 95\% intervals will contain false
+findings whatever the data say. Two questions carry the argument --- whether a
+method beats the all-positive baseline, and whether anything beats the
+best-scoring method --- so each method is compared against those two references
+and against nothing else. One caveat attaches to the second reference: it is
+selected as the maximum on this sample, and a difference measured against a
+selected maximum is biased in that maximum's favour, because the selection
+absorbs part of the sampling noise. Those intervals describe the gap to the
+leader; they are not a test that the leader is genuinely best.
 
 \subsection{Efficiency and interpretability}
 

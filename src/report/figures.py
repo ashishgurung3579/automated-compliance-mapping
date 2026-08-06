@@ -12,6 +12,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from src.methods import (CONFUSION_SUBSET, FAMILY_LABELS, PREVALENCE_SUBSET,
+                         by_family, labels, with_matrix)
+
 BASE = Path(__file__).parents[2]
 EVAL_DIR = BASE / "data" / "evaluation"
 FIG_DIR = BASE / "thesis" / "figures"
@@ -22,15 +25,7 @@ INK = "#0b0b0b"
 MUTED = "#898781"
 GRID = "#e1e0d9"
 
-METHOD_LABELS = {
-    "rule_based_tfidf": "TF-IDF",
-    "rule_based_jaccard": "Jaccard",
-    "sbert": "SBERT",
-    "bert": "BERT",
-    "securebert": "SecureBERT",
-    "gemini_embedding": "Gemini emb.",
-    "gemini_llm": "Gemini LLM",
-}
+METHOD_LABELS = labels()
 ORDER = list(METHOD_LABELS)
 
 LABELS = ["EQUIVALENCE", "OVERLAP", "SUBSUMPTION", "COMPLEMENTARITY", "NO_RELATION"]
@@ -73,7 +68,7 @@ def fig_detection_metrics(summary):
     methods = [m for m in ORDER if m in summary]
     x = np.arange(len(methods))
     w = 0.27
-    fig, ax = plt.subplots(figsize=(6.2, 2.9))
+    fig, ax = plt.subplots(figsize=(6.4, 1.5 + 0.16 * len(methods)))
     for off, key, color, name in [(-w, "precision", C1, "Precision"),
                                   (0, "recall", C2, "Recall"),
                                   (w, "f1", C3, "F1")]:
@@ -91,7 +86,8 @@ def fig_detection_metrics(summary):
 
 def fig_f1_ci(analysis):
     methods = [m for m in ORDER if m in analysis]
-    fig, axes = plt.subplots(1, 2, figsize=(6.0, 2.6), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(6.0, 1.0 + 0.26 * len(methods)),
+                             sharey=True)
     for ax, key, title in [(axes[0], "detection_f1", "Pair-detection F1"),
                            (axes[1], "macro_f1", "Classification macro-F1")]:
         pts = [analysis[m]["bootstrap"][key]["point"] for m in methods]
@@ -112,8 +108,9 @@ def fig_f1_ci(analysis):
     plt.close(fig)
 
 
-def fig_confusion(analysis, methods=("gemini_embedding", "bert", "gemini_llm")):
-    fig, axes = plt.subplots(1, len(methods), figsize=(6.2, 2.4))
+def fig_confusion(analysis, methods=CONFUSION_SUBSET):
+    methods = [m for m in methods if m in analysis]
+    fig, axes = plt.subplots(1, len(methods), figsize=(1.6 * len(methods), 2.4))
     for ax, m in zip(axes, methods):
         cm = analysis[m]["confusion_matrix"]
         mat = np.array([[cm[t][p] for p in LABELS] for t in LABELS], dtype=float)
@@ -148,58 +145,72 @@ def fig_similarity_distributions():
     src_idx = {p["provision_id"]: i for i, p in enumerate(src)}
     tgt_idx = {p["provision_id"]: j for j, p in enumerate(tgt)}
 
-    mats = {
-        "SBERT": "sbert_similarity_matrix.npy",
-        "BERT": "bert_similarity_matrix.npy",
-        "SecureBERT": "securebert_similarity_matrix.npy",
-        "Gemini emb.": "gemini_embedding_similarity_matrix.npy",
-    }
-    fig, axes = plt.subplots(1, 4, figsize=(6.4, 1.9), sharey=False)
+    scored = [m for m in with_matrix().values() if m.matrix.exists()]
+    ncols = 3
+    nrows = int(np.ceil(len(scored) / ncols))
+    fig, axes = plt.subplots(nrows, ncols, figsize=(6.4, 1.75 * nrows),
+                             squeeze=False)
+    flat = [a for row in axes for a in row]
     bins = np.linspace(0, 1, 29)
-    for ax, (name, fn) in zip(axes, mats.items()):
-        sim = np.load(BASE / "data" / "mappings" / fn)
+    for ax, method in zip(flat, scored):
+        sim = np.load(method.matrix)
         pos, neg = [], []
         for r in gt.itertuples():
             s = sim[src_idx[r.src_id], tgt_idx[r.tgt_id]]
             (neg if r.relationship == "NO_RELATION" else pos).append(s)
         ax.hist(pos, bins=bins, density=True, color=C1, alpha=0.75, label="Related")
         ax.hist(neg, bins=bins, density=True, color=C2, alpha=0.75, label="No relation")
-        ax.set_title(name, fontsize=9)
+        ax.set_title(method.label, fontsize=9)
         ax.set_xlim(0, 1)
         ax.set_yticks([])
-        ax.set_xlabel("Cosine similarity", fontsize=7.5)
+        ax.set_xlabel("Similarity score", fontsize=7.5)
         style_axes(ax)
         ax.spines["left"].set_visible(False)
-    axes[0].legend(frameon=False, fontsize=7, loc="upper left")
+    for ax in flat[len(scored):]:
+        ax.set_visible(False)
+    flat[0].legend(frameon=False, fontsize=7, loc="upper left")
     fig.tight_layout()
     fig.savefig(FIG_DIR / "similarity_distributions.pdf")
     plt.close(fig)
 
 
 def fig_threshold_sweep(analysis):
-    styles = {
-        "rule_based_tfidf": (C4, ":"),
-        "sbert": (C3, "-."),
-        "bert": (C1, "-"),
-        "securebert": (C5, (0, (4, 1.5))),
-        "gemini_embedding": (C2, "-"),
-    }
-    fig, ax = plt.subplots(figsize=(5.2, 3.0))
-    for m, (color, ls) in styles.items():
-        sweep = analysis.get(m, {}).get("threshold_sweep")
-        if not sweep:
-            continue
-        t = [row["threshold"] for row in sweep]
-        f1 = [row["f1"] for row in sweep]
-        ax.plot(t, f1, color=color, linestyle=ls, linewidth=1.6,
-                label=METHOD_LABELS[m])
-    ax.set_xlabel("Similarity threshold")
-    ax.set_ylabel("Pair-detection F1")
-    ax.set_xlim(0.05, 0.975)
-    ax.set_ylim(0, 1.0)
-    ax.legend(frameon=False, fontsize=8)
-    ax.grid(axis="x", visible=False)
-    ax.spines[["top", "right"]].set_visible(False)
+    """One panel per family. Eleven curves on shared axes cannot be told apart by
+    colour, and the families are what the comparison is actually about."""
+    panels = []
+    for family, methods in by_family().items():
+        present = [m for m in methods
+                   if analysis.get(m.key, {}).get("threshold_sweep")]
+        if present:
+            panels.append((family, present))
+
+    ncols = min(3, len(panels))
+    nrows = int(np.ceil(len(panels) / ncols))
+    fig, axes = plt.subplots(nrows, ncols, figsize=(6.4, 2.35 * nrows),
+                             squeeze=False, sharex=True, sharey=True)
+    flat = [a for row in axes for a in row]
+    styles = [(C1, "-"), (C2, "--"), (C3, (0, (4, 1.5)))]
+
+    for ax, (family, methods) in zip(flat, panels):
+        for method, (color, ls) in zip(methods, styles):
+            sweep = analysis[method.key]["threshold_sweep"]
+            ax.plot([r["threshold"] for r in sweep], [r["f1"] for r in sweep],
+                    color=color, linestyle=ls, linewidth=1.6, label=method.label)
+        ax.set_title(FAMILY_LABELS[family], fontsize=9)
+        ax.set_xlim(0.05, 0.975)
+        ax.set_ylim(0, 1.0)
+        ax.legend(frameon=False, fontsize=7.5, loc="upper right")
+        ax.grid(axis="x", visible=False)
+        ax.spines[["top", "right"]].set_visible(False)
+    for ax in flat[len(panels):]:
+        ax.set_visible(False)
+
+    for ax in axes[-1]:
+        ax.set_xlabel("Similarity threshold")
+    for row in axes:
+        row[0].set_ylabel("Pair-detection F1")
+
+    fig.tight_layout()
     fig.savefig(FIG_DIR / "threshold_sweep.pdf")
     plt.close(fig)
 
@@ -236,11 +247,11 @@ def fig_precision_prevalence(weighted):
     """Precision implied by each method's sensitivity and specificity as the base
     rate varies. Sensitivity and specificity do not depend on prevalence, so a
     single measured pair fixes the whole curve."""
-    shown = {"sbert": (C3, "-"), "gemini_llm": (C2, "-."),
-             "bert": (C1, "--"), "securebert": (C5, ":")}
+    shown = [m for m in PREVALENCE_SUBSET if m in weighted["methods"]]
+    styles = [(C1, "-"), (C2, "--"), (C3, "-."), (C4, ":")]
     pi = np.linspace(0.01, 0.99, 400)
     fig, ax = plt.subplots(figsize=(5.2, 3.0))
-    for m, (color, ls) in shown.items():
+    for m, (color, ls) in zip(shown, styles):
         p = weighted["methods"][m]["point"]
         sens, spec = p["recall"], p["specificity"]
         prec = pi * sens / (pi * sens + (1 - pi) * (1 - spec))
@@ -316,7 +327,7 @@ def fig_cv_threshold(analysis):
     methods = [m for m in ORDER if analysis.get(m, {}).get("cv_threshold")]
     x = np.arange(len(methods))
     cv = [analysis[m]["cv_threshold"] for m in methods]
-    fig, axes = plt.subplots(1, 2, figsize=(6.2, 2.6))
+    fig, axes = plt.subplots(1, 2, figsize=(6.4, 1.3 + 0.24 * len(methods)))
 
     ax = axes[0]
     ax.bar(x - 0.19, [c["in_sample_best_f1"] for c in cv], width=0.34, color=MUTED,
@@ -366,7 +377,7 @@ def fig_calibration_gap(weighted):
            [weighted["methods"][m]["corpus_calibrated"]["ci"]["f1"][1] - t for t, m
             in zip(tuned, methods)]]
 
-    fig, ax = plt.subplots(figsize=(5.4, 3.0))
+    fig, ax = plt.subplots(figsize=(1.4 + 0.55 * len(methods), 3.0))
     ax.bar(x - w / 2, shipped, w, color=MUTED, label="Pilot-calibrated threshold")
     ax.bar(x + w / 2, tuned, w, yerr=err, color=C3, ecolor=INK, capsize=2.5,
            error_kw={"elinewidth": 0.8}, label="Corpus-calibrated threshold")
@@ -375,7 +386,7 @@ def fig_calibration_gap(weighted):
     ax.axhline(base, color=C2, linestyle=(0, (4, 3)), linewidth=1.1,
                label=f"All-positive baseline ({base:.2f})")
 
-    ax.set_xticks(x, [METHOD_LABELS[m] for m in methods])
+    ax.set_xticks(x, [METHOD_LABELS[m] for m in methods], rotation=22, ha="right")
     ax.set_ylabel("Corpus pair-detection F1")
     ax.set_ylim(0, 0.68)
     ax.legend(frameon=False, fontsize=8, loc="upper left", ncols=2,

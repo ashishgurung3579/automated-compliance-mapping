@@ -126,6 +126,35 @@ absent alignment as well as strong matches.
 
 \section{Related work}
 
+\subsection{Manual comparative mapping of security standards}\label{sec:manualmapping}
+
+The closest published work to this thesis is manual. Djebbar and
+Nordstr\"{o}m~\cite{djebbar2023comparative} compare ISO/IEC 27001:2022,
+ISA/IEC 62443-3-3:2019 and \standardA{}, and their method is explicitly
+interpretive: controls are matched by \emph{teleological interpretation}, that
+is, by the goal a control is intended to realise rather than by the words it
+uses, and the authors state a deliberate preference for under-mapping over
+over-mapping when a match is uncertain. Their taxonomy is binary --- two
+controls are \emph{Equivalent} when wording and purpose coincide, and
+\emph{Related} when the wording differs but the security objective is the same.
+
+Their results are the reference point for what a careful manual mapping of
+\standardA{} produces. All 68 provisions of \standardA{} could be aligned with
+29 controls of ISO/IEC 27001:2022, while 64 of that standard's 93 controls had
+no counterpart in \standardA{} at all --- almost entirely the organizational
+and people controls, which have no meaning for a device. For ISA/IEC 62443-3-3
+they report 84 of 100 requirements mapped, and tabulate the unmapped remainder
+individually rather than reporting only a coverage figure. The complete
+mappings are given as appendix tables, one row per aligned control pair.
+
+Two features of that study shape this one. The first is the sparsity: a
+standards pair drawn from different domains produces far more non-matches than
+matches, and a mapping method that does not reproduce that asymmetry is not
+reproducing the task. The second is the form of the output --- a typed
+relation, a coverage statement, and an explicit list of what was left
+unmapped --- which is what Section~\ref{sec:coverage} reproduces
+automatically.
+
 \subsection{Automated compliance mapping in cybersecurity}
 
 Bar-Haim et al.~\cite{barhaim2023cloud} automate the assessment of
@@ -175,5 +204,17 @@ Prior work automates mapping between requirements and control frameworks
 ~\cite{rodriguez2024llm}. Mapping two security standards to each other ---
 with a typed relationship taxonomy rather than a binary match --- has not, to
 our knowledge, been evaluated systematically for the IoT/AI standard pair.
-This project fills that gap with a controlled comparison of seven methods
-against a common reference.
+
+The relationship to \cite{djebbar2023comparative} is the one worth stating
+plainly, because this thesis attempts by machine what that study did by hand.
+It takes the same interpretive task to a standard pair that study does not
+cover, \standardA{} against \standardB{}; it refines the Equivalent/Related
+distinction into six typed relations, so that partial and directional
+alignment can be expressed rather than collapsed; and it asks a question a
+manual study cannot answer about itself --- how much of that judgement
+survives automation, and at what error rate. Where the manual study reports
+its mapping, this one reports a mapping together with an estimate of how often
+it is wrong, measured against a probability sample of the full candidate space
+rather than a hand-picked subset. The comparison of eleven methods that
+follows is a comparison of how closely each approximates the judgement
+\cite{djebbar2023comparative} exercised directly.

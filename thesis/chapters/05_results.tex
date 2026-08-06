@@ -9,7 +9,7 @@ the findings against the research questions and the threats to their validity.
 
 \section{Experimental setup}\label{sec:setup}
 
-All seven methods were run on the full cross product of 69 \standardA{}
+All eleven methods were run on the full cross product of 69 \standardA{}
 provisions and 72 \standardB{} provisions (4{,}968 pairs) and evaluated on
 the 107 annotated pairs: 85 related pairs and 22 annotated negatives
 (Figure~\ref{fig:gtdist}). The distribution is dominated by \textsc{Overlap}
@@ -44,8 +44,12 @@ Method & $P^{+}$ & TP & FP & FN & Precision & Recall & F1\\
 TF--IDF            &   3 &  3 &  0 & 82 & 1.000 & 0.035 & 0.068\\
 Keyword Jaccard    &   6 &  6 &  0 & 79 & 1.000 & 0.071 & 0.132\\
 Sentence-BERT      &  15 & 15 &  0 & 70 & 1.000 & 0.176 & 0.300\\
-BERT               & 105 & 85 & 20 &  0 & 0.809 & 1.000 & 0.895\\
+MPNet              &  14 & 14 &  0 & 71 & 1.000 & 0.165 & 0.283\\
+BGE                &  90 & 75 & 15 & 10 & 0.833 & 0.882 & 0.857\\
+BERT               & 105 & 85 & 20 &  0 & 0.809 & 1.000 & \textbf{0.895}\\
 SecureBERT         & 107 & 85 & 22 &  0 & 0.794 & 1.000 & 0.885\\
+CySecBERT          & 107 & 85 & 22 &  0 & 0.794 & 1.000 & 0.885\\
+NLI cross-encoder  &   5 &  5 &  0 & 80 & 1.000 & 0.059 & 0.111\\
 Gemini embeddings  & 107 & 85 & 22 &  0 & 0.794 & 1.000 & 0.885\\
 Gemini LLM         &  94 & 73 & 21 & 12 & 0.777 & 0.859 & 0.816\\
 \bottomrule
@@ -86,34 +90,52 @@ similarity structure and in classification.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/similarity_distributions}
-\caption{Distributions of cosine similarity for annotated related pairs
-(blue) and annotated negatives (orange), per embedding model.}
+\caption{Score distributions for annotated related pairs (blue) and annotated
+negatives (orange), one panel per method with a continuous score. Panels are
+not on a common scale: what matters is the separation between the two
+distributions within a panel, not where either sits.}
 \label{fig:simdist}
 \end{figure}
 
-Figure~\ref{fig:simdist} explains the degenerate behaviour. BERT concentrates
-all pairs --- related or not --- between roughly 0.6 and 0.9; SecureBERT is
-even more extreme, packing everything above 0.9. With such compressed score
-ranges, the fixed label thresholds of Section~\ref{sec:thresholds} land every
-pair in the same band: SecureBERT assigns \textsc{Equivalence} to all 4{,}968
-possible pairs. This matches the known anisotropy of contextual embedding
-spaces~\cite{ethayarajh2019contextual}: mean-pooled vectors from models never
-trained for sentence similarity crowd into a narrow cone, and cosine
-similarity loses its discriminative meaning. Sentence-BERT, trained precisely
-to spread sentence meanings out, shows the widest score range and visibly
-separates the two distributions --- yet even there the overlap is
-substantial, confirming that annotated negatives (chosen to share surface
-vocabulary) are genuinely hard. Gemini embeddings sit between the extremes:
-compressed range, but with related pairs shifted consistently above
-negatives.
+Figure~\ref{fig:simdist} explains the degenerate behaviour, and with eleven
+methods the pattern is legible as a family property rather than a quirk of one
+model. All three contextual-embedding models compress: BERT places every pair,
+related or not, between roughly 0.57 and 0.91; CySecBERT between 0.71 and 0.93;
+SecureBERT is the extreme case, packing the entire corpus into
+$[0.875, 0.971]$, a band 0.10 wide. With ranges that narrow, the fixed label
+thresholds of Section~\ref{sec:thresholds} land every pair in the same band:
+SecureBERT assigns \textsc{Equivalence} to all 4{,}968 possible pairs, and
+CySecBERT splits them between \textsc{Equivalence} and \textsc{Overlap} without
+ever reaching \textsc{No relation}. This matches the known anisotropy of
+contextual embedding spaces~\cite{ethayarajh2019contextual}: mean-pooled vectors
+from models never trained for sentence similarity crowd into a narrow cone, and
+cosine similarity loses its discriminative meaning. Adding cybersecurity
+vocabulary does not repair the geometry --- both domain-adapted models are more
+compressed than the general-purpose model they descend from, not less.
+
+The sentence-embedding models spread out, as their training intends.
+Sentence-BERT and MPNet span roughly $[-0.05, 0.8]$ and visibly separate the two
+distributions --- yet even there the overlap is substantial, confirming that
+annotated negatives (chosen to share surface vocabulary) are genuinely hard.
+BGE is the instructive intermediate: it is trained for similarity and separates
+the classes well, but its scores never fall below 0.345, so a threshold chosen
+for its family lands beneath its entire distribution. Its saturation is an
+artefact of where its scores sit, not of what they encode --- which is exactly
+the distinction the recalibration in Section~\ref{sec:prevalence} isolates.
+Gemini embeddings sit between the extremes: compressed range, but with related
+pairs shifted consistently above negatives. The NLI cross-encoder is unlike all
+of them, producing a probability rather than a cosine and placing the bulk of
+pairs near zero, which is why its panel looks empty on the right.
 
 \section{Threshold sensitivity}\label{sec:thresholdresults}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.78\textwidth]{figures/threshold_sweep}
-\caption{Pair-detection F1 as a function of the similarity threshold, computed
-from the stored similarity matrices on the annotated scope.}
+\caption{Pair-detection F1 as a function of the decision threshold, computed
+from the stored score matrices on the annotated scope, faceted by method
+family. Eleven curves on shared axes cannot be distinguished by colour, and the
+families are what the comparison is about.}
 \label{fig:sweep}
 \end{figure}
 
@@ -122,10 +144,16 @@ operating point. Three observations stand out. First, the plateaus of BERT,
 SecureBERT, and Gemini embeddings coincide with the all-positive baseline
 (F1 $\approx$ 0.885) across most of the threshold range --- confirming that
 their default-threshold results reflect saturation, not discrimination.
+CySecBERT joins them, and the faceting makes the point sharper than a single
+axis would: every member of the contextual-embedding panel shows the same
+plateau, while no member of the sentence-embedding panel does.
 Second, with an optimally chosen threshold Sentence-BERT becomes the
 \emph{best} detector (F1 = 0.909 at $t=0.120$), despite being the worst
-non-trivial one at its default operating point; its published default entry
-threshold is simply far too high for cross-standard requirement text. Choosing a
+non-trivial one at its default operating point; MPNet and BGE reach 0.895 and
+0.897 on the same basis, so the three sentence-embedding models are effectively
+tied once their operating points are chosen properly. Their published default
+entry thresholds are simply the wrong ones for cross-standard requirement
+text. Choosing a
 threshold on the same pairs the score is reported on inflates it, so the sweep
 was repeated under 5-fold cross-validation with 20 repetitions: the threshold is
 selected on four folds and scored on the fifth. Held-out F1 is
@@ -197,13 +225,17 @@ rejected. The final row is a classifier that labels every pair related.}
 \toprule
 Method & Precision & Recall & Specificity & F1\\
 \midrule
-Sentence-BERT           & \textbf{0.905} & 0.061 & 0.999 & 0.115\\
-Keyword Jaccard         & 0.101 & 0.019 & 0.976 & 0.033\\
 TF--IDF                 & 0.000 & 0.000 & 1.000 & 0.000\\
+Keyword Jaccard         & 0.101 & 0.019 & 0.976 & 0.033\\
+Sentence-BERT           & \textbf{0.905} & 0.061 & 0.999 & 0.115\\
+MPNet                   & 0.696 & 0.057 & 0.997 & 0.106\\
+BGE                     & 0.147 & 0.867 & 0.289 & \textbf{0.252}\\
 BERT                    & 0.128 & 1.000 & 0.038 & 0.228\\
-Gemini LLM              & 0.121 & 0.886 & 0.092 & 0.214\\
 SecureBERT              & 0.124 & 1.000 & 0.000 & 0.221\\
+CySecBERT               & 0.124 & 1.000 & 0.000 & 0.221\\
+NLI cross-encoder       & 0.129 & 0.027 & 0.974 & 0.045\\
 Gemini embeddings       & 0.124 & 1.000 & 0.000 & 0.221\\
+Gemini LLM              & 0.121 & 0.886 & 0.092 & 0.214\\
 \midrule
 \emph{Label every pair related} & \emph{0.124} & \emph{1.000} & \emph{0.000} & \emph{0.221}\\
 \bottomrule
@@ -211,20 +243,32 @@ Gemini embeddings       & 0.124 & 1.000 & 0.000 & 0.221\\
 \end{table}
 
 \paragraph{The ranking inverts.} Table~\ref{tab:weighted} does not rearrange the
-pilot ordering so much as contradict it. SecureBERT and Gemini embeddings reach
-specificity 0.000: across the weighted sample they reject no unrelated pair at
-all, and their scores match the all-positive baseline to three decimals. BERT,
-which led the pilot benchmark at detection F1 0.895, rejects 3.8\% of unrelated
-pairs. A paired bootstrap on the difference in F1 --- both methods scored on the
-same resampled pairs, which is the comparison the overlap of two marginal
-intervals does not make --- puts SecureBERT, Gemini embeddings and the Gemini
-LLM within the baseline's interval, and BERT ahead of it by 0.007 [0.003, 0.011],
-a margin with no practical content.
+pilot ordering so much as contradict it. SecureBERT, CySecBERT and Gemini
+embeddings reach specificity 0.000: across the weighted sample they reject no
+unrelated pair at all, and their scores match the all-positive baseline to three
+decimals. BERT, which led the pilot benchmark at detection F1 0.895, rejects
+3.8\% of unrelated pairs. A paired bootstrap on the difference in F1 --- both
+methods scored on the same resampled pairs, which is the comparison the overlap
+of two marginal intervals does not make --- leaves four of the eleven methods
+inside the baseline's interval: SecureBERT, CySecBERT and Gemini embeddings at
+exactly zero difference, and the Gemini LLM at $-0.007$ [$-0.025$, 0.009]. BERT
+sits ahead of the baseline by 0.007 [0.003, 0.011], a margin with no practical
+content.
 
-Sentence-BERT moves the other way. It looked worst among the non-degenerate
-methods on the pilot set (F1 0.300) and is the only method here with precision of
-practical interest: 0.905, meaning nine in ten of the pairs it surfaces are
-genuinely related. It pays for this with recall of 0.061.
+Sentence-BERT and MPNet move the other way. Both looked mediocre on the pilot set
+(F1 0.300 and 0.283) and are the only methods here with precision of practical
+interest: 0.905 and 0.696, meaning most of what they surface is genuinely
+related. They pay for it with recall near 0.06. The NLI cross-encoder behaves
+the same way from the other end of the design space --- precision 0.129 at recall
+0.027 --- and BGE, alone among the sentence-embedding models, lands in the
+saturated regime instead, flagging 87\% of the corpus.
+
+That split runs along family lines, and it is the clearest structural finding
+of the corpus view. The three models never trained for sentence similarity
+(BERT, SecureBERT, CySecBERT) all saturate. Two of the three trained for it
+(Sentence-BERT, MPNet) do the opposite and become too conservative to be useful.
+Neither behaviour is about the model's size or its domain; both are about
+whether its score distribution happens to straddle the threshold it inherited.
 
 Sensitivity and specificity are properties of a classifier alone; precision also
 depends on how common the positive class is. Fixing the first two therefore fixes
@@ -273,10 +317,14 @@ estimate is the remaining optimism.}
 Method & Threshold & Precision & Recall & F1 & Held-out F1\\
 \midrule
 Gemini embeddings & 0.719 & \textbf{0.446} & 0.571 & \textbf{0.501} & 0.485\\
+BGE               & 0.578 & 0.360 & 0.570 & 0.441 & 0.413\\
+MPNet             & 0.325 & 0.336 & 0.611 & 0.434 & 0.405\\
 Sentence-BERT     & 0.324 & 0.327 & 0.571 & 0.416 & 0.378\\
 TF--IDF           & 0.017 & 0.281 & 0.367 & 0.319 & 0.285\\
 BERT              & 0.824 & 0.233 & 0.477 & 0.313 & 0.289\\
+CySecBERT         & 0.857 & 0.204 & 0.497 & 0.289 & 0.274\\
 SecureBERT        & 0.939 & 0.178 & 0.508 & 0.264 & 0.252\\
+NLI cross-encoder & 0.002 & 0.194 & 0.334 & 0.246 & 0.211\\
 \midrule
 \emph{Label every pair related} & --- & \emph{0.124} & \emph{1.000} & \emph{0.221} & ---\\
 \bottomrule
@@ -284,14 +332,22 @@ SecureBERT        & 0.939 & 0.178 & 0.508 & 0.264 & 0.252\\
 \end{table}
 
 The result changes the diagnosis (Figure~\ref{fig:calibgap}). At a threshold
-fitted to the corpus, four of the five continuous methods clear the all-positive
-baseline, and two clear it by a margin the paired bootstrap separates from zero:
-Gemini embeddings by 0.280 [0.199, 0.365] and Sentence-BERT by 0.195
-[0.123, 0.263]. TF--IDF and BERT beat it by about 0.09 each, intervals excluding
-zero but only just. SecureBERT does not clear it at all
-($+0.043$, [$-0.011$, 0.096]). The two leaders are not separable from one another
-($-0.085$, [$-0.184$, 0.013]), so the honest statement is that they are tied at
-the top, not that one wins.
+fitted to the corpus, seven of the nine continuous methods clear the all-positive
+baseline by a margin the paired bootstrap separates from zero. Gemini embeddings
+lead at $+0.280$ [0.204, 0.362], with BGE at $+0.221$ [0.145, 0.295], MPNet at
+$+0.213$ [0.146, 0.282] and Sentence-BERT at $+0.195$ [0.126, 0.267] behind it.
+TF--IDF, BERT and CySecBERT beat it by 0.098, 0.093 and 0.068, intervals
+excluding zero but only just. Two do not clear it at all: SecureBERT
+($+0.043$, [$-0.009$, 0.095]) and the NLI cross-encoder
+($+0.025$, [$-0.049$, 0.098]).
+
+The top of that ranking is a four-way tie rather than a winner. Measured against
+the leader, BGE ($-0.060$, [$-0.161$, 0.045]), MPNet ($-0.067$, [$-0.160$,
+0.019]) and Sentence-BERT ($-0.085$, [$-0.184$, 0.015]) all have intervals
+containing zero, so the honest statement is that a hosted commercial embedding
+and three freely available local models cannot be told apart on this task. That
+matters practically: the best local model matches the paid one within the
+resolution this sample supports.
 
 What collapsed in Table~\ref{tab:weighted}, then, was mostly calibration rather
 than representation. The embedding spaces do carry enough signal to reject
@@ -301,7 +357,12 @@ development set at the wrong base rate is not a mild optimism in the reported
 score, it is an operating point that turns a usable model into a constant
 function. SecureBERT is the exception, and the informative one --- its scores
 occupy a band 0.06 wide across the entire corpus, so no threshold placed anywhere
-in that band separates the classes.
+in that band separates the classes. CySecBERT, adapted to the same domain from a
+different base model by a different group, is the near-exception: it recovers
+enough range to clear the baseline by 0.068, but still finishes below plain BERT.
+Two independent attempts at cybersecurity domain adaptation both end up worse
+than the general-purpose model they were built from, which is a stronger
+statement than either could make alone.
 
 \begin{figure}[htbp]
 \centering
@@ -340,10 +401,14 @@ Method & Accuracy & Macro-F1 & Macro-F1 95\% CI\\
 TF--IDF            & 0.215 & 0.086 & [0.053, 0.128]\\
 Keyword Jaccard    & 0.224 & 0.179 & [0.059, 0.288]\\
 Sentence-BERT      & 0.224 & 0.099 & [0.064, 0.137]\\
-BERT               & 0.411 & 0.172 & [0.116, 0.237]\\
+MPNet              & 0.224 & 0.100 & [0.064, 0.140]\\
+BGE                & 0.243 & 0.149 & [0.098, 0.199]\\
+BERT               & 0.411 & 0.172 & [0.114, 0.234]\\
 SecureBERT         & 0.028 & 0.011 & [0.000, 0.025]\\
-Gemini embeddings  & \textbf{0.477} & \textbf{0.279} & [0.148, 0.391]\\
-Gemini LLM         & 0.187 & 0.088 & [0.053, 0.127]\\
+CySecBERT          & 0.196 & 0.087 & [0.057, 0.118]\\
+NLI cross-encoder  & 0.215 & 0.102 & [0.054, 0.164]\\
+Gemini embeddings  & \textbf{0.477} & \textbf{0.279} & [0.150, 0.388]\\
+Gemini LLM         & 0.187 & 0.088 & [0.052, 0.127]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -351,8 +416,8 @@ Gemini LLM         & 0.187 & 0.088 & [0.053, 0.127]\\
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/confusion_matrices}
-\caption{Row-normalised confusion matrices (counts printed) for the three most
-instructive methods. EQV = equivalence, OVL = overlap, SUB = subsumption,
+\caption{Row-normalised confusion matrices (counts printed) for the most
+instructive methods, one per family. EQV = equivalence, OVL = overlap, SUB = subsumption,
 CMP = complementarity, NONE = no relation.}
 \label{fig:confusion}
 \end{figure}
@@ -363,9 +428,9 @@ second pair. The comparison that matters is against the trivial classifier
 that assigns the majority label to everything: \textsc{Overlap} accounts for
 51 of the 107 pairs, so always predicting it yields 0.477 accuracy. The best
 method matches that figure exactly and none exceeds it. The same baseline
-scores 0.129 macro-F1, which three methods do beat --- keyword Jaccard, BERT and
-Gemini embeddings --- so the methods are not uniformly worthless; but the
-headline conclusion has to be stated plainly. On the five-label task, none of the seven methods learns the
+scores 0.129 macro-F1, which four methods do beat --- keyword Jaccard, BGE, BERT
+and Gemini embeddings --- so the methods are not uniformly worthless; but the
+headline conclusion has to be stated plainly. On the five-label task, none of the eleven methods learns the
 distinction the task is about. The confusion matrices in
 Figure~\ref{fig:confusion} show how each one fails:
 
@@ -386,6 +451,16 @@ Figure~\ref{fig:confusion} show how each one fails:
   a relation to 20 of the 22 annotated negatives.
   \item \textbf{SecureBERT}'s uniform \textsc{Equivalence} output produces
   0.028 accuracy --- exactly the 3 equivalence pairs in the ground truth.
+  \item \textbf{The NLI cross-encoder} is the only method that predicts
+  \textsc{Subsumption} at all. Over the full corpus it emits 123 subsumption
+  labels where every other method emits none, because every other method scores
+  pairs with a symmetric function and direction is not recoverable from one. Its
+  macro-F1 of 0.102 is nonetheless unremarkable, and the reason is instructive:
+  it is extremely conservative, flagging 142 of 4{,}968 pairs, so it reaches the
+  directional label on too few pairs to score well. The capability is real and
+  the recall is not. This is the one structural gap in the taxonomy that a
+  different architecture --- rather than a better-calibrated threshold --- does
+  close, which is why it is worth reporting despite the weak headline number.
 \end{itemize}
 
 Two error examples illustrate the pattern. Provision 5.3-11 of \standardA{}
@@ -402,6 +477,70 @@ authentication-related access control, but the model read the difference in
 system layer as a difference in objective. The boundary between overlap and
 complementarity is exactly where the annotation itself is hardest, a point
 the validation study below quantifies.
+
+\section{Coverage and gaps}\label{sec:coverage}
+
+The preceding sections measure how often a method is right. This one asks what
+the method actually says about the two standards, which is the question a
+compliance practitioner brings to a mapping exercise: which provisions of
+\standardA{} have a counterpart in \standardB{}, and which have none. The
+manual study closest to this one~\cite{djebbar2023comparative} reports exactly
+that --- a coverage statement and an explicit list of unmapped requirements ---
+so producing the same two artefacts automatically is the fairest way to show
+what the automation delivers.
+
+Everything in this section is a prediction from a single method, the
+best-scoring one at its corpus-calibrated operating point, and its precision at
+that point is 0.446 with a 95\% interval of [0.362, 0.535]. Roughly half of
+what follows is therefore wrong. The section is included because a shortlist
+with a known error rate is a usable artefact and a mapping with an unknown one
+is not, but nothing here carries the standing of the estimates in
+Section~\ref{sec:prevalence}.
+
+At its calibrated threshold the method flags 797 of the 4{,}968 candidate pairs,
+16.0\% of the space, against an estimated true prevalence of 12.4\%
+[10.0\%, 15.0\%]. It over-predicts, which is what a threshold chosen to maximise
+F1 at a low base rate should do: recall is worth more than precision when the
+output is a shortlist for human review.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{figures/coverage_heatmap.pdf}
+  \caption{Predicted relation density by clause. Each cell is the share of
+  provision pairs in that clause block flagged as related by Gemini embeddings
+  at the corpus-calibrated threshold of 0.719. These are predictions, not
+  verified relations: the method's precision at this operating point is 0.446
+  [0.362, 0.535].}
+  \label{fig:coverage}
+\end{figure}
+
+Figure~\ref{fig:coverage} shows where the predicted relations concentrate. The
+density is uneven in a way that follows the structure of the two documents
+rather than the behaviour of the model.
+
+The gap side is the more informative one, and it is the part a similarity
+threshold can state cleanly. Eight of the 69 \standardA{} provisions and five
+of the 72 \standardB{} provisions receive no predicted counterpart at all;
+Table~\ref{tab:unmapped} lists them. A gap here is a weaker claim than a gap in
+a manual study: it means the method found nothing, not that nothing is there,
+and at a recall well below one the two are different statements. The list is
+useful in the direction that a false gap is cheap to check --- an analyst reads
+thirteen provisions --- and expensive to miss.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Provisions with no predicted counterpart in the other standard, at
+  the corpus-calibrated operating point. Absence of a prediction is not evidence
+  of absence of a relation; the method's recall at this threshold is below one.}
+  \label{tab:unmapped}
+  \small
+  \input{tables/unmapped_provisions}
+\end{table}
+
+The full predicted mapping --- all 797 pairs with their scores --- is given in
+Appendix~\ref{app:mapping}. Both the table above and that appendix are
+generated directly from the evaluation outputs, so neither can drift from the
+numbers reported here.
 
 \section{Ground-truth validation}\label{sec:agreementresults}
 
@@ -473,10 +612,11 @@ it is retained rather than discarded.
 
 \begin{table}[htbp]
 \centering
-\caption{Wall-clock runtime per stage on a CPU-only laptop (Apple silicon),
-including model loading. Gemini stages run through the batch API; their
-end-to-end time is dominated by queueing (minutes to hours) rather than
-computation.}
+\caption[Wall-clock runtime per stage]{Wall-clock runtime per stage on an
+8\,GB Apple silicon laptop, including model loading but not the one-off model
+download (about 2\,GB in total). Embedding stages use the Metal backend. Gemini
+stages run through the batch API; their end-to-end time is dominated by queueing
+(minutes to hours) rather than computation.}
 \label{tab:runtime}
 \small
 \begin{tabular}{lr}
@@ -485,24 +625,38 @@ Stage & Runtime\\
 \midrule
 Provision extraction (both PDFs) & 0.9 s\\
 TF--IDF + keyword mapping        & 3.5 s\\
-Sentence-BERT mapping            & 56 s\\
-BERT mapping                     & 104 s\\
-SecureBERT mapping               & 195 s\\
+Sentence-BERT mapping            & 1.8 s\\
+MPNet mapping                    & 3.9 s\\
+BGE mapping                      & 3.9 s\\
+BERT mapping                     & 4.2 s\\
+SecureBERT mapping               & 5.7 s\\
+CySecBERT mapping                & 3.9 s\\
+NLI cross-encoder (9{,}936 forward passes) & 327 s\\
 Gemini embeddings                & API batch\\
 Gemini LLM classification (4{,}968 prompts) & API batch\\
 Evaluation                       & 1.4 s\\
+Corpus estimation (bootstrap + calibration) & 612 s\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Every local method runs in minutes on commodity hardware
+Every local method runs in seconds or minutes on commodity hardware
 (Table~\ref{tab:runtime}); by comparison, drafting and reviewing the 107 pilot
 pairs occupied several working days even with LLM assistance, and the 650
-sampled pairs took several times that again. Interpretability differs more than
-runtime: the keyword baseline can show \emph{which} terms matched, embedding
-methods offer only an opaque score, and the LLM can produce a textual
-rationale on request --- though its rationale quality was not separately
-evaluated here.
+sampled pairs took several times that again. The cost structure separates the
+two architectures cleanly. A bi-encoder embeds each provision once, so the work
+is linear in the 141 provisions and the 4{,}968 similarities are a single matrix
+product --- which is why every embedding stage finishes in under six seconds. A
+cross-encoder must run the model once per pair per direction, so its work is
+quadratic in the provisions: 9{,}936 forward passes and 327 seconds, roughly
+sixty times the cost of the slowest bi-encoder for the same corpus. On this pair
+of standards that is affordable; on a pair ten times larger it would not be.
+
+Interpretability differs more than runtime: the keyword baseline can show
+\emph{which} terms matched, embedding methods offer only an opaque score, the
+cross-encoder additionally reports which direction the entailment ran, and the
+LLM can produce a textual rationale on request --- though its rationale quality
+was not separately evaluated here.
 
 \section{Discussion}\label{sec:discussion}
 
@@ -514,33 +668,54 @@ the annotated scope --- although, as Section~\ref{sec:prevalence} shows, that
 figure reflects the benchmark's high positive rate more than deployable
 accuracy. Identifying the \emph{type} of relationship is a
 different matter. The best classification result (macro-F1 0.279) is far from
-usable autonomy, and structural limits are visible: symmetric similarity
-scores cannot express directional subsumption at all, and the
+usable autonomy, and structural limits are visible: the
 overlap/complementarity boundary requires judging \emph{objectives}, not
 surface meaning. The fundamental limitation is that a scalar similarity
 collapses precisely the distinctions the taxonomy is designed to capture.
 
+One of those limits turns out to be architectural rather than fundamental.
+Symmetric similarity cannot express directional subsumption --- but the NLI
+cross-encoder, which asks a directional question by construction, predicts 123
+subsumption relations where the other ten methods predict none. It does so at
+too low a recall to be useful on its own, so the practical conclusion is
+unchanged; the theoretical one is not. The distinction the taxonomy needs is
+reachable, just not by the family of methods that dominates this literature.
+
 \paragraph{RQ2 --- method comparison.}
-No method family wins outright; they fail differently. Lexical baselines are
-precise but nearly blind (recall $\leq$ 0.07). General-purpose transformer
-embeddings saturate --- anisotropy makes their cosine scores unusable without
-calibration, and domain pretraining (SecureBERT) makes this worse rather than
-better, refuting the intuition that cybersecurity vocabulary is what is
-missing. The purpose-built sentence encoder (Sentence-BERT) has the best
-underlying representation once its threshold is calibrated. Gemini embeddings
-give the best label quality overall (macro-F1 0.279, accuracy 0.477), and the
-prompted LLM is the only method with non-trivial recall on complementarity but
-over-predicts it massively. The pilot and corpus views disagree about which
-method to prefer, and where they disagree the corpus view should win: Gemini
-embeddings and Sentence-BERT lead once the operating point is fitted to the
-corpus rather than to the pilot, and the paired bootstrap cannot separate them
-($-0.085$, [$-0.184$, 0.013]). Since accuracy does not decide between the two, the
-practical grounds do: Sentence-BERT runs locally in under a minute with no
-per-query cost and reproduces bit-identically, whereas the Gemini embeddings
-depend on a hosted model that can change under the same name. Calibrated
-Sentence-BERT for ranking, plus human labelling of the shortlist, is the
-defensible configuration, with Gemini embeddings the better choice where recall
-matters more than reproducibility.
+No method family wins outright; they fail differently, and with three models
+in each of the two embedding families the failures separate by family rather
+than by model. Lexical baselines are precise but nearly blind (recall $\leq$
+0.07). Contextual embeddings saturate: anisotropy makes their cosine scores
+unusable without calibration, and all three sit at the bottom of the calibrated
+ranking. Domain pretraining makes this worse rather than better, and that now
+rests on two independent models --- SecureBERT and CySecBERT, built by different
+groups from different base models --- both of which finish below the plain BERT
+they were adapted from. The intuition that cybersecurity vocabulary is the
+missing ingredient is not merely unsupported; it is contradicted twice.
+
+The sentence-embedding models are the strongest local family once calibrated,
+and they are mutually indistinguishable: BGE 0.441, MPNet 0.434 and
+Sentence-BERT 0.416, with paired intervals that all contain zero against the
+leader. Gemini embeddings top the table at 0.501 and give the best label quality
+overall (macro-F1 0.279, accuracy 0.477), but the paired bootstrap cannot
+separate them from any of the three free local models --- so the practical answer
+to whether the paid model is needed is no, not at the resolution this sample
+supports. The cross-encoder buys direction at roughly sixty times the compute
+and a recall too low to exploit it. The prompted LLM is the only method with
+non-trivial recall on complementarity but over-predicts it massively.
+
+The pilot and corpus views disagree about which method to prefer, and where they
+disagree the corpus view should win. Once the operating point is fitted to the
+corpus, four methods lead and the paired bootstrap separates none of them:
+Gemini embeddings, BGE, MPNet and Sentence-BERT. Since accuracy does not decide
+between them, practical grounds do. All three local models run in under four
+seconds with no per-query cost and reproduce bit-identically across runs,
+whereas the Gemini embeddings depend on a hosted model that can change under the
+same name --- and the LLM replicate of Section~\ref{sec:agreementresults} shows
+what hosted non-determinism costs. Calibrated BGE or MPNet for ranking, plus
+human labelling of the shortlist, is the defensible configuration; the paid
+model earns its place only where the marginal 0.06 F1 it may or may not carry is
+worth the loss of reproducibility.
 
 \paragraph{RQ3 --- automated versus human mapping.}
 Against the author-reviewed reference, automation is dramatically faster

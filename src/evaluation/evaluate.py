@@ -12,6 +12,8 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 
+from src.methods import METHODS
+
 BASE = Path(__file__).parents[2]
 DATA = BASE / "data"
 GT_PATH = DATA / "baseline" / "gt.csv"
@@ -180,19 +182,10 @@ if __name__ == "__main__":
     print(f"Ground truth: {len(gt)} pairs")
     print(f"  Relationships: {gt['relationship'].value_counts().to_dict()}\n")
 
-    methods = {
-        "rule_based_tfidf":     DATA / "mappings" / "rule_based_tfidf.csv",
-        "rule_based_jaccard":   DATA / "mappings" / "rule_based_jaccard.csv",
-        "sbert":                DATA / "mappings" / "sbert_output.csv",
-        "bert":                 DATA / "mappings" / "bert_output.csv",
-        "securebert":           DATA / "mappings" / "securebert_output.csv",
-        "gemini_embedding":     DATA / "mappings" / "gemini_embedding_output.csv",
-        "gemini_llm":           DATA / "mappings" / "gemini_output.csv",
-    }
-
     summary = {}
 
-    for name, path in methods.items():
+    for name, method in METHODS.items():
+        path = method.predictions
         if not path.exists():
             print(f"Skipping {name}: file not found")
             continue
