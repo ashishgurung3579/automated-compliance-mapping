@@ -1,0 +1,245 @@
+{
+  "batch": 9,
+  "items": [
+    {
+      "pair_id": "5.9-3||5.1.1-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Orderly network reconnection versus the AI content of a staff security training programme."
+    },
+    {
+      "pair_id": "5.1-4||5.2.4-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Changing an authentication value versus documenting the provenance of public training data."
+    },
+    {
+      "pair_id": "5.12-2||5.1.1-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Guidance aimed at consumers versus threat awareness maintained by an organization's own staff."
+    },
+    {
+      "pair_id": "5.3-12||5.3.1-2.2",
+      "relationship": "OVERLAP",
+      "confidence": 3,
+      "justification": "Both require users to be told about updates; A covers disruption to functionality, B covers security relevance and explanation."
+    },
+    {
+      "pair_id": "5.6-2||5.2.2-2",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both restrict what an attacker can extract through an exposed interface, A by limiting disclosure, B by limiting access rate."
+    },
+    {
+      "pair_id": "5.5-6||5.2.4-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Encryption of security parameters in transit versus an audit log of prompt and configuration changes."
+    },
+    {
+      "pair_id": "5.12-2||5.2.4-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Consumer setup guidance versus logging changes to model configuration."
+    },
+    {
+      "pair_id": "5.3-14||5.2.1-4.1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Publishing the rationale for absent updates versus sanitising data and inputs at design time."
+    },
+    {
+      "pair_id": "5.1-2||5.1.2-2",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Password generation resistant to automated attack versus general robustness to adversarial AI attacks; B does not name credentials."
+    },
+    {
+      "pair_id": "5.1-5||5.2.2-2",
+      "relationship": "OVERLAP",
+      "confidence": 3,
+      "justification": "Both make automated attack through an exposed interface impracticable, A against brute-forced authentication, B against model access rate."
+    },
+    {
+      "pair_id": "5.5-5||5.2.2-1",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both require access control over security-relevant surfaces, A on device configuration interfaces, B on APIs, models and pipelines."
+    },
+    {
+      "pair_id": "5.12-2||5.1.3-1.2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Secure setup guidance versus the risk carried by unused model capabilities."
+    },
+    {
+      "pair_id": "5.6-6||5.1.3-1.2",
+      "relationship": "OVERLAP",
+      "confidence": 3,
+      "justification": "Both cut attack surface by removing unnecessary capability; A mandates minimizing code, B mandates managing the risk of superfluous model functionality."
+    },
+    {
+      "pair_id": "5.3-15B||5.2.2-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Hardware replaceability versus evaluation of access control frameworks."
+    },
+    {
+      "pair_id": "5.5-8||5.1.1-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Lifecycle management of security parameters versus AI content in a training programme."
+    },
+    {
+      "pair_id": "5.8-3||5.2.4-1.2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Documenting sensing capabilities versus publishing hashes of model components."
+    },
+    {
+      "pair_id": "5.2-3||5.1.2-4",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "Vulnerability management of one's own product and due diligence on external components are the two halves of product security assurance across the supply chain."
+    },
+    {
+      "pair_id": "5.6-5||5.3.1-2.1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Disabling unnecessary services versus guidance on appropriate use and failure modes."
+    },
+    {
+      "pair_id": "5.13-1A||5.2.4-2",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Runtime validation of user interface input versus documentation that allows poisoned training data to be traced after the fact."
+    },
+    {
+      "pair_id": "5.3-5||5.2.2-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Checking for available updates versus evaluation of access control frameworks."
+    },
+    {
+      "pair_id": "5.5-2||5.2.2-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Use of reviewed cryptographic implementations versus separated development and tuning environments."
+    },
+    {
+      "pair_id": "5.11-2||5.5.1-1",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both require secure disposal of data held in back-end services, A on user request, B on transfer of ownership."
+    },
+    {
+      "pair_id": "5.2-3||5.2.2-1",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Continuous vulnerability monitoring versus a review of organizational access control frameworks."
+    },
+    {
+      "pair_id": "5.3-4B||5.5.1-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Automatic update activation versus secure disposal of assets on transfer of ownership."
+    },
+    {
+      "pair_id": "5.5-5||5.2.2-5",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Authentication before configuration change versus incident management and recovery planning."
+    },
+    {
+      "pair_id": "5.7-2||5.2.2-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Alerting on unauthorized software change versus evaluation of access control frameworks."
+    },
+    {
+      "pair_id": "5.7-2||5.2.3-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Detection of unauthorized change versus justifying the use of poorly documented components."
+    },
+    {
+      "pair_id": "5.0-1||5.2.2-5",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Recording justifications for non-applicable provisions versus incident and recovery planning."
+    },
+    {
+      "pair_id": "5.1-1||5.2.4-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Per-device password uniqueness versus documenting where public training data came from."
+    },
+    {
+      "pair_id": "5.12-3||5.1.3-4",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "User-side checking and operator-side continuous monitoring are different obligations that together keep a deployed system in a secure state."
+    },
+    {
+      "pair_id": "5.8-2||5.4.1-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Encryption of sensitive personal data in transit versus the delivery chain for security patches."
+    },
+    {
+      "pair_id": "5.4-4||5.1.3-1.2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Uniqueness of security parameters versus the risk of unused model capability."
+    },
+    {
+      "pair_id": "5.2-3||5.3.1-2.2",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 3,
+      "justification": "Rectifying vulnerabilities and notifying users of the resulting security updates are consecutive steps of one handling process."
+    },
+    {
+      "pair_id": "5.1-2||5.2.4-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Password generation mechanism versus an audit log of model configuration changes."
+    },
+    {
+      "pair_id": "5.3-16||5.2.4-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Recognizable model designation on a device versus logging changes to system prompts."
+    },
+    {
+      "pair_id": "5.6-7||5.2.2-3",
+      "relationship": "OVERLAP",
+      "confidence": 3,
+      "justification": "Both mandate least privilege, A for software running on the device, B for development and tuning environments."
+    },
+    {
+      "pair_id": "5.8-3||5.3.1-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Documenting sensing capabilities versus supporting users through an incident."
+    },
+    {
+      "pair_id": "5.4-3||5.2.4-1.2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Prohibiting hard-coded security parameters versus publishing hashes for model components."
+    },
+    {
+      "pair_id": "5.3-7||5.1.2-2",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Cryptography for the update mechanism versus general robustness of the AI system to adversarial input."
+    },
+    {
+      "pair_id": "5.9-3||5.2.4-1.2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Orderly network reconnection versus cryptographic hashes for model components."
+    }
+  ]
+}

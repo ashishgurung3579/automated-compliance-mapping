@@ -1,0 +1,40 @@
+{
+  "batch": 18,
+  "items": [
+    {
+      "pair_id": "5.8-1||5.1.3-2",
+      "requirement_A_en303645": "The confidentiality of personal data transiting between the consumer IoT device and associated\nservices should be protected with best practice cryptography, appropriate to the properties of the technology, operating\nenvironment, risk and usage.",
+      "requirement_B_en304223": "Where AI security threats are identified that cannot be resolved by Developers, this shall be\ncommunicated to System Operators so they can threat model their systems. System Operators shall communicate this\ninformation to End-users, so they are made aware of these threats. This communication should include detailed\ndescriptions of the risks, potential impacts, and recommended actions to address or monitor these threats."
+    },
+    {
+      "pair_id": "5.5-3||5.2.5-3",
+      "requirement_A_en303645": "Cryptographic algorithms and primitives should be replaceable.",
+      "requirement_B_en304223": "Developers should ensure that the findings from the testing and evaluation are shared with System\nOperators, to inform their own testing and evaluation."
+    },
+    {
+      "pair_id": "5.9-2||5.2.4-1.1",
+      "requirement_A_en303645": "Consumer IoT devices should remain operating and locally functional in the case of a loss of network\naccess and should recover cleanly in the case of restoration of a loss of power.",
+      "requirement_B_en304223": "Developers should ensure that the document includes security-relevant information, such as the\nsources of training data (including fine-tuning data and human or other operational feedback), intended scope and\nlimitations, guardrails, retention time, suggested review frequency and potential failure modes."
+    },
+    {
+      "pair_id": "5.7-2||5.1.4-5",
+      "requirement_A_en303645": "If an unauthorized change is detected to the software, the consumer IoT device should alert the user\nand/or administrator to the issue and should not connect to wider networks than those necessary to perform the alerting\nfunction.\nThe ability to recover remotely from unauthorized changes can rely on a known good state, such as locally storing a\nknown good version to enable safe recovery and updating of the consumer IoT device. This will avoid denial of service\nand costly recalls or maintenance visits, whilst managing the risk of potential takeover of the consumer IoT device by\nan attacker subverting update or other network communications mechanisms.\nIf a consumer IoT device detects an unauthorized change to its software, it will be able to inform the right stakeholder.\nIn some cases, consumer IoT devices can have the ability to be in administration mode.",
+      "requirement_B_en304223": "Developers and System Operators should make End-users aware of prohibited use cases of the AI\nsystem."
+    },
+    {
+      "pair_id": "5.2-2||5.2.2-4",
+      "requirement_A_en303645": "Disclosed vulnerabilities should be acted on in a timely manner.\nA \"timely manner\" for acting on vulnerabilities varies considerably and is incident-specific; however, conventionally,\nthe vulnerability management process is following a properly documented process including clear responsibilities and\ncompleted within 90 days for a software solution, including availability of patches and notification of the issue. A\nhardware fix can take considerably longer to address than a software fix. Additionally, a fix that has to be deployed to\ndevices can take time to roll out compared with a server software fix.",
+      "requirement_B_en304223": "Developers and System Operators shall implement and publish a clear and accessible vulnerability\ndisclosure policy."
+    },
+    {
+      "pair_id": "5.3-10||5.2.5-2.1",
+      "requirement_A_en303645": "Where updates are delivered over a network interface, the consumer IoT device shall verify the\nauthenticity and integrity of each update via a trust relationship.",
+      "requirement_B_en304223": "For security testing, System Operators and Developers should use independent security testers with\ntechnical skills relevant to their AI systems."
+    },
+    {
+      "pair_id": "5.5-1||5.3.1-2",
+      "requirement_A_en303645": "The consumer IoT device shall use best practice cryptography to communicate securely.\nAppropriateness of security controls and the use of best practice cryptography is dependent on many factors including\nthe properties of technology, operating environment, risk and usage context. As security is ever-evolving it is difficult\nto give prescriptive advice about cryptography or other security measures without the risk of such advice quickly\nbecoming obsolete.",
+      "requirement_B_en304223": "System Operators shall provide End-users with accessible guidance to support their use,\nmanagement, integration, and configuration of AI systems. If the Developer is an external entity, they shall provide all\nnecessary information to help System Operators."
+    }
+  ]
+}

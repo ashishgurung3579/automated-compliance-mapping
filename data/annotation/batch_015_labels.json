@@ -1,0 +1,245 @@
+{
+  "batch": 15,
+  "items": [
+    {
+      "pair_id": "5.3-4B||5.4.1-3",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Consented automatic updating on a device versus preview access that lets operators evaluate model changes."
+    },
+    {
+      "pair_id": "5.2-2||5.1.1-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Timely action on disclosed vulnerabilities versus AI content in a training programme."
+    },
+    {
+      "pair_id": "5.1-1||5.1.1-2.2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Per-device password uniqueness versus secure coding training."
+    },
+    {
+      "pair_id": "5.3-1||5.2.1-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Updateability of software components versus disaster recovery planning."
+    },
+    {
+      "pair_id": "5.12-3||5.2.5-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "User guidance on checking secure setup versus security testing before release."
+    },
+    {
+      "pair_id": "5.3-4A||5.4.1-1",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both concern getting fixes onto the deployed product, A through an automatable mechanism, B through the supply and delivery obligation."
+    },
+    {
+      "pair_id": "5.2-1||5.2.2-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Vulnerability disclosure policy versus separation of development environments."
+    },
+    {
+      "pair_id": "5.10-1||5.4.2-4",
+      "relationship": "OVERLAP",
+      "confidence": 3,
+      "justification": "Both examine operational data for security-relevant anomalies, A in device telemetry, B in model behaviour over time."
+    },
+    {
+      "pair_id": "5.3-1||5.3.1-2.2",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Technical updateability of components versus the obligation to notify users of updates."
+    },
+    {
+      "pair_id": "5.4-1||5.2.1-4.2",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both protect confidential material held at rest, A security parameters in device storage, B training data and model weights."
+    },
+    {
+      "pair_id": "5.3-8||5.4.1-1.1",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "Prompt patching and mitigation where patching is impossible are the two arms of managing known vulnerabilities."
+    },
+    {
+      "pair_id": "5.3-15A||5.4.1-1.1",
+      "relationship": "SUBSUMPTION_B_BROADER",
+      "confidence": 2,
+      "justification": "Both address products that cannot be updated; A names isolation, B requires mechanisms and contingency plans generally, of which isolation is one."
+    },
+    {
+      "pair_id": "5.1-3||5.2.2-1",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Cryptographic strength of authentication versus an organizational access control review."
+    },
+    {
+      "pair_id": "5.2-2||5.4.1-1.1",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "Acting on disclosed vulnerabilities and planning for the unpatchable case cover the two outcomes of a vulnerability report."
+    },
+    {
+      "pair_id": "5.8-2||5.1.4-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Encryption of sensitive personal data versus interpretability of model outputs."
+    },
+    {
+      "pair_id": "5.2-3||5.4.2-3",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both require ongoing observation to surface security problems, A of the product, B of the model's internal states."
+    },
+    {
+      "pair_id": "5.5-5||5.3.1-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Authentication before configuration change versus accessible user guidance."
+    },
+    {
+      "pair_id": "5.9-3||5.2.5-4",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Orderly network reconnection versus evaluating outputs for reverse engineering risk."
+    },
+    {
+      "pair_id": "5.8-2||5.1.3-1.1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Encryption of sensitive personal data versus threat modelling on configuration change."
+    },
+    {
+      "pair_id": "5.9-3||5.3.1-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Orderly network reconnection versus transparency about data use and storage."
+    },
+    {
+      "pair_id": "5.2-3||5.3.1-3",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "Finding and fixing vulnerabilities and supporting affected users through an incident are separate parts of one response capability."
+    },
+    {
+      "pair_id": "5.2-3||5.2.2-4",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "Internal monitoring and rectification and a published disclosure route are the inward and outward halves of vulnerability management."
+    },
+    {
+      "pair_id": "5.4-1||5.2.2-4",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Secure storage of security parameters versus publishing a vulnerability disclosure policy."
+    },
+    {
+      "pair_id": "5.3-1||5.4.1-2",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both govern how software change is handled safely, A by requiring components to be securely updateable, B by re-testing after a major change."
+    },
+    {
+      "pair_id": "5.3-7||5.2.3-1",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "Cryptographic protection of the update path and secure supply chain process together establish that delivered software is trustworthy."
+    },
+    {
+      "pair_id": "5.3-3||5.2.1-4.1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Ease of applying an update versus sanitisation of data and inputs."
+    },
+    {
+      "pair_id": "5.5-1||5.2.2-1",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Cryptography for secure communication versus an organizational access control review."
+    },
+    {
+      "pair_id": "5.12-1||5.2.3-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Usability of installation and maintenance versus secure software supply chain processes."
+    },
+    {
+      "pair_id": "5.6-8||5.2.1-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Hardware memory access control versus maintaining an asset inventory."
+    },
+    {
+      "pair_id": "5.7-2||5.2.4-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Alerting on detected software tampering versus documenting public training data provenance."
+    },
+    {
+      "pair_id": "5.5-1||5.2.3-2.2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Cryptography for secure communication versus sharing documentation with End-users."
+    },
+    {
+      "pair_id": "5.3-3||5.2.4-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Ease of applying an update versus an audit log of configuration changes."
+    },
+    {
+      "pair_id": "5.6-9||5.2.1-4.1",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "A secure development process and design-time sanitisation of data and inputs are distinct obligations within secure engineering of the artefact."
+    },
+    {
+      "pair_id": "5.1-1||5.3.1-2.1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Password uniqueness versus guidance on appropriate use and failure modes."
+    },
+    {
+      "pair_id": "5.5-7||5.2.2-2",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both harden a remotely accessible interface, A by protecting the credentials it carries, B by limiting how it can be exercised."
+    },
+    {
+      "pair_id": "5.11-3||5.2.2-4",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Instructions for deleting personal data versus publishing a vulnerability disclosure policy."
+    },
+    {
+      "pair_id": "5.6-9||5.1.2-5.1",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "A secure development process relies on staff raising risks they notice, which is what B mandates."
+    },
+    {
+      "pair_id": "5.3-14||5.1.2-4",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Publishing the rationale for absent updates versus due diligence on external components."
+    },
+    {
+      "pair_id": "5.12-1||5.5.1-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Usability of installation and maintenance versus secure deletion at decommissioning."
+    },
+    {
+      "pair_id": "5.5-5||5.4.1-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Authentication before configuration change versus the patch delivery chain."
+    }
+  ]
+}

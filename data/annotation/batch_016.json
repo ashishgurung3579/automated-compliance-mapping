@@ -1,0 +1,205 @@
+{
+  "batch": 16,
+  "items": [
+    {
+      "pair_id": "5.4-1||5.1.2-4",
+      "requirement_A_en303645": "Sensitive security parameters in persistent storage shall be stored securely by the consumer IoT device.",
+      "requirement_B_en304223": "If a Developer or System Operator uses an external component, they shall conduct an AI security risk\nassessment and due diligence process in line with their existing software development processes, that assesses AI\nspecific risks."
+    },
+    {
+      "pair_id": "5.10-1||5.1.3-1",
+      "requirement_A_en303645": "If telemetry data is collected from consumer IoT products, such as usage and measurement data, it\nshould be examined for security anomalies.",
+      "requirement_B_en304223": "Developers and System Operators shall analyse threats and manage security risks to their systems.\nThreat modelling should include regular reviews and updates and address AI-specific attacks, such as data poisoning,\nmodel inversion, and membership inference."
+    },
+    {
+      "pair_id": "5.4-1||5.3.1-3",
+      "requirement_A_en303645": "Sensitive security parameters in persistent storage shall be stored securely by the consumer IoT device.",
+      "requirement_B_en304223": "Developers and System Operators should support End-users and Affected Entities during and\nfollowing a cyber security incident to contain and mitigate the impacts of an incident. The process for undertaking this\nshould be documented and agreed in contracts with End-users."
+    },
+    {
+      "pair_id": "5.13-1B||5.2.1-4",
+      "requirement_A_en303645": "Data input at application layer to the device via network interfaces shall be validated by the device\nregarding unexpected data input to prevent system manipulations and failures.",
+      "requirement_B_en304223": "Developers, System Operators, Data Custodians and End-users shall protect sensitive data, such as\ntraining or test data, against unauthorized access (see clause 5.2.3 for details on securing data)."
+    },
+    {
+      "pair_id": "5.6-1||5.4.1-1",
+      "requirement_A_en303645": "All unused network interfaces and all unused logical interfaces that are accessible through a network\ninterface shall be disabled.\nDisabling unused network and logical interfaces can significantly reduce the attack surface of a consumer IoT device.\nThese interfaces may have been used only during the development phase of the device and are no longer required for\nnormal operation, or may be specific to certain environments or purposes. By default, these interfaces are to be disabled\nbefore the device is made available to the public. The disabling can be realized for example by appropriate access\ncontrol mechanisms that are for example preventing unauthorized access to or misuse of the unused interfaces.\nHowever, users may have the ability to manually enable any disabled interface that is required for their specific usage.\nIn such a case it is to be ensured that the enabling capability cannot be misused easily, e.g. by appropriate access control\nand authentication mechanisms.",
+      "requirement_B_en304223": "Developers shall provide security updates and patches, where possible, and notify System Operators\nof the security updates. System Operators shall deliver these updates and patches to End-users."
+    },
+    {
+      "pair_id": "5.5-6||5.1.2-5",
+      "requirement_A_en303645": "Critical security parameters should be encrypted in transit, with such encryption appropriate to the\nproperties of the technology, risk and usage.",
+      "requirement_B_en304223": "Data Custodians shall ensure that the intended usage of the system is appropriate to the sensitivity of\nthe data it was trained on as well as the controls intended to ensure the security of the data."
+    },
+    {
+      "pair_id": "5.6-8||5.2.1-4.2",
+      "requirement_A_en303645": "The consumer IoT device should include a hardware-level access control mechanism for memory.\nSoftware exploits often use the lack of access control in memory to execute malicious code. Access control mechanisms\nlimit whether data in memory on the consumer IoT device can be executed. Suitable mechanisms include technologies\nsuch as MMUs or MPUs, executable space protection (e.g. NX bits), memory tagging, and trusted execution\nenvironments.",
+      "requirement_B_en304223": "Where training data or model weights could be confidential, Developers shall put proportionate\nprotections in place."
+    },
+    {
+      "pair_id": "5.4-1||5.1.3-2",
+      "requirement_A_en303645": "Sensitive security parameters in persistent storage shall be stored securely by the consumer IoT device.",
+      "requirement_B_en304223": "Where AI security threats are identified that cannot be resolved by Developers, this shall be\ncommunicated to System Operators so they can threat model their systems. System Operators shall communicate this\ninformation to End-users, so they are made aware of these threats. This communication should include detailed\ndescriptions of the risks, potential impacts, and recommended actions to address or monitor these threats."
+    },
+    {
+      "pair_id": "5.9-3||5.2.1-3",
+      "requirement_A_en303645": "The consumer IoT device should connect to networks in an expected, operational and stable state and\nin an orderly fashion, taking the capability of the infrastructure into consideration.",
+      "requirement_B_en304223": "System Operators shall develop and tailor their disaster recovery plans to account for specific attacks\naimed at AI systems."
+    },
+    {
+      "pair_id": "5.12-3||5.3.1-2.1",
+      "requirement_A_en303645": "The manufacturer should provide users with guidance on how to check whether their consumer IoT\ndevice is securely set up and maintained in a secure state.\nIn the general case, the average overhead of securely setting up a consumer IoT device is higher than the average\noverhead of checking whether a consumer IoT device is securely setup. The check of a secure setup, from a process\nstandpoint, can be undertaken in large part by the manufacturer through an automated process that communicates with\nthe consumer IoT device remotely. Part of such an automated process could include validation of the consumer IoT\ndevice's capacity to establish a secure communication channel.\nThe manufacturer can help consumers keep their device secure by providing or communicating updated security\ninformation (i.e. terms of service, features, guidelines, instructions and notifications, etc.), in simple language and\ntimely manner.",
+      "requirement_B_en304223": "System Operators shall include guidance on the appropriate use of the model or system, which\nincludes highlighting limitations and potential failure modes."
+    },
+    {
+      "pair_id": "5.10-1||5.1.4-4",
+      "requirement_A_en303645": "If telemetry data is collected from consumer IoT products, such as usage and measurement data, it\nshould be examined for security anomalies.",
+      "requirement_B_en304223": "Developers should verify that the security controls specified by the Data Custodian have been built\ninto the system."
+    },
+    {
+      "pair_id": "5.12-2||5.2.4-1",
+      "requirement_A_en303645": "The manufacturer should provide users with guidance on how to securely set up their consumer IoT\ndevice.\nHowever, the ideal is for a process that involves the minimum of human intervention and which achieves a secure\nconfiguration automatically.\nClear guidance to users on how to configure consumer IoT devices securely can also reduce their exposure to threats.\nAn inventory of the IoT Devices in an IoT Product can be visible from the associated services including version,\napplied patches and updates for the user's convenience.",
+      "requirement_B_en304223": "Developers shall document and maintain a clear audit trail of their system design and\npost-deployment maintenance plans. Developers should make the documentation available to the downstream System\nOperators and Data Custodians."
+    },
+    {
+      "pair_id": "5.5-1||5.2.5-1",
+      "requirement_A_en303645": "The consumer IoT device shall use best practice cryptography to communicate securely.\nAppropriateness of security controls and the use of best practice cryptography is dependent on many factors including\nthe properties of technology, operating environment, risk and usage context. As security is ever-evolving it is difficult\nto give prescriptive advice about cryptography or other security measures without the risk of such advice quickly\nbecoming obsolete.",
+      "requirement_B_en304223": "Developers shall ensure that all models, applications and systems that are released to System\nOperators and/or End-users have been tested as part of a security assessment process."
+    },
+    {
+      "pair_id": "5.9-1||5.3.1-3",
+      "requirement_A_en303645": "Resilience should be built in to consumer IoT products, taking into account the possibility of outages of\ndata networks and power.",
+      "requirement_B_en304223": "Developers and System Operators should support End-users and Affected Entities during and\nfollowing a cyber security incident to contain and mitigate the impacts of an incident. The process for undertaking this\nshould be documented and agreed in contracts with End-users."
+    },
+    {
+      "pair_id": "5.3-6B||5.3.1-2.2",
+      "requirement_A_en303645": "If the consumer IoT device supports update notifications, the user should be able to enable and\ndisable the update notifications.\n\n\nIt is important from a consumer rights and ownership perspective that the user is in control of whether or not they\nreceive updates. There are good reasons why a user may choose not to update, including security. In addition, if an\nupdate is deployed and subsequently found to cause issues, manufacturers can ask users to not upgrade their software in\norder that those consumer IoT devices are not affected.",
+      "requirement_B_en304223": "System Operators shall proactively inform End-users of any security relevant updates and provide\nclear explanations in an accessible way."
+    },
+    {
+      "pair_id": "5.3-15A||5.1.2-3",
+      "requirement_A_en303645": "For devices that cannot have their software updated, the consumer IoT device should be isolable.",
+      "requirement_B_en304223": "To support the process of preparing data, security auditing and incident response for an AI system,\nDevelopers shall document and create an audit trail in relation to the AI system. This shall include the operation, and\nlifecycle management of models, datasets and prompts incorporated into the system."
+    },
+    {
+      "pair_id": "5.6-4A||5.1.1-2.2",
+      "requirement_A_en303645": "Debug interfaces shall be disabled or protected via a best practice authentication or access control\nmechanism.\nDebug interfaces are commonly used by manufacturers during the development and testing phases of the consumer IoT\ndevice's lifecycle. However, when placing the consumer IoT device on the market, it is crucial to ensure that potential\nattackers cannot misuse debug interfaces to compromise the consumer IoT device's security. To achieve this, the debug\ninterfaces are to be disabled in software by default, using any means that prevent potential attackers from operating the\ndevice in debugging mode, which would allow them to modify the device's code, including its security mechanisms. It\nis to be impossible for the user of the consumer IoT device to enable any disabled debug interface that is not considered\nto be required for the consumer IoT device's lifecycle. However, if the debug interface is intermittently required after\nthe consumer IoT device is being placed on the market, it would be enough if the interface is disabled in software by\ndefault but can be enabled, when required. In such a case it is to be ensured that the enabling capability cannot be\nmisused easily, e.g. by appropriate access control and authentication mechanisms.",
+      "requirement_B_en304223": "Organizations shall provide developers with training in secure coding and system design techniques\nspecific to AI development, with a focus on preventing and mitigating security vulnerabilities in AI algorithms, models,\nand associated software."
+    },
+    {
+      "pair_id": "5.5-6||5.1.2-4",
+      "requirement_A_en303645": "Critical security parameters should be encrypted in transit, with such encryption appropriate to the\nproperties of the technology, risk and usage.",
+      "requirement_B_en304223": "If a Developer or System Operator uses an external component, they shall conduct an AI security risk\nassessment and due diligence process in line with their existing software development processes, that assesses AI\nspecific risks."
+    },
+    {
+      "pair_id": "5.5-4||5.2.5-1",
+      "requirement_A_en303645": "Access to consumer IoT device functionality via a network interface in the initialized state should only\nbe possible after authentication on that interface.",
+      "requirement_B_en304223": "Developers shall ensure that all models, applications and systems that are released to System\nOperators and/or End-users have been tested as part of a security assessment process."
+    },
+    {
+      "pair_id": "5.0-1||5.2.3-2",
+      "requirement_A_en303645": "A justification shall be recorded for each recommendation in the present document that is considered to\nbe not applicable for or not fulfilled by the consumer IoT device.\n\n\nIt is recommended that the manufacturer conducts a threat modelling to identify, analyse and mitigate threats to the\ndevice.\nTable B.1 provides a schema to record these justifications in a structured manner. This is to allow other stakeholders\n(e.g. assurance assessors, members of the supply chain, security researchers or retailers) to determine whether\nprovisions have been applied correctly and appropriately.",
+      "requirement_B_en304223": "System Operators that choose to use or adapt any models, or components, which are not\nwell-documented or secured shall be able to justify their decision to use such models or components through\ndocumentation (for example if there was no other supplier for said component)."
+    },
+    {
+      "pair_id": "5.7-2||5.1.3-1.2",
+      "requirement_A_en303645": "If an unauthorized change is detected to the software, the consumer IoT device should alert the user\nand/or administrator to the issue and should not connect to wider networks than those necessary to perform the alerting\nfunction.\nThe ability to recover remotely from unauthorized changes can rely on a known good state, such as locally storing a\nknown good version to enable safe recovery and updating of the consumer IoT device. This will avoid denial of service\nand costly recalls or maintenance visits, whilst managing the risk of potential takeover of the consumer IoT device by\nan attacker subverting update or other network communications mechanisms.\nIf a consumer IoT device detects an unauthorized change to its software, it will be able to inform the right stakeholder.\nIn some cases, consumer IoT devices can have the ability to be in administration mode.",
+      "requirement_B_en304223": "Developers shall manage the security risks associated with AI models that provide superfluous\nfunctionalities, where increased functionality leads to increased risk. For example, where a multi-modal model is being\nused but only single modality is used for system function."
+    },
+    {
+      "pair_id": "5.5-2||5.1.1-2.1",
+      "requirement_A_en303645": "The consumer IoT device should use reviewed or evaluated implementations to deliver network and\nsecurity functionalities, particularly in the field of cryptography.\nReviews and evaluations can involve an independent internal or external entity.",
+      "requirement_B_en304223": "These updates should be communicated through multiple channels, such as security bulletins,\nnewsletters, or internal knowledge-sharing platforms. This will ensure broad dissemination and understanding among\nthe staff."
+    },
+    {
+      "pair_id": "5.5-3||5.1.2-3",
+      "requirement_A_en303645": "Cryptographic algorithms and primitives should be replaceable.",
+      "requirement_B_en304223": "To support the process of preparing data, security auditing and incident response for an AI system,\nDevelopers shall document and create an audit trail in relation to the AI system. This shall include the operation, and\nlifecycle management of models, datasets and prompts incorporated into the system."
+    },
+    {
+      "pair_id": "5.3-9||5.5.1-2",
+      "requirement_A_en303645": "The consumer IoT device should verify the authenticity and integrity of software updates.\nA common approach for confirming that an update is valid is to verify its integrity and authenticity. This can be done on\nthe consumer IoT device.",
+      "requirement_B_en304223": "If a Developer or System Operators decides to decommission a model and/or system, they shall\ninvolve Data Custodians and securely delete applicable data and configuration details."
+    },
+    {
+      "pair_id": "5.3-11||5.1.2-1",
+      "requirement_A_en303645": "The user should be informed in a recognizable and apparent manner that a security update is required\ntogether with information on the risks mitigated by that update.",
+      "requirement_B_en304223": "As part of deciding whether to create an AI system, a System Operator and/or Developer shall\nconduct a thorough assessment that includes determining and documenting the business requirements and/or problem\nthey are seeking to address, along with associated AI security risks and mitigation strategies."
+    },
+    {
+      "pair_id": "5.7-2||5.2.3-4",
+      "requirement_A_en303645": "If an unauthorized change is detected to the software, the consumer IoT device should alert the user\nand/or administrator to the issue and should not connect to wider networks than those necessary to perform the alerting\nfunction.\nThe ability to recover remotely from unauthorized changes can rely on a known good state, such as locally storing a\nknown good version to enable safe recovery and updating of the consumer IoT device. This will avoid denial of service\nand costly recalls or maintenance visits, whilst managing the risk of potential takeover of the consumer IoT device by\nan attacker subverting update or other network communications mechanisms.\nIf a consumer IoT device detects an unauthorized change to its software, it will be able to inform the right stakeholder.\nIn some cases, consumer IoT devices can have the ability to be in administration mode.",
+      "requirement_B_en304223": "System Operators shall communicate their intention to update models to End-users in an accessible\nway prior to models being updated."
+    },
+    {
+      "pair_id": "5.5-8||5.2.4-1",
+      "requirement_A_en303645": "The manufacturer shall follow secure management processes for critical security parameters that relate\nto the consumer IoT device and for the entire lifecycle of the critical security parameters.",
+      "requirement_B_en304223": "Developers shall document and maintain a clear audit trail of their system design and\npost-deployment maintenance plans. Developers should make the documentation available to the downstream System\nOperators and Data Custodians."
+    },
+    {
+      "pair_id": "5.8-3||5.1.2-3",
+      "requirement_A_en303645": "All external sensing capabilities of the consumer IoT device shall be documented in an accessible way\nthat is clear and transparent for the user.",
+      "requirement_B_en304223": "To support the process of preparing data, security auditing and incident response for an AI system,\nDevelopers shall document and create an audit trail in relation to the AI system. This shall include the operation, and\nlifecycle management of models, datasets and prompts incorporated into the system."
+    },
+    {
+      "pair_id": "5.9-2||5.1.3-3",
+      "requirement_A_en303645": "Consumer IoT devices should remain operating and locally functional in the case of a loss of network\naccess and should recover cleanly in the case of restoration of a loss of power.",
+      "requirement_B_en304223": "Where an external entity has responsibility for AI security risks identified within an organizations\ninfrastructure, System Operators should attain assurance that these parties are able to address such risks."
+    },
+    {
+      "pair_id": "5.3-11||5.3.1-1",
+      "requirement_A_en303645": "The user should be informed in a recognizable and apparent manner that a security update is required\ntogether with information on the risks mitigated by that update.",
+      "requirement_B_en304223": "System Operators shall convey to End-users in an accessible way where and how their data will be\nused, accessed and stored (for example, if it is used for model retraining, or reviewed by employees or partners). If the\nDeveloper is an external entity, they shall provide this information to System Operators."
+    },
+    {
+      "pair_id": "5.3-15A||5.2.4-2.1",
+      "requirement_A_en303645": "For devices that cannot have their software updated, the consumer IoT device should be isolable.",
+      "requirement_B_en304223": "The documentation of training data should include at a minimum the source of the data, such as the\nURL of the scraped page, and the date/time the data was obtained. This will allow Developers to identify whether a\nreported data poisoning attack was in their data sets."
+    },
+    {
+      "pair_id": "5.5-2||5.2.5-1",
+      "requirement_A_en303645": "The consumer IoT device should use reviewed or evaluated implementations to deliver network and\nsecurity functionalities, particularly in the field of cryptography.\nReviews and evaluations can involve an independent internal or external entity.",
+      "requirement_B_en304223": "Developers shall ensure that all models, applications and systems that are released to System\nOperators and/or End-users have been tested as part of a security assessment process."
+    },
+    {
+      "pair_id": "5.2-1||5.2.1-1",
+      "requirement_A_en303645": "The manufacturer shall make a vulnerability disclosure policy publicly available. This policy shall\ninclude, at a minimum:\n\u2022\n\ncontact information for the reporting of issues; and\n\n\u2022\n\ntimelines for initial acknowledgement of receipt of a vulnerability report; and\n\n\u2022\n\ntimelines for when the person who reported the issue will receive status updates until the resolution of the\nreported issues.",
+      "requirement_B_en304223": "Developers, Data Custodians and System Operators shall maintain a comprehensive inventory of\ntheir assets (including their interdependencies/connectivity)."
+    },
+    {
+      "pair_id": "5.3-14||5.1.4-1",
+      "requirement_A_en303645": "For consumer IoT devices that cannot have their software updated, the rationale for the absence of\nsoftware updates, the period and method of hardware replacement support should be published by the manufacturer in\nan accessible way that is clear and transparent to the user.",
+      "requirement_B_en304223": "When designing an AI system, Developers and/or System Operators should incorporate and maintain\ncapabilities to enable human oversight."
+    },
+    {
+      "pair_id": "5.10-1||5.4.2-3",
+      "requirement_A_en303645": "If telemetry data is collected from consumer IoT products, such as usage and measurement data, it\nshould be examined for security anomalies.",
+      "requirement_B_en304223": "System Operators and Developers should monitor internal states of their AI systems where this could\nbetter enable them to address security threats, or to enable future security analytics."
+    },
+    {
+      "pair_id": "5.3-16||5.4.2-2",
+      "requirement_A_en303645": "The model designation of the consumer IoT device shall be clearly recognizable, either by labelling\non the consumer IoT device or via a user interface.\nThis is often performed by communicating with a consumer IoT device over a logical interface.",
+      "requirement_B_en304223": "System Operators should analyse their logs to ensure that AI models continue to produce desired\noutputs and to detect anomalies, security breaches, or unexpected behaviour over time (such as due to data drift or data\npoisoning)."
+    },
+    {
+      "pair_id": "5.3-12||5.4.1-1",
+      "requirement_A_en303645": "The user should be notified when the application of a software update will disrupt the basic\nfunctioning of the consumer IoT device.\nThis notification can include extra detail, such as the approximate expected duration for which the consumer IoT device\nwill be offline.",
+      "requirement_B_en304223": "Developers shall provide security updates and patches, where possible, and notify System Operators\nof the security updates. System Operators shall deliver these updates and patches to End-users."
+    },
+    {
+      "pair_id": "5.5-8||5.2.1-2",
+      "requirement_A_en303645": "The manufacturer shall follow secure management processes for critical security parameters that relate\nto the consumer IoT device and for the entire lifecycle of the critical security parameters.",
+      "requirement_B_en304223": "As part of broader software security practices, Developers, Data Custodians and System Operators\nshall have processes and tools to track, authenticate, manage version control and secure their assets due to the increased\ncomplexities of AI specific assets."
+    },
+    {
+      "pair_id": "5.8-1||5.2.5-2.1",
+      "requirement_A_en303645": "The confidentiality of personal data transiting between the consumer IoT device and associated\nservices should be protected with best practice cryptography, appropriate to the properties of the technology, operating\nenvironment, risk and usage.",
+      "requirement_B_en304223": "For security testing, System Operators and Developers should use independent security testers with\ntechnical skills relevant to their AI systems."
+    },
+    {
+      "pair_id": "5.9-3||5.2.2-1",
+      "requirement_A_en303645": "The consumer IoT device should connect to networks in an expected, operational and stable state and\nin an orderly fashion, taking the capability of the infrastructure into consideration.",
+      "requirement_B_en304223": "Developers and System Operators shall evaluate their organization's access control frameworks and\nidentify appropriate measures to secure APIs, models, data, and training and processing pipelines."
+    }
+  ]
+}

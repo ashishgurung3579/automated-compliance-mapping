@@ -1,0 +1,245 @@
+{
+  "batch": 12,
+  "items": [
+    {
+      "pair_id": "5.9-1||5.3.1-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Resilience to power and network outages versus accessible guidance on system configuration."
+    },
+    {
+      "pair_id": "5.12-3||5.3.1-2.2",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both keep users informed so they can maintain a secure state; A through checking guidance, B through proactive update notices."
+    },
+    {
+      "pair_id": "5.8-1||5.2.1-4",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both protect sensitive data from unauthorized access, A on the wire, B wherever training and test data are held."
+    },
+    {
+      "pair_id": "5.5-4||5.5.1-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Authentication before network access versus secure deletion at decommissioning."
+    },
+    {
+      "pair_id": "5.5-2||5.2.5-3",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Using reviewed implementations versus passing test findings to downstream operators."
+    },
+    {
+      "pair_id": "5.3-12||5.2.3-4",
+      "relationship": "OVERLAP",
+      "confidence": 3,
+      "justification": "Both require advance notice to users before an update lands, A when it disrupts function, B whenever a model is updated."
+    },
+    {
+      "pair_id": "5.3-16||5.1.1-2.2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Recognizable model designation versus secure coding training for developers."
+    },
+    {
+      "pair_id": "5.1-3||5.5.1-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Cryptographic strength of authentication versus secure deletion at decommissioning."
+    },
+    {
+      "pair_id": "5.4-3||5.2.4-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Prohibiting hard-coded security parameters versus an audit log of configuration changes."
+    },
+    {
+      "pair_id": "5.8-3||5.3.1-1",
+      "relationship": "OVERLAP",
+      "confidence": 3,
+      "justification": "Both require accessible disclosure of what the product does with data, A of sensing capabilities, B of where and how data is used and stored."
+    },
+    {
+      "pair_id": "5.2-1||5.2.2-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Vulnerability disclosure policy versus evaluation of access control frameworks."
+    },
+    {
+      "pair_id": "5.6-8||5.2.1-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Hardware memory access control versus asset tracking and version control."
+    },
+    {
+      "pair_id": "5.5-1||5.2.3-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Best practice cryptography for communication versus justifying use of poorly documented components."
+    },
+    {
+      "pair_id": "5.3-9||5.2.4-1.2",
+      "relationship": "OVERLAP",
+      "confidence": 3,
+      "justification": "Both establish authenticity of a distributed artefact; A obliges the recipient to verify, B obliges the publisher to release the hashes."
+    },
+    {
+      "pair_id": "5.1-2||5.3.1-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Password generation mechanism versus transparency about data use and storage."
+    },
+    {
+      "pair_id": "5.3-13||5.2.4-1",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both publish maintenance commitments, A the support period to users, B the design and post-deployment plans to downstream parties."
+    },
+    {
+      "pair_id": "5.3-6B||5.2.1-4",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "User control over update notifications versus protection of sensitive training data."
+    },
+    {
+      "pair_id": "5.7-2||5.1.2-2",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Detection of and response to software tampering versus general robustness to adversarial input and system failure."
+    },
+    {
+      "pair_id": "5.3-11||5.4.1-1.1",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "Informing users of a needed update and planning for the case where no update exists are the two branches of managing unpatched risk."
+    },
+    {
+      "pair_id": "5.9-3||5.2.2-3",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Orderly network reconnection versus separation of development and tuning environments."
+    },
+    {
+      "pair_id": "5.5-5||5.2.4-1.1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Authentication before configuration change versus the required content of model documentation."
+    },
+    {
+      "pair_id": "5.6-4A||5.1.2-2",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Disabling debug interfaces versus general robustness of the model to adversarial input."
+    },
+    {
+      "pair_id": "5.6-2||5.2.5-4",
+      "relationship": "OVERLAP",
+      "confidence": 3,
+      "justification": "Both prevent internals leaking through an exposed channel, A through network interface disclosure, B through model outputs."
+    },
+    {
+      "pair_id": "5.12-2||5.4.1-1.1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Setup guidance for consumers versus contingency planning where updates cannot be provided."
+    },
+    {
+      "pair_id": "5.5-5||5.2.1-4",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Authentication on a configuration interface versus confidentiality of training and test data; different assets."
+    },
+    {
+      "pair_id": "5.7-1||5.2.2-5",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Secure boot verification versus incident management and recovery planning."
+    },
+    {
+      "pair_id": "5.3-13||5.3.1-1",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Both are accessible disclosures to users but of unrelated content: support duration versus data handling."
+    },
+    {
+      "pair_id": "5.11-3||5.2.5-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Instructions for deleting personal data versus security testing before release."
+    },
+    {
+      "pair_id": "5.8-3||5.2.4-1",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Documenting sensing capabilities for users versus an internal audit trail shared with downstream operators."
+    },
+    {
+      "pair_id": "5.6-9||5.4.1-2",
+      "relationship": "OVERLAP",
+      "confidence": 2,
+      "justification": "Both govern the engineering discipline applied to released software; A the development process, B re-testing after a major change."
+    },
+    {
+      "pair_id": "5.3-6A||5.1.2-4",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "User control over automatic updates versus due diligence on external components."
+    },
+    {
+      "pair_id": "5.4-1||5.4.2-1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Secure storage of security parameters versus logging of system and user actions."
+    },
+    {
+      "pair_id": "5.2-2||5.2.3-2.2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Timely remediation of vulnerabilities versus sharing documentation with End-users."
+    },
+    {
+      "pair_id": "5.1-2A||5.2.2-1",
+      "relationship": "NO_RELATION",
+      "confidence": 2,
+      "justification": "Choice of machine-to-machine authentication method versus an organizational access control review."
+    },
+    {
+      "pair_id": "5.3-11||5.3.1-2.2",
+      "relationship": "EQUIVALENCE",
+      "confidence": 3,
+      "justification": "Both require the user to be told, in an accessible and recognizable way, that a security update applies and what it addresses; the scope is the same."
+    },
+    {
+      "pair_id": "5.1-2||5.2.4-2",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Password generation mechanism versus documentation of public training data provenance."
+    },
+    {
+      "pair_id": "5.7-1||5.2.1-2",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "Boot-time verification and the process that authenticates and version-controls assets serve one component integrity control from opposite ends."
+    },
+    {
+      "pair_id": "5.2-1||5.2.4-1.1",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Vulnerability disclosure policy versus the security content of model documentation."
+    },
+    {
+      "pair_id": "5.3-13||5.4.1-1",
+      "relationship": "COMPLEMENTARITY",
+      "confidence": 2,
+      "justification": "Declaring the support period and actually supplying patches within it are separate obligations that together constitute update support."
+    },
+    {
+      "pair_id": "5.4-2||5.4.2-4",
+      "relationship": "NO_RELATION",
+      "confidence": 3,
+      "justification": "Tamper resistance of a device identity versus monitoring model behaviour over time."
+    }
+  ]
+}
