@@ -40,7 +40,13 @@ python3 -m src.mapping.gemini_mapping
 
 \noindent require a \texttt{GEMINI\_API\_KEY} in \texttt{.env} and incur API
 cost; the repository ships their stored outputs, which the evaluation
-consumes directly.
+consumes directly. The run-to-run agreement figure of
+Table~\ref{tab:agreement} needs a second pass of the classifier over
+byte-identical prompts, written to a separate file:
+
+\begin{verbatim}
+GEMINI_OUTPUT_SUFFIX=rep2 python3 -m src.mapping.gemini_mapping
+\end{verbatim}
 
 \section*{Probability sample and reliability}
 
@@ -50,6 +56,24 @@ python3 -m src.baseline.annotate_sample status
 python3 -m src.evaluation.weighted_metrics  # corpus estimates
 python3 -m src.validation.agreement         # kappa + table
 \end{verbatim}
+
+\noindent The 19 annotation batches are stored in \texttt{data/annotation/}, so
+these steps reproduce the reported estimates without re-annotating. Rebuilding
+the reference set from scratch instead requires the \texttt{emit} and
+\texttt{ingest} subcommands of \texttt{annotate\_sample} once per batch.
+
+\section*{Building the report}
+
+\begin{verbatim}
+python3 -m src.report.check_thesis_numbers  # guard: tables vs. data
+cd thesis
+pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
+\end{verbatim}
+
+\noindent The guard re-reads every number printed in a results table directly
+from the stored evaluation files and exits non-zero on any mismatch. It is run
+before each submission build, and caught three transcription errors during
+writing.
 
 \section*{Determinism}
 

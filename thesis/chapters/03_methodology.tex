@@ -13,9 +13,13 @@ The design addresses the research questions directly. RQ1 (feasibility and
 limits of automated relationship identification) is answered by the absolute
 performance levels and the error analysis. RQ2 (comparison of method families)
 is answered by evaluating all seven methods under identical conditions. RQ3
-(automated vs.\ expert mapping) is answered by treating the expert-reviewed
-annotation as the reference and additionally measuring how consistently humans
-themselves perform the task.
+(automated vs.\ expert mapping) is answered by treating the reference annotation
+as the standard of comparison and additionally measuring how consistently the
+task is performed on repetition. The expert role in that comparison is filled by
+LLM-assisted annotation reviewed by the authors against a written codebook, not
+by external domain experts; a protocol for the external study is given in
+Appendix~\ref{app:survey} but was not carried out, and Section~\ref{sec:threats}
+states what this costs the RQ3 answer.
 
 The workflow has five stages --- extraction, ground-truth construction,
 automated mapping, evaluation, and reporting --- described in the remainder of
@@ -91,8 +95,8 @@ Evaluating the automated methods requires a reference mapping. Annotating all
 4{,}968 pairs manually was outside the scope of a 15-credit project, so the
 ground truth was produced with LLM assistance and human review, a set-up
 increasingly common in annotation work and disclosed here for transparency.
-Candidate pairs and draft relationship labels were generated with Claude Opus
-4.8 (Anthropic), prompted with the full provision texts and the taxonomy
+Candidate pairs and draft relationship labels were generated with Claude Opus~5
+(Anthropic), prompted with the full provision texts and the taxonomy
 definitions of Section~\ref{sec:taxonomy}. The authors then reviewed the
 drafts, corrected labels and justifications, and removed pairs whose
 connection did not hold up against the original standard texts. Each retained
@@ -111,9 +115,13 @@ and a life-cycle-level standard: near-identical requirements are rare.
 Using an LLM in the annotation loop creates a risk of circularity, since one
 of the evaluated methods is itself an LLM. Two design choices reduce this
 risk: the annotation model (Claude) is from a different family than the
-evaluated model (Gemini), and every pair passed human review. The residual
-risk is examined empirically through the validation study below and discussed
-in Section~\ref{sec:threats}.
+evaluated model (Gemini), and the labels follow a codebook written before any
+were drafted. Human review, however, covers only the 107 pilot pairs. The
+650-pair probability sample of Section~\ref{sec:sampling} was not reviewed pair
+by pair --- at that size it would have consumed the project's remaining budget
+--- so its reliability rests on the blind comparison against the reviewed pilot
+reported in Section~\ref{sec:gtvalidation}. The residual risk is examined there
+and discussed in Section~\ref{sec:threats}.
 
 \subsection{A probability sample of the candidate space}\label{sec:sampling}
 

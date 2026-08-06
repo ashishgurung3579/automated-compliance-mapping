@@ -62,8 +62,8 @@ is not to develop new model architectures but to establish, empirically, how
 well existing techniques perform on this task. Concretely, the project (i)
 extracts the normative provisions of both standards into a structured dataset,
 (ii) applies seven automated mapping methods spanning rule-based, embedding-based,
-and LLM-based approaches, (iii) evaluates them against an expert-reviewed ground
-truth of annotated provision pairs, and (iv) analyses the errors to
+and LLM-based approaches, (iii) evaluates them against an author-reviewed,
+LLM-assisted ground truth of annotated provision pairs, and (iv) analyses the errors to
 characterise the limitations of each method family. The outcome is a grounded
 assessment of the feasibility of automated compliance mapping between IoT and
 AI security standards, together with a reusable dataset and evaluation
@@ -90,9 +90,11 @@ The main contributions of this degree project are:
 
 \begin{itemize}
   \item A structured dataset of 141 normative provisions extracted from
-  \standardA{} and \standardB{}, and a ground-truth mapping of 107 provision
-  pairs annotated with six relationship types, justifications, and confidence
-  scores.
+  \standardA{} and \standardB{}, and two reference mappings annotated with six
+  relationship types, justifications, and confidence scores: a purposive pilot
+  of 107 pairs, and a stratified probability sample of 650 pairs with known
+  inclusion probabilities, which permits estimates for the full 4{,}968-pair
+  candidate space rather than for a hand-picked subset of it.
   \item An open, reproducible pipeline implementing seven mapping methods ---
   TF--IDF, security-keyword Jaccard matching, Sentence-BERT, BERT, SecureBERT,
   Gemini embeddings, and Gemini LLM classification --- with a common evaluation
