@@ -601,6 +601,80 @@ What these mean:
 
 ---
 
+## 14b. Step 4b - Extended Analysis
+
+Script:
+
+```text
+src/evaluation/analysis.py
+```
+
+Run command:
+
+```bash
+python3 -m src.evaluation.analysis
+```
+
+What happens:
+
+1. It reads each method's `*_predictions_vs_gt.csv`.
+2. It builds a confusion matrix per method over the five merged labels.
+3. It computes bootstrap 95% confidence intervals (2,000 resamples, seed 42) for
+   detection F1 and classification macro-F1.
+4. For methods with a stored similarity matrix, it sweeps the threshold from 0.05 to
+   0.975 and records precision, recall, and F1 at each step.
+
+Created file:
+
+```text
+data/evaluation/analysis.json
+```
+
+---
+
+## 14c. Probability Sample and Reference-Set Reliability
+
+Scripts:
+
+```text
+src/baseline/sample_reference.py
+src/baseline/annotate_sample.py
+src/evaluation/weighted_metrics.py
+src/validation/agreement.py
+```
+
+`sample_reference.py` ranks all 4,968 pairs by their mean percentile rank across the five
+similarity matrices, cuts the ordering into three strata (top 10 %, next 30 %, bottom
+60 %) and draws 250/200/200 pairs without replacement under seed 20260804. Each row keeps
+its stratum size, sample size and weight, which is what makes corpus-level estimation
+possible.
+
+`annotate_sample.py` emits fixed-size batches with the full text of both provisions,
+validates the label vocabulary on ingest, and is resumable. Batch order is shuffled under
+the same seed, so a partially completed pass remains a random subsample. The 107 pilot
+pairs are folded into the stream unmarked. All 19 batches were annotated: 650 sampled
+pairs plus 77 pilot-only pairs, 727 rows in total.
+
+`weighted_metrics.py` computes Horvitz-Thompson precision, recall, specificity, F1 and
+corpus prevalence, with bootstrap intervals resampled within stratum. It reports each
+method at two operating points — the shipped threshold, and one selected by weighted
+cross-validation on the sample — plus Kish's design effect and a paired bootstrap on
+between-method differences. `agreement.py` reports agreement with the author-reviewed
+pilot labels, confidence calibration, and the evaluated LLM's run-to-run self-agreement
+as a contrast.
+
+Created files:
+
+```text
+data/baseline/reference_pool.csv
+data/baseline/gt_sample.csv
+data/evaluation/weighted_metrics.json
+data/validation/agreement.json
+data/validation/agreement_table.tex
+```
+
+---
+
 ## 15. Step 5 - Generate Final Report
 
 Script:
@@ -653,7 +727,12 @@ python3 -m src.mapping.sbert_mapping
 python3 -m src.mapping.bert_mapping
 python3 -m src.mapping.securebert_mapping
 python3 -m src.evaluation.evaluate
+python3 -m src.evaluation.analysis
+python3 -m src.baseline.sample_reference
+python3 -m src.evaluation.weighted_metrics
+python3 -m src.validation.agreement
 python3 -m src.report.generate_report
+python3 -m src.report.figures
 ```
 
 Optional Gemini commands:
@@ -679,7 +758,12 @@ python3 -m src.mapping.sbert_mapping
 python3 -m src.mapping.bert_mapping
 python3 -m src.mapping.securebert_mapping
 python3 -m src.evaluation.evaluate
+python3 -m src.evaluation.analysis
+python3 -m src.baseline.sample_reference
+python3 -m src.evaluation.weighted_metrics
+python3 -m src.validation.agreement
 python3 -m src.report.generate_report
+python3 -m src.report.figures
 ```
 
 If you also want Gemini results, run these before evaluation:
@@ -740,6 +824,16 @@ Metrics are computed only against the 107 annotated GT pairs. Predictions outsid
 | Gemini LLM | 0.780 | 0.835 | 0.807 | 0.159 | 0.085 |
 
 In the current saved results, **Gemini Embedding** has the highest classification macro-F1.
+
+Two caveats matter when reading this table:
+
+- Detection precision counts false positives only on the 22 annotated negatives, so a
+  method that predicts almost nothing (TF-IDF, Jaccard, SBERT at its default threshold)
+  can reach precision 1.000 while missing nearly every true pair.
+- With 85 of the 107 annotated pairs being positives, predicting "related" for everything
+  already yields detection F1 = 0.885. BERT, SecureBERT, and Gemini Embedding are at or
+  near that value, so detection F1 barely separates them; `analysis.json` (confusion
+  matrices, threshold sweeps, bootstrap intervals) carries the informative differences.
 
 ---
 

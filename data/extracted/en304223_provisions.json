@@ -36,7 +36,7 @@
     "standard": "EN 304 223",
     "section_id": "5.1.1",
     "title": "Raise awareness of AI security threats and risks",
-    "text": "Organizations shall provide developers with training in secure coding and system design techniques\nspecific to AI development, with a focus on preventing and mitigating security vulnerabilities in AI algorithms, models,\nand associated software.\n\n5.1.2\n\nPrinciple 2: Design the AI system for security as well as functionality\nand performance\n\nPrimarily applies to: System Operators and Developers\nReferences: [i.11], [i.12], [i.10], [i.18], [i.19], [i.20], [i.15], [i.21], [i.22], [i.23], [i.9], [i.24].",
+    "text": "Organizations shall provide developers with training in secure coding and system design techniques\nspecific to AI development, with a focus on preventing and mitigating security vulnerabilities in AI algorithms, models,\nand associated software.",
     "modality": "shall"
   },
   {
@@ -76,7 +76,7 @@
     "standard": "EN 304 223",
     "section_id": "5.1.2",
     "title": "Design the AI system for security as well as functionality and performance",
-    "text": "If a Developer or System Operator uses an external component, they shall conduct an AI security risk\nassessment and due diligence process in line with their existing software development processes, that assesses AI\nspecific risks.\n\n\f11",
+    "text": "If a Developer or System Operator uses an external component, they shall conduct an AI security risk\nassessment and due diligence process in line with their existing software development processes, that assesses AI\nspecific risks.",
     "modality": "shall"
   },
   {
@@ -108,7 +108,7 @@
     "standard": "EN 304 223",
     "section_id": "5.1.2",
     "title": "Design the AI system for security as well as functionality and performance",
-    "text": "If a Developer or System Operator chooses to work with an external provider, they shall undertake a\ndue diligence assessment and should ensure that the provider is adhering to the present document.\n\n5.1.3\n\nPrinciple 3: Evaluate the threats and manage the risks to the AI\nsystem\n\nPrimarily applies to: Developers and System Operators\nReferences: [i.5], [i.11], [i.10], [i.25], [i.18], [i.13], [i.21], [i.19], [i.12], [i.17]",
+    "text": "If a Developer or System Operator chooses to work with an external provider, they shall undertake a\ndue diligence assessment and should ensure that the provider is adhering to the present document.",
     "modality": "shall"
   },
   {
@@ -164,7 +164,7 @@
     "standard": "EN 304 223",
     "section_id": "5.1.3",
     "title": "Evaluate the threats and manage the risks to the AI system",
-    "text": "Developers and System Operators should continuously monitor and review their system infrastructure\naccording to risk appetite. It is important to recognize that a higher level of risk will remain in AI systems despite the\napplication of controls to mitigate against them.\n\n5.1.4\n\nPrinciple 4: Enable human responsibility for AI systems\n\nPrimarily applies to: Developers and System Operators\nReferences: [i.11], [i.12], [i.20]",
+    "text": "Developers and System Operators should continuously monitor and review their system infrastructure\naccording to risk appetite. It is important to recognize that a higher level of risk will remain in AI systems despite the\napplication of controls to mitigate against them.",
     "modality": "should"
   },
   {
@@ -196,7 +196,7 @@
     "standard": "EN 304 223",
     "section_id": "5.1.4",
     "title": "Enable human responsibility for AI systems",
-    "text": "Developers should verify that the security controls specified by the Data Custodian have been built\ninto the system.\n\n\f12",
+    "text": "Developers should verify that the security controls specified by the Data Custodian have been built\ninto the system.",
     "modality": "should"
   },
   {
@@ -204,7 +204,7 @@
     "standard": "EN 304 223",
     "section_id": "5.1.4",
     "title": "Enable human responsibility for AI systems",
-    "text": "Developers and System Operators should make End-users aware of prohibited use cases of the AI\nsystem.\n\n5.2\n\nSecure Development\n\n5.2.1\n\nPrinciple 5: Identify, track and protect the assets\n\nPrimarily applies to: Developers, System Operators and Data Custodians\nReferences: [i.11], [i.25], [i.19], [i.20], [i.15], [i.16], [i.21], [i.24]",
+    "text": "Developers and System Operators should make End-users aware of prohibited use cases of the AI\nsystem.",
     "modality": "should"
   },
   {
@@ -260,7 +260,7 @@
     "standard": "EN 304 223",
     "section_id": "5.2.1",
     "title": "Identify, track and protect the assets",
-    "text": "Where training data or model weights could be confidential, Developers shall put proportionate\nprotections in place.\n\n5.2.2\n\nPrinciple 6: Secure the infrastructure\n\nPrimarily applies to: Developers and System Operators\nReferences: [i.11], [i.12], [i.10], [i.19], [i.24]",
+    "text": "Where training data or model weights could be confidential, Developers shall put proportionate\nprotections in place.",
     "modality": "shall"
   },
   {
@@ -308,7 +308,7 @@
     "standard": "EN 304 223",
     "section_id": "5.2.2",
     "title": "Secure the infrastructure",
-    "text": "Developers and System Operators should ensure that, where they are using cloud service operators to\nhelp to deliver the capability, their contractual agreements support compliance with the above requirements.\n\n\f13\n\n5.2.3\n\nPrinciple 7: Secure the supply chain\n\nPrimarily applies to: Developers, System Operators and Data Custodians\nReferences: [i.6], [i.11], [i.19], [i.9]",
+    "text": "Developers and System Operators should ensure that, where they are using cloud service operators to\nhelp to deliver the capability, their contractual agreements support compliance with the above requirements.",
     "modality": "should"
   },
   {
@@ -356,7 +356,7 @@
     "standard": "EN 304 223",
     "section_id": "5.2.3",
     "title": "Secure the supply chain",
-    "text": "System Operators shall communicate their intention to update models to End-users in an accessible\nway prior to models being updated.\n\n5.2.4\n\nPrinciple 8: Document data, models and prompts\n\nPrimarily applies to: Developers\nReferences: [i.11], [i.10], [i.19], [i.15], [i.24]",
+    "text": "System Operators shall communicate their intention to update models to End-users in an accessible\nway prior to models being updated.",
     "modality": "shall"
   },
   {
@@ -404,7 +404,7 @@
     "standard": "EN 304 223",
     "section_id": "5.2.4",
     "title": "Document data, models and prompts",
-    "text": "Developers should ensure that they have an audit log of changes to system prompts or other model\nconfiguration (including prompts) that affect the underlying working of the systems. Developers can make this available\nto any System Operators and End-Users that have access to the model.\n\n5.2.5\n\nPrinciple 9: Conduct appropriate testing and evaluation\n\nPrimarily applies to: Developers and System Operators\nReferences: [i.11], [i.10], [i.25], [i.19], [i.18], [i.13], [i.21]",
+    "text": "Developers should ensure that they have an audit log of changes to system prompts or other model\nconfiguration (including prompts) that affect the underlying working of the systems. Developers can make this available\nto any System Operators and End-Users that have access to the model.",
     "modality": "should"
   },
   {
@@ -420,7 +420,7 @@
     "standard": "EN 304 223",
     "section_id": "5.2.5",
     "title": "Conduct appropriate testing and evaluation",
-    "text": "System Operators shall conduct testing prior to the system being deployed with support from\nDevelopers.\n\n\f14",
+    "text": "System Operators shall conduct testing prior to the system being deployed with support from\nDevelopers.",
     "modality": "shall"
   },
   {
@@ -452,7 +452,7 @@
     "standard": "EN 304 223",
     "section_id": "5.2.5",
     "title": "Conduct appropriate testing and evaluation",
-    "text": "Additionally, Developers should evaluate model outputs to ensure they do not provide System\nOperators or End-users with unintended influence over the system.\n\n5.3\n\nSecure Deployment\n\n5.3.1\n\nPrinciple 10: Communication and processes associated with\nEnd-users and Affected Entities\n\nNOTE:\n\nAs part of an organization's wider deployment practices, pre-deployment testing of AI systems is to be\nconsidered alongside the requirements below.",
+    "text": "Additionally, Developers should evaluate model outputs to ensure they do not provide System\nOperators or End-users with unintended influence over the system.",
     "modality": "should"
   },
   {
@@ -492,7 +492,7 @@
     "standard": "EN 304 223",
     "section_id": "5.3.1",
     "title": "Communication and processes associated with End-users and Affected Entities",
-    "text": "Developers and System Operators should support End-users and Affected Entities during and\nfollowing a cyber security incident to contain and mitigate the impacts of an incident. The process for undertaking this\nshould be documented and agreed in contracts with End-users.\n\n5.4\n\nSecure Maintenance\n\n5.4.1\n\nPrinciple 11: Maintain regular security updates, patches and\nmitigations\n\nPrimarily applies to: Developers and System Operators\nReferences: [i.24]",
+    "text": "Developers and System Operators should support End-users and Affected Entities during and\nfollowing a cyber security incident to contain and mitigate the impacts of an incident. The process for undertaking this\nshould be documented and agreed in contracts with End-users.",
     "modality": "should"
   },
   {
@@ -524,7 +524,7 @@
     "standard": "EN 304 223",
     "section_id": "5.4.1",
     "title": "Maintain regular security updates, patches and mitigations",
-    "text": "Developers should support System Operators to evaluate and respond to model changes, (for example\nby providing preview access via beta-testing and versioned APIs).\n\n\f15\n\n5.4.2\n\nPrinciple 12: Monitor the system's behaviour\n\nPrimarily applies to: Developers and System Operators\nReferences: [i.11], [i.10], [i.25], [i.18], [i.20], [i.15], [i.16], [i.21], [i.24]",
+    "text": "Developers should support System Operators to evaluate and respond to model changes, (for example\nby providing preview access via beta-testing and versioned APIs).",
     "modality": "should"
   },
   {
@@ -556,7 +556,7 @@
     "standard": "EN 304 223",
     "section_id": "5.4.2",
     "title": "Monitor the system's behaviour",
-    "text": "System Operators and Developers should monitor the performance of their models and system over\ntime so that they can detect sudden or gradual changes in behaviour that could affect security.\n\n5.5\n\nSecure End of Life\n\n5.5.1\n\nPrinciple 13: Ensure proper data and model disposal\n\nPrimarily applies to: Developers and System Operators",
+    "text": "System Operators and Developers should monitor the performance of their models and system over\ntime so that they can detect sudden or gradual changes in behaviour that could affect security.",
     "modality": "should"
   },
   {
@@ -572,7 +572,7 @@
     "standard": "EN 304 223",
     "section_id": "5.5.1",
     "title": "Ensure proper data and model disposal",
-    "text": "If a Developer or System Operators decides to decommission a model and/or system, they shall\ninvolve Data Custodians and securely delete applicable data and configuration details.\n\n\f16\n\nHistory\nVersion\n\nDate\n\nStatus\n\nV1.1.1\n\nApril 2025\n\nPublication as ETSI TS 104 223\n\nV2.0.0\n\nSeptember 2025\n\nENAP process\n\nV2.1.1\n\nDecember 2025\n\nPublication\n\nAP 20251207: 2025-09-08 to 2025-12-08",
+    "text": "If a Developer or System Operators decides to decommission a model and/or system, they shall\ninvolve Data Custodians and securely delete applicable data and configuration details.",
     "modality": "shall"
   }
 ]

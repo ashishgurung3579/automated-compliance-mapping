@@ -38,6 +38,7 @@ if __name__ == "__main__":
 
     out_dir = DATA / "mappings"
     out_dir.mkdir(parents=True, exist_ok=True)
+    np.save(out_dir / "securebert_similarity_matrix.npy", sim)
 
     rows = []
     for i, sp in enumerate(src):

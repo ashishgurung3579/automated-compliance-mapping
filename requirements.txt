@@ -1,11 +1,12 @@
-scikit-learn
-pandas
-numpy
-sentence-transformers
-transformers
-torch
-google-genai>=1.28.0
-python-dotenv
+scikit-learn==1.8.0
+pandas==3.0.2
+numpy==2.4.4
+sentence-transformers==5.4.1
+transformers==5.8.0
+torch==2.11.0
+google-genai==2.0.1
+python-dotenv==1.2.2
+matplotlib==3.11.1
 
 # System dependency:
 # Install poppler for pdftotext: brew install poppler

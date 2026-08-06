@@ -46,6 +46,9 @@ Relationship options:
 
 Respond with exactly one label from the list above. No explanation."""
 
+# Set to write a replicate alongside the main output, for run-to-run agreement checks.
+OUTPUT_SUFFIX = os.environ.get("GEMINI_OUTPUT_SUFFIX", "").strip()
+
 
 def load_provisions() -> tuple[list[dict], list[dict]]:
     src = json.loads((DATA / "extracted" / "en303645_provisions.json").read_text())
@@ -96,7 +99,7 @@ def invoke_batch(client, requests: list[dict]):
     job = client.batches.create(
         model=LLM_MODEL,
         src=requests,
-        config={"display_name": "compliance-gemini-independent-mapping"},
+        config={"display_name": "compliance-gemini-mapping"},
     )
     return wait_for_batch(client, job)
 
@@ -157,11 +160,15 @@ def main():
 
     out_dir = DATA / "mappings"
     out_dir.mkdir(parents=True, exist_ok=True)
+    name = "gemini_output.csv"
+    if OUTPUT_SUFFIX:
+        name = name.replace(".csv", f"_{OUTPUT_SUFFIX}.csv")
+    out_path = out_dir / name
     df = pd.DataFrame(results)
-    df.to_csv(out_dir / "gemini_output.csv", index=False)
+    df.to_csv(out_path, index=False)
     print(f"Classified {len(df)} pairs.")
     print(df["predicted_rel"].value_counts().to_dict())
-    print(f"Saved: {out_dir / 'gemini_output.csv'}")
+    print(f"Saved: {out_path}")
 
 
 if __name__ == "__main__":

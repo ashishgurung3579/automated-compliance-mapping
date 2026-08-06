@@ -21,5 +21,17 @@ venv/
 # Runtime logs
 *.log
 
+# LaTeX build artefacts (main.pdf is kept — it is the submitted document)
+thesis/*.aux
+thesis/*.bbl
+thesis/*.blg
+thesis/*.lof
+thesis/*.lot
+thesis/*.out
+thesis/*.toc
+thesis/*.fls
+thesis/*.fdb_latexmk
+thesis/*.synctex.gz
+
 # Old local draft name
 explainer.md

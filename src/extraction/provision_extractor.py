@@ -48,6 +48,39 @@ PRINCIPLE_META_304223 = {
 }
 
 
+PHASES_304223 = [
+    "Secure Design", "Secure Development", "Secure Deployment",
+    "Secure Maintenance", "Secure End of Life",
+]
+
+# A provision runs until the next "Provision" marker, so whatever structural material
+# sits between it and that marker gets swallowed: section headings, the principle
+# preamble, reference lists. These patterns mark where the provision actually ends.
+_BOUNDARY_PATTERNS = [
+    r"\n\s*5\.\d+(?:\.\d+)*\s*\n",           # bare section number on its own line
+    r"Primarily applies to",
+    r"References:\s*\[i\.",
+    r"\n\s*Principle\s+\d+\s*:",
+    r"\n\s*Annex\s+[A-Z]\b",
+    r"\n\s*History\s*\n",                     # document history table closing the PDF
+    r"\n\s*(?:NOTE|EXAMPLE)\s*\d*\s*:\s*",    # explanatory block, including a bare trailer
+] + [rf"\n\s*{re.escape(t)}\s*\n" for t in SECTION_TITLES_303645.values()] \
+  + [rf"\n\s*{re.escape(p)}\s*\n" for p in PHASES_304223]
+
+_BOUNDARY_RE = re.compile("|".join(_BOUNDARY_PATTERNS))
+
+# Page breaks fall inside provisions as well as between them, so they are cleaned
+# rather than treated as boundaries.
+_PAGE_ARTEFACT_RE = re.compile(r"\f\s*\d*\s*")
+
+
+def _trim_to_provision(body: str) -> str:
+    match = _BOUNDARY_RE.search(body)
+    if match:
+        body = body[: match.start()]
+    return _PAGE_ARTEFACT_RE.sub("\n", body).strip()
+
+
 @dataclass
 class Provision:
     provision_id: str      # e.g. "5.1-1" or "5.1.1-1"
@@ -96,6 +129,7 @@ def parse_303645(text: str) -> list[Provision]:
 
         # Drop explanatory blocks so the provision text stays focused.
         body = re.sub(r"\n(NOTE|EXAMPLE)\s+\d*:.*", "", body, flags=re.DOTALL).strip()
+        body = _trim_to_provision(body)
 
         if bool(_VOID_PAT.search(body)) or "Void" in body[:20]:
             continue
@@ -128,7 +162,7 @@ def parse_304223(text: str) -> list[Provision]:
     provisions = []
     for m in _PAT_304223.finditer(text):
         pid = m.group(1)
-        body = m.group(2).strip()
+        body = _trim_to_provision(m.group(2).strip())
 
         key = _principle_key_from_id(pid)
         title, _phase = PRINCIPLE_META_304223.get(key, ("Unknown", "Unknown"))
