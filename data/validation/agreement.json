@@ -1,0 +1,46 @@
+{
+  "sample_vs_pilot": {
+    "n": 107,
+    "six_label": {
+      "percent_agreement": 0.6075,
+      "cohen_kappa": 0.401,
+      "band": "fair"
+    },
+    "merged_five_label": {
+      "percent_agreement": 0.6075,
+      "cohen_kappa": 0.4
+    },
+    "binary_detection": {
+      "percent_agreement": 0.8224,
+      "cohen_kappa": 0.5138,
+      "band": "moderate"
+    }
+  },
+  "confidence_calibration": {
+    "2": {
+      "agreement": 0.4643,
+      "n": 56
+    },
+    "3": {
+      "agreement": 0.7647,
+      "n": 51
+    }
+  },
+  "llm_run_to_run": {
+    "n": 4968,
+    "six_label": {
+      "percent_agreement": 0.6882,
+      "cohen_kappa": 0.0244,
+      "band": "slight"
+    },
+    "merged_five_label": {
+      "percent_agreement": 0.6882,
+      "cohen_kappa": 0.0244
+    },
+    "binary_detection": {
+      "percent_agreement": 0.8188,
+      "cohen_kappa": 0.0448,
+      "band": "slight"
+    }
+  }
+}

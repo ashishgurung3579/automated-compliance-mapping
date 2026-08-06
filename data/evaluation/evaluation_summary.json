@@ -3,25 +3,25 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_in_gt": 2,
-      "true_positives": 2,
+      "predicted_positive_in_gt": 3,
+      "true_positives": 3,
       "false_positives": 0,
-      "false_negatives": 83,
+      "false_negatives": 82,
       "precision": 1.0,
-      "recall": 0.0235,
-      "f1": 0.046
+      "recall": 0.0353,
+      "f1": 0.0682
     },
     "classification": {
-      "overall_accuracy": 0.2056,
-      "macro_precision": 0.0419,
-      "macro_recall": 0.2,
-      "macro_f1": 0.0693,
+      "overall_accuracy": 0.215,
+      "macro_precision": 0.109,
+      "macro_recall": 0.2091,
+      "macro_f1": 0.0858,
       "per_class": {
         "COMPLEMENTARITY": {
           "support": 22,
-          "precision": 0.0,
-          "recall": 0.0,
-          "f1": 0.0
+          "precision": 0.3333,
+          "recall": 0.0455,
+          "f1": 0.08
         },
         "EQUIVALENCE": {
           "support": 3,
@@ -31,9 +31,9 @@
         },
         "NO_RELATION": {
           "support": 22,
-          "precision": 0.2095,
+          "precision": 0.2115,
           "recall": 1.0,
-          "f1": 0.3465
+          "f1": 0.3492
         },
         "OVERLAP": {
           "support": 51,
@@ -105,25 +105,25 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_in_gt": 14,
-      "true_positives": 14,
+      "predicted_positive_in_gt": 15,
+      "true_positives": 15,
       "false_positives": 0,
-      "false_negatives": 71,
+      "false_negatives": 70,
       "precision": 1.0,
-      "recall": 0.1647,
-      "f1": 0.2828
+      "recall": 0.1765,
+      "f1": 0.3
     },
     "classification": {
       "overall_accuracy": 0.2243,
-      "macro_precision": 0.0781,
+      "macro_precision": 0.0764,
       "macro_recall": 0.2182,
       "macro_f1": 0.0994,
       "per_class": {
         "COMPLEMENTARITY": {
           "support": 22,
-          "precision": 0.1538,
+          "precision": 0.1429,
           "recall": 0.0909,
-          "f1": 0.1143
+          "f1": 0.1111
         },
         "EQUIVALENCE": {
           "support": 3,
@@ -133,9 +133,9 @@
         },
         "NO_RELATION": {
           "support": 22,
-          "precision": 0.2366,
+          "precision": 0.2391,
           "recall": 1.0,
-          "f1": 0.3826
+          "f1": 0.386
         },
         "OVERLAP": {
           "support": 51,
@@ -156,19 +156,19 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_in_gt": 104,
-      "true_positives": 84,
+      "predicted_positive_in_gt": 105,
+      "true_positives": 85,
       "false_positives": 20,
-      "false_negatives": 1,
-      "precision": 0.8077,
-      "recall": 0.9882,
-      "f1": 0.8889
+      "false_negatives": 0,
+      "precision": 0.8095,
+      "recall": 1.0,
+      "f1": 0.8947
     },
     "classification": {
-      "overall_accuracy": 0.3832,
-      "macro_precision": 0.2328,
-      "macro_recall": 0.2339,
-      "macro_f1": 0.162,
+      "overall_accuracy": 0.4112,
+      "macro_precision": 0.3046,
+      "macro_recall": 0.2456,
+      "macro_f1": 0.1715,
       "per_class": {
         "COMPLEMENTARITY": {
           "support": 22,
@@ -178,21 +178,21 @@
         },
         "EQUIVALENCE": {
           "support": 3,
-          "precision": 0.0556,
+          "precision": 0.0625,
           "recall": 0.3333,
-          "f1": 0.0952
+          "f1": 0.1053
         },
         "NO_RELATION": {
           "support": 22,
-          "precision": 0.6667,
+          "precision": 1.0,
           "recall": 0.0909,
-          "f1": 0.16
+          "f1": 0.1667
         },
         "OVERLAP": {
           "support": 51,
-          "precision": 0.4419,
-          "recall": 0.7451,
-          "f1": 0.5547
+          "precision": 0.4607,
+          "recall": 0.8039,
+          "f1": 0.5857
         },
         "SUBSUMPTION": {
           "support": 9,
@@ -267,16 +267,16 @@
       "f1": 0.8854
     },
     "classification": {
-      "overall_accuracy": 0.4579,
-      "macro_precision": 0.3506,
-      "macro_recall": 0.2859,
-      "macro_f1": 0.2782,
+      "overall_accuracy": 0.4766,
+      "macro_precision": 0.3519,
+      "macro_recall": 0.2886,
+      "macro_f1": 0.2788,
       "per_class": {
         "COMPLEMENTARITY": {
           "support": 22,
-          "precision": 0.2143,
-          "recall": 0.2727,
-          "f1": 0.24
+          "precision": 0.2174,
+          "recall": 0.2273,
+          "f1": 0.2222
         },
         "EQUIVALENCE": {
           "support": 3,
@@ -292,9 +292,9 @@
         },
         "OVERLAP": {
           "support": 51,
-          "precision": 0.5385,
-          "recall": 0.8235,
-          "f1": 0.6512
+          "precision": 0.5422,
+          "recall": 0.8824,
+          "f1": 0.6716
         },
         "SUBSUMPTION": {
           "support": 9,
@@ -309,25 +309,25 @@
     "detection": {
       "gt_positive_pairs": 85,
       "gt_negative_pairs": 22,
-      "predicted_positive_in_gt": 91,
-      "true_positives": 71,
-      "false_positives": 20,
-      "false_negatives": 14,
-      "precision": 0.7802,
-      "recall": 0.8353,
-      "f1": 0.8068
+      "predicted_positive_in_gt": 94,
+      "true_positives": 73,
+      "false_positives": 21,
+      "false_negatives": 12,
+      "precision": 0.7766,
+      "recall": 0.8588,
+      "f1": 0.8156
     },
     "classification": {
-      "overall_accuracy": 0.1589,
-      "macro_precision": 0.0971,
-      "macro_recall": 0.1442,
-      "macro_f1": 0.0847,
+      "overall_accuracy": 0.1869,
+      "macro_precision": 0.1121,
+      "macro_recall": 0.1715,
+      "macro_f1": 0.0882,
       "per_class": {
         "COMPLEMENTARITY": {
           "support": 22,
-          "precision": 0.1605,
-          "recall": 0.5909,
-          "f1": 0.2524
+          "precision": 0.1977,
+          "recall": 0.7727,
+          "f1": 0.3148
         },
         "EQUIVALENCE": {
           "support": 3,
@@ -337,15 +337,15 @@
         },
         "NO_RELATION": {
           "support": 22,
-          "precision": 0.125,
-          "recall": 0.0909,
-          "f1": 0.1053
+          "precision": 0.0769,
+          "recall": 0.0455,
+          "f1": 0.0571
         },
         "OVERLAP": {
           "support": 51,
-          "precision": 0.2,
+          "precision": 0.2857,
           "recall": 0.0392,
-          "f1": 0.0656
+          "f1": 0.069
         },
         "SUBSUMPTION": {
           "support": 9,

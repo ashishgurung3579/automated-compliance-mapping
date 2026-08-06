@@ -1,6 +1,6 @@
 # Automated Compliance Mapping - Evaluation Report
 
-**Generated**: 2026-05-10  
+**Generated**: 2026-08-04  
 **Standards**: ETSI EN 303 645 (IoT security) x ETSI EN 304 223 (AI security)  
 **Ground truth**: 107 annotated pairs (85 positive, 22 negative)  
 

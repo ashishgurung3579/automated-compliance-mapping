@@ -1,0 +1,12 @@
+{
+  "_note": "Wall-clock seconds on Apple Silicon MacBook (CPU only), single run, including model loading. Gemini methods run through the batch API; end-to-end time depends on queueing and is reported qualitatively in the thesis.",
+  "extraction": 0.9,
+  "create_baseline": 0.1,
+  "rule_based_tfidf_and_jaccard": 3.5,
+  "sbert": 55.7,
+  "bert": 103.9,
+  "securebert": 194.9,
+  "gemini_embedding": null,
+  "gemini_llm": null,
+  "evaluate": 1.4
+}
