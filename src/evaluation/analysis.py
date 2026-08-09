@@ -5,7 +5,7 @@ Extended analysis on top of evaluate.py output:
   - bootstrap 95% confidence intervals for detection F1 and macro-F1
   - detection-F1 threshold sensitivity from saved similarity matrices
   - cross-validated operating points, and the metrics each method reaches there
-  - paired bootstrap intervals for a preregistered set of between-method contrasts
+  - paired bootstrap intervals for a prespecified set of between-method contrasts
 
 Writes data/evaluation/analysis.json. Run after src.evaluation.evaluate.
 """
@@ -321,7 +321,7 @@ if __name__ == "__main__":
             "results": paired_differences(positive, preds, rng, contrasts),
         }
         print(f"\nContrast reference (highest calibrated F1): {best}")
-        print(f"{len(contrasts)} preregistered contrasts, {N_BOOT} paired bootstrap draws")
+        print(f"{len(contrasts)} prespecified contrasts, {N_BOOT} paired bootstrap draws")
 
     (EVAL_DIR / "analysis.json").write_text(json.dumps(analysis, indent=2))
     print(f"Saved {EVAL_DIR / 'analysis.json'}")

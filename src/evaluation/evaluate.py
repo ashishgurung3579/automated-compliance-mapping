@@ -1,5 +1,5 @@
 """
-Evaluation of automated compliance mapping against expert ground truth.
+Evaluation of automated compliance mapping against the annotated reference set.
 
 Metrics:
   - Pair detection: precision, recall, F1, coverage

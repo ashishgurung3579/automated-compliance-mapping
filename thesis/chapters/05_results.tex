@@ -213,14 +213,14 @@ deviation). Right: the threshold each set of training folds selected.}
 \end{figure}
 
 Recalibration changes the diagnosis, but far less than the shipped-threshold
-table might suggest. Comparisons use a preregistered contrast set fixed before
+table might suggest. Comparisons use a prespecified contrast set fixed before
 the results were read: every method against the all-positive baseline, and every
 method against whichever method scores highest. The intervals are paired
 bootstrap intervals, since the methods are scored on identical pairs and the
 paired variance is far smaller than the marginal intervals imply.
 
-Against the baseline, only three of the nine continuous methods clear it by a
-margin whose interval excludes zero: Gemini embeddings at $+0.116$
+Against the baseline, only three of the nine methods with a stored score matrix
+clear it by a margin whose interval excludes zero: Gemini embeddings at $+0.116$
 [0.050, 0.188], BGE at $+0.044$ [0.005, 0.086] and CySecBERT at $+0.018$
 [0.007, 0.032]. MPNet gains $+0.054$ but with an interval spanning zero
 [$-0.019$, 0.129], and TF--IDF, Sentence-BERT and BERT sit between $+0.026$ and
@@ -443,7 +443,7 @@ runs over identical input.}
 Comparison & $n$ & Agreement & $\kappa$ & Agreement & $\kappa$\\
 \midrule
 Second round vs.\ reviewed pilot & 107 & 0.61 & 0.40 & 0.82 & 0.51\\
-Evaluated LLM vs.\ itself, identical input & 4\,968 & 0.69 & 0.02 & 0.81 & $-$0.03\\
+Evaluated LLM vs.\ itself, identical input & 4\,968 & 0.69 & 0.02 & 0.82 & 0.04\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -461,9 +461,11 @@ overlap/complementarity boundary, which Section~\ref{sec:threats} identifies as
 the least determinate distinction in the taxonomy, and on the general-process
 provisions covered by the codebook amendment recorded during annotation. Recorded
 confidence tracks them: pairs marked confidence 3 agree with the pilot 77\% of
-the time ($n = 51$) against 46\% for confidence 2 ($n = 56$). The scale collapsed
-in practice to those two values, since no pair was recorded at 1, so this is a
-two-level contrast and not a calibration curve. It does show that the field
+the time ($n = 51$) against 46\% for confidence 2 ($n = 56$). The comparison rests
+on the confidence recorded in the second round, which used only levels 2 and 3,
+so this is a two-level contrast and not a calibration curve. Level 1 was
+available throughout and was used sparingly in the pilot, five times across its
+107 pairs, three of which reach the reference set. It does show that the field
 carries information.
 
 The second row of Table~\ref{tab:agreement} is the more instructive one. The
@@ -607,15 +609,36 @@ labels are the noisier construct and the classification results in
 Section~\ref{sec:classresults} are measured against a correspondingly noisier
 target.
 
-\paragraph{Internal validity.} The reference set was drafted with LLM
-assistance, which risks favouring LLM-family methods. Three things bound the
-risk. The drafting model (Claude) belongs to a different family from the
-evaluated ones (Gemini); 37 of the 200 pairs come from the author-reviewed pilot;
-and the evaluated LLM classifier performed worst of the non-degenerate methods on
-the typed task, so the circularity, if any, did not manifest as an advantage. The
-remaining 163 pairs were not reviewed pair by pair, and their reliability rests
-instead on the blind comparison with the reviewed pilot reported in
-Section~\ref{sec:agreementresults}.
+\paragraph{Internal validity.} Provision text from \standardA{} retains the
+unlabelled explanatory paragraphs the standard prints beneath its requirements,
+as Section~\ref{sec:data} sets out, and those paragraphs are 53\% of that
+standard's extracted words. They are written in general security vocabulary,
+so two provisions whose requirements are unrelated can still share a
+substantial amount of wording through their explanations alone. Every
+similarity score in this chapter is computed over text of that composition,
+which means the compression documented in Section~\ref{sec:simstructure} cannot
+be attributed to model geometry alone: part of it may be the input. The
+anisotropy explanation is supported independently by the
+literature~\cite{ethayarajh2019contextual} and by the fact that the three
+sentence-embedding models separate the classes on the same text, but the size
+of the input's contribution is not measured here. Re-running the local methods
+on requirement text alone would settle it and is a cheap experiment; it was not
+run because the two hosted methods, one of which leads the comparison, are
+archived as stored outputs and could not be re-scored on the same footing.
+
+The reference set was drafted with LLM
+assistance, which risks favouring LLM-family methods. Four things bound the
+risk. Neither annotation model belongs to the evaluated family: the labels were
+drafted by Fable~5 (Anthropic) and verified by GPT-5.6 Sol (OpenAI), while the evaluated
+methods are Gemini. The two annotation models are independent of each other, so
+a label reflects agreement across developers rather than one model's judgement.
+37 of the 200 pairs come from the author-reviewed pilot. And the evaluated LLM
+classifier performed worst of the non-degenerate methods on the typed task, so
+the circularity, if any, did not manifest as an advantage. The remaining 163
+pairs were not reviewed by an author pair by pair --- they carry the two models'
+agreement plus author adjudication where the models diverged --- and their
+reliability rests further on the blind comparison with the reviewed pilot
+reported in Section~\ref{sec:agreementresults}.
 
 \paragraph{External validity.} Two limits bound generalisation. The first is the
 balanced composition of the reference set: as Section~\ref{sec:refset} sets out,
@@ -625,18 +648,27 @@ lower is not quantified here. The second is scope. The results belong to this
 pair of standards and these model versions, and the specific numbers should not
 be transferred to another pair without re-measurement.
 
-\paragraph{Statistical conclusion validity.} Three limits constrain how far the
+\paragraph{Statistical conclusion validity.} Four limits constrain how far the
 numbers can be pushed. First, the rare classes are rare: with three
 \textsc{Equivalence} and ten \textsc{Subsumption} pairs, per-class figures for
 those two rows move substantially on a single prediction, and the macro-F1 that
 averages them inherits that instability. The targeted search reported in
 Section~\ref{sec:setup} establishes that this cannot be fixed by annotating more
-pairs from the same corpus. Second, the operating points in
+pairs from the same corpus. The same scarcity reaches the intervals: a bootstrap
+resample of 200 pairs omits all three \textsc{Equivalence} pairs about one time
+in twenty, and that class then contributes zero to the macro average, so the
+macro-F1 intervals in Table~\ref{tab:classification} are biased slightly low and
+are wider than the underlying estimate warrants. Second, the operating points in
 Table~\ref{tab:calibrated} are selected by cross-validation on the same set they
 are scored on. The residual optimism is measured rather than assumed, at between
 0.010 and 0.035 across methods, and is small relative to the differences
 reported, but the point estimates remain the optimistic end of their range.
-Third, the paired comparisons follow a preregistered contrast set, each method
+Third, the paired bootstrap holds each method's calibrated threshold fixed across
+the resamples rather than re-selecting it within each one, so those intervals
+carry the sampling variance of the metric at a fixed operating point and not the
+variance of the selection procedure that chose it. They are consequently
+narrower than a fully nested resampling would produce. Fourth, the paired
+comparisons follow a prespecified contrast set, each method
 against the baseline and against the leader, instead of all pairs, because
 fifty-five uncorrected intervals would guarantee false findings among them. The
 leader is nonetheless the sample maximum, so differences measured against it are

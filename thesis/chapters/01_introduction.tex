@@ -46,7 +46,7 @@ privacy policies, GDPR data processing agreements, and cloud security
 posture~\cite{rodriguez2024llm,cejas2023gdpr,barhaim2023cloud}, but the
 specific task of mapping one security standard onto another has received little
 systematic evaluation. By implementing a spectrum of methods, from keyword
-matching to LLM classification, and scoring them against a common expert
+matching to LLM classification, and scoring them against a common annotated
 reference on a real standard pair, this project produces evidence about where
 automation helps, where it fails, and where human expertise remains
 indispensable. The results are relevant both to researchers working on NLP for
@@ -61,8 +61,8 @@ is not to develop new model architectures but to establish, empirically, how
 well existing techniques perform on this task. Concretely, the project (i)
 extracts the normative provisions of both standards into a structured dataset,
 (ii) applies eleven automated mapping methods spanning rule-based, embedding-based,
-and LLM-based approaches, (iii) evaluates them against an author-reviewed,
-LLM-assisted ground truth of annotated provision pairs, and (iv) analyses the errors to
+and LLM-based approaches, (iii) evaluates them against a ground truth of annotated provision pairs that was
+LLM-drafted, cross-verified by a second independent model, and author-reviewed, and (iv) analyses the errors to
 characterise the limitations of each method family. The outcome is a grounded
 assessment of the feasibility of automated compliance mapping between IoT and
 AI security standards, together with a reusable dataset and evaluation

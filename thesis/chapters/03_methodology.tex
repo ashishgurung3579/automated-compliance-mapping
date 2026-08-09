@@ -16,7 +16,8 @@ is answered by evaluating all eleven methods under identical conditions. RQ3
 (automated vs.\ expert mapping) is answered by treating the reference annotation
 as the standard of comparison and additionally measuring how consistently the
 task is performed on repetition. The expert role in that comparison is filled by
-LLM-assisted annotation reviewed by the authors against a written codebook, not
+annotation drafted by one frontier LLM, verified by a second from an unrelated
+developer, and reviewed by the authors against a written codebook, not
 by external domain experts; a protocol for the external study is given in
 Appendix~\ref{app:survey} but was not carried out, and Section~\ref{sec:threats}
 states what this costs the RQ3 answer.
@@ -38,15 +39,36 @@ format, which the extraction step exploits.
 \subsection{Extraction of normative provisions}
 
 Security standards mix normative requirements with explanatory prose,
-examples, and notes. Only the normative statements are relevant for mapping,
-so the first step isolates them. The PDF documents are converted to plain text
+examples, and notes. The PDF documents are converted to plain text
 with \texttt{pdftotext}, recurring page headers and footers are stripped, and
 provisions are located by their clause identifiers (e.g., ``Provision
 5.3-3'' in \standardA{}, numbered requirement clauses in \standardB{}). For
 each provision the pipeline records: the provision identifier, source
-standard, section number and title, the full provision text, and its modality,
+standard, section number and title, the provision text, and its modality,
 that is whether the provision uses \emph{shall} (mandatory), \emph{should}
 (recommended), or \emph{may} (permitted).
+
+What counts as the provision text needs stating precisely, because the two
+standards format their requirements differently and the choice affects every
+similarity score that follows. Blocks the standards label as
+\textsc{Note} or \textsc{Example}, along with cross-reference lists and annex
+material, are removed. \standardA{} additionally prints one or more
+\emph{unlabelled} explanatory paragraphs beneath many of its provisions,
+giving the reasoning behind the requirement, and these are retained as part of
+the provision text. The effect is substantial and is reported here rather than
+left implicit: 25 of the 69 \standardA{} provisions carry such a trailer, and
+the retained explanation accounts for 53\% of that standard's extracted words.
+Provision 5.6-1, for instance, contributes a 19-word requirement followed by
+135 words explaining why unused interfaces are disabled. \standardB{} has no
+equivalent construction; its provisions are normative throughout, which is why
+the two documents are handled by separate parsers.
+
+Retaining the explanation gives the encoders the context in which a
+short requirement is meant to be read, which is the case for keeping it. The
+cost is that the explanatory passages are written in general security
+vocabulary, so they add wording that two otherwise unrelated provisions can
+share. Section~\ref{sec:threats} treats that as a threat to the internal
+validity of the similarity results.
 
 The extraction yields 69 provisions from \standardA{} and 72 from \standardB{},
 141 in total. Since any provision of one standard could in principle relate to
@@ -89,25 +111,49 @@ confusions are less interesting than detecting subsumption at all and the per
 
 \section{Ground-truth construction and validation}\label{sec:gt}
 
-\subsection{LLM-assisted annotation}
+\subsection{LLM-assisted annotation with cross-model verification}
 
 Evaluating the automated methods requires a reference mapping. Annotating all
 4{,}968 pairs manually was outside the scope of a 15-credit project, so the
-ground truth was produced with LLM assistance and human review, a set-up
+ground truth was produced through a three-stage procedure --- LLM drafting,
+independent cross-model verification, and author review --- a set-up
 increasingly common in annotation work and disclosed here for transparency.
-Candidate pairs and draft relationship labels were generated with Claude Opus~5
-(Anthropic), prompted with the full provision texts and the taxonomy
-definitions of Section~\ref{sec:taxonomy}. The authors then reviewed the
-drafts, corrected labels and justifications, and removed pairs whose
-connection did not hold up against the original standard texts. Each retained
-pair carries a short written justification and a reviewer confidence score
-from 1 (uncertain) to 3 (certain).
+LLM annotation of text has been reported at or above crowd-worker quality on
+classification tasks~\cite{gilardi2023chatgpt}, but the same literature is
+explicit that it should not be trusted unverified: agreement with expert labels
+varies by task and construct, and human validation of the machine labels remains
+necessary~\cite{ziems2024css}. The procedure below follows that advice, and adds
+a second model as an independent judge, a use of LLMs whose agreement with human
+judgement has itself been characterised~\cite{zheng2023judge}.
+
+In the first stage, candidate pairs and draft relationship labels were
+generated with Fable~5 (Anthropic), prompted with the full provision texts and
+the taxonomy definitions of Section~\ref{sec:taxonomy}. In the second, every
+drafted label was re-examined by GPT-5.6 Sol (OpenAI), a frontier model from an
+unrelated developer, given the same provision texts and codebook but not the
+first model's justification, and asked to confirm or contest the label. In the
+third, the authors reviewed the drafts and the verifier's verdicts, adjudicated
+every pair the two models disagreed on, corrected labels and justifications,
+and removed pairs whose connection did not hold up against the original
+standard texts. Each retained pair carries a short written justification and a
+reviewer confidence score from 1 (uncertain) to 3 (certain).
+
+Two independent frontier models and a human adjudication step is a stronger
+warrant than single-pass drafting: a label survives only if two models trained
+by different organisations on different data agree on it, or if an author
+settled it. Known failure modes of LLM judges --- self-preference for their own
+outputs and position effects~\cite{zheng2023judge} --- are constrained here
+because the judge is from a different developer than the drafter and never sees
+the drafter's justification. What the procedure does not supply is a domain
+expert~\cite{ziems2024css}, and that limit is stated in
+Section~\ref{sec:threats}.
 
 Using an LLM in the annotation loop creates a risk of circularity, since one
-of the evaluated methods is itself an LLM. Two design choices reduce this
-risk: the annotation model (Claude) is from a different family than the
-evaluated model (Gemini), and the labels follow a codebook written before any
-were drafted, reproduced in Appendix~\ref{app:labels}. It states the decision
+of the evaluated methods is itself an LLM. Three design choices reduce this
+risk: neither the drafting model (Anthropic) nor the verifying model (OpenAI)
+shares a family with the evaluated model (Gemini), the two annotation models
+are independent of each other, and the labels follow a codebook written before
+any were drafted, reproduced in Appendix~\ref{app:labels}. It states the decision
 procedure, the overlap-versus-complementarity test that carries most of the
 difficulty, and one amendment made partway through and applied from that point
 onward.
@@ -162,7 +208,20 @@ rows support is the structure of the confusion, not a recall estimate.
 
 \subsection{Assembling the reference set}\label{sec:refset}
 
-The three rounds leave a pool of 1{,}027 judged pairs. From that pool the
+The three rounds leave a pool of 1{,}027 judged pairs. Because the 107 pilot
+pairs were judged twice, once in the pilot and once again, unmarked, in the
+screened round, the pool needs a rule for which of the two labels it carries. It
+carries the pilot label, on the grounds that those pairs are the only ones two
+authors examined individually. The consequence is worth stating, because it falls
+on the rarest classes. Under the pilot labels the pool holds three
+\textsc{Equivalence} and ten \textsc{Subsumption} pairs; under the blind
+re-annotation of the same pairs it would hold two and four. The rare-class
+support of the reference set therefore comes almost entirely from the pilot, and
+the disagreement between the two label sets on those pairs is part of what
+Section~\ref{sec:gtvalidation} measures. Neither reading changes the finding
+that both classes are scarce.
+
+From that pool the
 evaluation set is drawn under one rule, fixed in advance: \emph{negatives are
 half the set; positives are balanced across the five positive classes as far as
 the annotated material allows.}
@@ -363,7 +422,7 @@ without knowing where a method's scores actually fall, and
 Section~\ref{sec:simstructure} shows that several methods occupy ranges their
 family default does not reach into at all. Those methods therefore ship at
 operating points that place every pair on one side of the line, which is why
-every method with a continuous score is also reported at a threshold
+every method with a stored score matrix is also reported at a threshold
 recalibrated on the reference set. The calibration analysis in
 Section~\ref{sec:thresholdresults} shows how much of each method's performance
 is representation and how much is the choice of operating point.

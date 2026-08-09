@@ -6,7 +6,9 @@ techniques. A five-stage pipeline was built that extracts 141 normative
 provisions from the two standards, maps them with eleven methods spanning
 lexical, sentence-embedding, contextual-embedding, cross-encoder and hosted API
 approaches, and evaluates all of them against a 200-pair reference set assembled
-from three rounds of LLM-assisted annotation totalling 1{,}027 judged pairs.
+from three rounds of LLM-assisted annotation totalling 1{,}027 judged pairs, each
+label drafted by one frontier model, verified by a second from an unrelated
+developer, and reviewed by the authors.
 
 The answer the evidence supports is a split one. Finding \emph{that} two
 provisions relate is partly feasible; determining \emph{how} they relate is not.
@@ -62,9 +64,10 @@ a minute of computation.
 
 Three choices shaped this project and deserve scrutiny. First, the reference set
 was annotated with LLM assistance; this was a pragmatic necessity at 15 credits,
-it is disclosed openly, and the design (a different model family from the
-evaluated ones, a written codebook fixed in advance, and a blind comparison
-against the author-reviewed pilot) bounds the risk. What it does not remove is
+it is disclosed openly, and the design (two annotation models from separate
+developers, neither sharing a family with the evaluated ones, a written codebook
+fixed in advance, author adjudication of every model disagreement, and a blind
+comparison against the author-reviewed pilot) bounds the risk. What it does not remove is
 the ceiling that comparison reveals: $\kappa = 0.51$ on the detection decision
 means the reference is good enough to rank methods against a common target but
 not to certify an absolute accuracy. A fully expert-built reference would be

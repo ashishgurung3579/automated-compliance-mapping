@@ -44,9 +44,11 @@ For evaluation the two subsumption directions merge into one class, leaving five
 Three annotation rounds produced **1,027 judged pairs**: a 107-pair pilot chosen
 purposively and reviewed by the authors, a 650-pair screened round drawn from three bands
 of a method-agnostic similarity ranking, and a 300-pair targeted round aimed at the rare
-classes. All were annotated with LLM assistance (Claude Opus 5, deliberately a different
-model family from every evaluated method) against the written codebook in
-`annotation_codebook.md`. This is disclosed in the thesis rather than hidden.
+classes. All were annotated in three stages against the written codebook in
+`annotation_codebook.md`: drafted by Fable 5 (Anthropic), verified independently by GPT-5.6 Sol
+(OpenAI), then author-reviewed with every model disagreement adjudicated by hand. Both
+annotation models are deliberately from different families than every evaluated method.
+This is disclosed in the thesis rather than hidden.
 
 The **200-pair evaluated set** (`data/baseline/reference_set.csv`) is drawn from that pool
 under one rule: negatives are half the set, and positives are balanced across the five
@@ -314,6 +316,13 @@ Current extracted counts:
 - `en303645_provisions.json`: 69 provisions.
 - `en304223_provisions.json`: 72 provisions.
 
+What `provision text` contains: blocks the standards label `NOTE` or `EXAMPLE`, plus
+cross-reference lists and annex material, are dropped. EN 303 645 also prints unlabelled
+explanatory paragraphs beneath many provisions, and those are **kept** as part of the
+text — 25 of its 69 provisions carry one, and they are 53% of that standard's extracted
+words. EN 304 223 has no such trailer. Every similarity score in the project is computed
+over text of that composition; see the internal-validity paragraph in the thesis.
+
 Total possible pairs:
 
 ```text
@@ -364,9 +373,9 @@ Current baseline count:
 - 85 positive relation pairs.
 - 22 `NO_RELATION` negative pairs.
 
-Important: the annotations were produced with LLM assistance (Claude Opus 5)
-against the written codebook in `docs/annotation_codebook.md`, and the 107 pilot
-pairs were then reviewed pair by pair by the authors. This is disclosed in the
+Important: the annotations were drafted by Fable 5 (Anthropic) against the written
+codebook in `docs/annotation_codebook.md`, verified independently by GPT-5.6 Sol (OpenAI),
+and the 107 pilot pairs were then reviewed pair by pair by the authors. This is disclosed in the
 thesis. Two further annotation rounds widen the pool (section 15), and the
 200-pair set actually evaluated is assembled from all three by
 `build_reference.py`. Reliability of the unreviewed rounds is measured in
@@ -459,14 +468,6 @@ Run commands:
 ```bash
 python3 -m src.mapping.run_embedding sbert
 python3 -m src.mapping.run_embedding --all
-```
-
-The three original entry points still work and simply call the runner:
-
-```bash
-python3 -m src.mapping.sbert_mapping
-python3 -m src.mapping.bert_mapping
-python3 -m src.mapping.securebert_mapping
 ```
 
 Models used:

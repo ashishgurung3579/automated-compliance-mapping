@@ -1,10 +1,11 @@
 """
 Guard against the thesis drifting from the data: parses the result tables in
-thesis/chapters/05_results.tex and compares every number against
-data/evaluation/evaluation_summary.json and analysis.json.
+thesis/chapters/05_results.tex and the sampling table in 03_methodology.tex, and
+compares every number against the stored evaluation, agreement and annotation data.
 
 Exits non-zero if any value disagrees. Run before every submission build.
 """
+import csv
 import json
 import re
 import sys
@@ -13,31 +14,95 @@ from pathlib import Path
 from src.methods import THESIS_ROWS
 
 BASE = Path(__file__).parents[2]
-EVAL = BASE / "data" / "evaluation"
+DATA = BASE / "data"
+EVAL = DATA / "evaluation"
+BASELINE = DATA / "baseline"
 RESULTS_TEX = BASE / "thesis" / "chapters" / "05_results.tex"
+METHOD_TEX = BASE / "thesis" / "chapters" / "03_methodology.tex"
 
 # thesis row label -> method key in the JSON files
 ROWS = THESIS_ROWS
 
+# tab:agreement row -> key in data/validation/agreement.json
+AGREEMENT_ROWS = {
+    "Second round vs.\\ reviewed pilot": "sample_vs_pilot",
+    "Evaluated LLM vs.\\ itself, identical input": "llm_run_to_run",
+}
+
+# tab:sampling row -> label in the annotation CSVs
+SAMPLING_ROWS = {
+    "No relation": "NO_RELATION",
+    "Overlap": "OVERLAP",
+    "Complementarity": "COMPLEMENTARITY",
+    "Subsumption (B broader)": "SUBSUMPTION_B_BROADER",
+    "Subsumption (A broader)": "SUBSUMPTION_A_BROADER",
+    "Equivalence": "EQUIVALENCE",
+}
+
+# tab:runtime row -> key in data/evaluation/runtimes.json
+RUNTIME_ROWS = {
+    "Provision extraction (both PDFs)": "extraction",
+    "TF--IDF + keyword mapping": "rule_based_tfidf_and_jaccard",
+    "Sentence-BERT mapping": "sbert",
+    "MPNet mapping": "mpnet",
+    "BGE mapping": "bge",
+    "BERT mapping": "bert",
+    "SecureBERT mapping": "securebert",
+    "CySecBERT mapping": "cysecbert",
+    "NLI cross-encoder (9{,}936 forward passes)": "nli",
+    "Evaluation": "evaluate",
+    "Calibration and bootstrap analysis": "analysis",
+}
+
 
 def strip_tex(cell: str) -> str:
-    return re.sub(r"\\textbf\{([^}]*)\}", r"\1", cell).strip()
+    cell = re.sub(r"\\(?:textbf|emph|textsc)\{([^}]*)\}", r"\1", cell)
+    return cell.replace("\\,", "").replace("$-$", "-").strip()
 
 
-def parse_rows(tex: str, label: str) -> dict[str, list[str]]:
+def parse_rows(tex: str, label: str, keys=None) -> dict[str, list[str]]:
     """Return {row label: [cells]} for the tabular carrying the given \\label."""
+    keys = ROWS if keys is None else keys
     block = re.search(r"\\begin\{table\}.*?\\label\{" + re.escape(label)
                       + r"\}.*?\\end\{table\}", tex, re.S)
     if not block:
-        raise SystemExit(f"table {label} not found in {RESULTS_TEX.name}")
+        raise SystemExit(f"table {label} not found")
     rows = {}
     for line in block.group(0).splitlines():
         if "&" not in line or line.lstrip().startswith("%"):
             continue
         cells = [strip_tex(c) for c in line.replace("\\\\", "").split("&")]
-        if cells[0] in ROWS:
+        if cells[0] in keys:
             rows[cells[0]] = cells[1:]
     return rows
+
+
+def judged_pool() -> dict[str, int]:
+    """Label counts over the 1,027 judged pairs, pilot labels taking precedence.
+
+    Reproduces the Judged column of tab:sampling, including the precedence rule
+    documented in Section 3.4.3.
+    """
+    def read(name):
+        return list(csv.DictReader((BASELINE / name).open()))
+
+    pool = {}
+    for row in read("gt_sample.csv") + read("rare_class_pairs.csv"):
+        pool[(row["src_id"], row["tgt_id"])] = row["relationship"]
+    for row in read("gt.csv"):                      # pilot wins where they overlap
+        pool[(row["src_id"], row["tgt_id"])] = row["relationship"]
+
+    counts: dict[str, int] = {}
+    for label in pool.values():
+        counts[label] = counts.get(label, 0) + 1
+    return counts
+
+
+def reference_counts() -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for row in csv.DictReader((BASELINE / "reference_set.csv").open()):
+        counts[row["relationship"]] = counts.get(row["relationship"], 0) + 1
+    return counts
 
 
 def check(name: str, thesis: str, data, fmt: str, errors: list):
@@ -105,6 +170,54 @@ if __name__ == "__main__":
                   ".3f", errors)
         check(f"calibrated/{label}/held_out", cells[5], cv["cv_f1_mean"], ".3f", errors)
         checked += 6
+
+    # Agreement table: the kappas are computed elsewhere and were transcribed by hand.
+    agreement = json.loads((DATA / "validation" / "agreement.json").read_text())
+    agr = parse_rows(tex, "tab:agreement", AGREEMENT_ROWS)
+    for label, key in AGREEMENT_ROWS.items():
+        cells = agr.get(label)
+        if cells is None:
+            errors.append(f"agreement table: row {label!r} missing")
+            continue
+        block = agreement[key]
+        check(f"agreement/{label}/n", cells[0], block["six_label"]["n"]
+              if "n" in block["six_label"] else block["n"], "d", errors)
+        for i, (part, field) in enumerate([
+            ("six_label", "percent_agreement"), ("six_label", "cohen_kappa"),
+            ("binary_detection", "percent_agreement"), ("binary_detection", "cohen_kappa"),
+        ], start=1):
+            check(f"agreement/{label}/{part}.{field}", cells[i],
+                  block[part][field], ".2f", errors)
+            checked += 1
+        checked += 1
+
+    # Sampling table lives in the methodology chapter, not the results chapter.
+    meth = METHOD_TEX.read_text()
+    smp = parse_rows(meth, "tab:sampling", SAMPLING_ROWS)
+    pool, refset = judged_pool(), reference_counts()
+    for label, key in SAMPLING_ROWS.items():
+        cells = smp.get(label)
+        if cells is None:
+            errors.append(f"sampling table: row {label!r} missing")
+            continue
+        check(f"sampling/{label}/judged", cells[0], pool.get(key, 0), "d", errors)
+        check(f"sampling/{label}/in_set", cells[1], refset.get(key, 0), "d", errors)
+        checked += 2
+
+    # Runtime table: printed to whichever precision reads well, so compare rounded.
+    runtimes = json.loads((EVAL / "runtimes.json").read_text())
+    rt = parse_rows(tex, "tab:runtime", RUNTIME_ROWS)
+    for label, key in RUNTIME_ROWS.items():
+        cells = rt.get(label)
+        if cells is None:
+            errors.append(f"runtime table: row {label!r} missing")
+            continue
+        printed = cells[0].replace("s", "").strip()
+        stored = runtimes[key]
+        if printed not in {f"{stored:.1f}", f"{round(stored):d}"}:
+            errors.append(f"runtime/{label}: thesis says {printed!r}, "
+                          f"data says {stored}")
+        checked += 1
 
     if errors:
         print("Thesis numbers do not match the data:")
