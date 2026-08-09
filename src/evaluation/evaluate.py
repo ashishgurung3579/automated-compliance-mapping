@@ -141,9 +141,8 @@ def classification_metrics(gt: pd.DataFrame, pred: pd.DataFrame) -> dict:
 def all_positive_baseline(gt: pd.DataFrame) -> dict:
     """What a classifier that calls every pair related would score.
 
-    Reported alongside every method because precision and F1 both move with the
-    positive rate of the set, and a detection score is only meaningful next to what
-    the trivial answer achieves on the same pairs.
+    Precision and F1 both move with the positive rate, so every detection score is
+    reported next to this one.
     """
     positives = int((gt["relationship"] != "NO_RELATION").sum())
     negatives = len(gt) - positives

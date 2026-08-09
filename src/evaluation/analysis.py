@@ -97,9 +97,8 @@ def pair_scores(sim: np.ndarray, gt: pd.DataFrame,
 def candidate_thresholds(scores: np.ndarray) -> np.ndarray:
     """Cut points taken as quantiles of a method's own scores.
 
-    A shared absolute grid would be unfair rather than neutral: TF-IDF tops out
-    around 0.14 while SecureBERT never drops below 0.91, so a fixed 0.05-to-1.00
-    grid hands one method a hundred candidate cut points and the other three.
+    The methods occupy very different ranges, so a shared absolute grid would give
+    one of them many usable cut points and another almost none.
     """
     return np.unique(np.quantile(scores, np.linspace(0.01, 0.99, 200)))
 
@@ -153,11 +152,8 @@ def metrics_at(scores: np.ndarray, positive: np.ndarray, t: float) -> dict:
 def cv_threshold(scores: np.ndarray, positive: np.ndarray) -> dict:
     """Held-out detection F1 when the threshold is tuned only on training folds.
 
-    The sweep in threshold_sweep() picks its operating point on the same pairs it
-    scores, which overstates what calibration achieves. Here the threshold never sees
-    the fold it is scored on, so the result is comparable to unseen provisions. The
-    reported threshold is the median of the selected values rather than the in-sample
-    optimum, so the metrics computed at it are not tuned on the pairs they score.
+    Unlike threshold_sweep(), the threshold never sees the fold it is scored on.
+    The reported value is the median of the selections, not the in-sample optimum.
     """
     from sklearn.model_selection import RepeatedStratifiedKFold
 
@@ -189,9 +185,8 @@ def cv_threshold(scores: np.ndarray, positive: np.ndarray) -> dict:
 def calibrated_ci(scores: np.ndarray, positive: np.ndarray, t: float) -> dict:
     """Bootstrap intervals for the metrics at the calibrated operating point.
 
-    The threshold is held fixed across draws rather than reselected on each one:
-    the interval wanted here is the uncertainty in the score of a fixed operating
-    point, not the uncertainty of the whole selection procedure.
+    The threshold is held fixed across draws, so the interval is the uncertainty
+    of a fixed operating point, not of the selection procedure.
     """
     rng = np.random.default_rng(SEED)
     n = len(scores)
@@ -211,16 +206,10 @@ def calibrated_ci(scores: np.ndarray, positive: np.ndarray, t: float) -> dict:
 def contrast_set(names: list[str], reference: str) -> list[tuple[str, str]]:
     """The comparisons that get reported, fixed by rule rather than exhaustive.
 
-    All pairs of eleven methods is fifty-five intervals, and reporting fifty-five
-    uncorrected 95% intervals guarantees false findings among them. Two questions
-    carry the argument -- does a method beat the all-positive baseline, and does
-    anything beat the best method -- so those are the contrasts computed.
-
-    The rule is fixed, but the reference is not: it is whichever method scores
-    highest on this set. Differences measured against a selected maximum are biased
-    in that maximum's favour, because the selection absorbs some of the sampling
-    noise. The intervals here are therefore read as descriptive rather than as a
-    test that the reference is best.
+    Fifty-five uncorrected intervals would contain false findings, so only two
+    contrasts are computed per method: against the all-positive baseline, and
+    against the best-scoring method. The reference is the sample maximum, so
+    differences against it are biased in its favour and are descriptive only.
     """
     pairs = [(n, "all_positive") for n in names]
     pairs += [(n, reference) for n in names if n != reference]
@@ -231,10 +220,8 @@ def paired_differences(positive: np.ndarray, preds: dict[str, np.ndarray],
                        rng, contrasts: list[tuple[str, str]]) -> dict:
     """Bootstrap CIs for between-method differences, both methods on the same draw.
 
-    Comparing two marginal intervals for overlap is not a test of the difference:
-    the methods are scored on identical pairs, so the paired variance is much
-    smaller than the marginals suggest and a ranking can be significant while the
-    intervals overlap.
+    The methods are scored on identical pairs, so the paired variance is much
+    smaller than the marginals and overlapping marginals prove nothing.
     """
     n = len(positive)
     names = list(preds)

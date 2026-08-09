@@ -1,23 +1,10 @@
 """
 Assemble the reference set the evaluation runs against.
 
-Every pair judged in any annotation round feeds into one pool: the pilot round, the
-screened round that followed it, and the targeted search for the rare classes. From
-that pool this module draws a single set under one rule --
-
-    negatives are half the set; positives are balanced across the five positive
-    classes as far as the annotated material allows
-
--- which fixes the two things a reference set has to get right. Half negatives keeps
-the trivial "everything is related" classifier from scoring well, so a method that
-beats it has done something. Balancing the positives keeps the typed task from being
-a report on whichever relationship happens to be most common.
-
-The second half of the rule binds hard here. Equivalence and subsumption are close to
-absent from the corpus: 13 pairs of the 1,027 judged, and none at all among the 300
-highest-ranked pairs searched specifically to find more. Those classes therefore enter
-the set at their full available count rather than at the target, and the shortfall is
-reported as a property of this standard pair rather than smoothed over.
+Pools every pair judged in the pilot, screened and targeted rounds, then draws
+under one rule: negatives are half the set, positives balanced across the five
+positive classes as far as the material allows. Equivalence and subsumption fall
+short of their share and enter at their full available count.
 
 Writes data/baseline/reference_set.csv.
 """
@@ -49,9 +36,8 @@ COLUMNS = [
 def pool() -> pd.DataFrame:
     """Every judged pair, one row each, earliest round winning on duplicates.
 
-    The pilot is taken first because its labels are the ones the authors reviewed
-    pair by pair; where a later round judged the same pair, that second judgement is
-    kept aside for the agreement analysis rather than overwriting the first.
+    The pilot goes first: its labels are the reviewed ones. A later round's second
+    judgement of the same pair goes to the agreement analysis instead.
     """
     frames = []
 
@@ -79,10 +65,8 @@ def pool() -> pd.DataFrame:
 def allocate(available: dict[str, int]) -> dict[str, int]:
     """Target count per label under the composition rule.
 
-    Classes that cannot meet an equal share contribute everything they have, and
-    what they leave unspent is redistributed across the classes that can still
-    absorb it. Without that redistribution the scarcity of equivalence would shrink
-    the whole set rather than only its own row.
+    A class that cannot meet its share contributes everything it has, and the
+    remainder is redistributed across the classes that can still absorb it.
     """
     n_negative = TARGET_SIZE // 2
     quota = {NEGATIVE_LABEL: min(n_negative, available[NEGATIVE_LABEL])}

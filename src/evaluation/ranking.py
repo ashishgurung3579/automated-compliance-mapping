@@ -39,9 +39,8 @@ def rank_one_provision(scores: np.ndarray, tgt_ids: list[str], src_id: str,
     order = np.argsort(-scores)
     ranked = [tgt_ids[j] for j in order]
 
-    # Pairs absent from the reference set are unjudged. Following standard pooled
-    # test-collection practice they count as non-relevant, and judged_at_k below
-    # records how much of the ranking that assumption actually covers.
+    # Unjudged pairs count as non-relevant, per pooled test-collection practice.
+    # judged_at_k below records how much of the ranking that covers.
     gains = [1 if relevance.get((src_id, t), False) else 0 for t in ranked]
     judged = [1 if (src_id, t) in relevance else 0 for t in ranked]
     total_relevant = sum(gains)
@@ -79,9 +78,8 @@ def evaluate_method(sim: np.ndarray, src_ids: list[str], tgt_ids: list[str],
         summary[key] = round(float(np.mean([m[key] for m in per_provision])), 4)
     summary["map"] = summary.pop("ap")
 
-    # Diagnostic, not a result. When this sits at 1.0 the reference set judged almost
-    # nothing that a method ranked highly and got wrong, so P@k is tracking judging
-    # coverage rather than ranking quality and must not be read as method performance.
+    # Diagnostic, not a result. At 1.0, P@k tracks judging coverage rather than
+    # ranking quality and must not be read as method performance.
     summary["precision_among_judged_at_10"] = round(
         summary["p_at_10"] / summary["judged_at_10"], 4
     ) if summary["judged_at_10"] else None

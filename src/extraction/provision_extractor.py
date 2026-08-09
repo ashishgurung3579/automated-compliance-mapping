@@ -53,9 +53,8 @@ PHASES_304223 = [
     "Secure Maintenance", "Secure End of Life",
 ]
 
-# A provision runs until the next "Provision" marker, so whatever structural material
-# sits between it and that marker gets swallowed: section headings, the principle
-# preamble, reference lists. These patterns mark where the provision actually ends.
+# A provision runs to the next "Provision" marker, swallowing headings, preambles
+# and reference lists on the way. These patterns mark the real end.
 _BOUNDARY_PATTERNS = [
     r"\n\s*5\.\d+(?:\.\d+)*\s*\n",           # bare section number on its own line
     r"Primarily applies to",
@@ -69,8 +68,7 @@ _BOUNDARY_PATTERNS = [
 
 _BOUNDARY_RE = re.compile("|".join(_BOUNDARY_PATTERNS))
 
-# Page breaks fall inside provisions as well as between them, so they are cleaned
-# rather than treated as boundaries.
+# Page breaks fall inside provisions too, so they are cleaned, not treated as boundaries.
 _PAGE_ARTEFACT_RE = re.compile(r"\f\s*\d*\s*")
 
 

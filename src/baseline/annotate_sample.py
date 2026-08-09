@@ -44,9 +44,8 @@ def load_provisions() -> tuple[dict, dict]:
 def worklist() -> pd.DataFrame:
     """Sampled pairs plus the pilot pairs, shuffled into a single blind pass.
 
-    The pilot pairs ride along so that agreement against the earlier human-reviewed
-    labels is measured on all 107 of them rather than the 23 the sample happened to
-    hit. They are not marked in the emitted batches.
+    The pilot pairs ride along unmarked so agreement against the reviewed labels
+    covers all 107, not the 23 the sample happened to hit.
     """
     sample = pd.read_csv(DATA / "baseline" / "reference_pool.csv")
     sample["source"] = "sample"

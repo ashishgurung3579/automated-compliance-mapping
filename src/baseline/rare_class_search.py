@@ -1,17 +1,10 @@
 """
 Targeted search for the rare relationship classes.
 
-Equivalence and subsumption are the two classes the earlier annotation rounds barely
-reached: three equivalence pairs and ten subsumption pairs among 727 judged. A
-classification result resting on those counts says very little, so this module goes
-looking for more of them among the pairs no round has judged yet.
-
-The candidates are ranked by mean percentile similarity across every method rather
-than by any single one. Ranking on one model's scores would concentrate the search
-where that model is confident and hand it an easier test set; averaging leaves no
-method privileged. What the screen cannot do is make the harvest representative --
-pairs found this way are conditioned on the screen, so the classes it fills support
-confusion structure rather than an unbiased per-class recall, and the thesis says so.
+Ranks the pairs no earlier round judged by mean percentile similarity across every
+method, so no single method is privileged, and emits the top ones for annotation.
+The harvest is conditioned on that screen, so per-class recall for the classes it
+fills is not unbiased.
 
 Usage:
     python3 -m src.baseline.rare_class_search emit     # rank and write batches

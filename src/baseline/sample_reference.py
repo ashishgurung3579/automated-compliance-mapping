@@ -1,15 +1,9 @@
 """
 Draw a screened, score-banded set of provision pairs for annotation.
 
-The pilot reference set in gt.csv was assembled purposively, so it concentrates on
-pairs that already looked related. This module widens the annotation pool: pairs are
-ranked by mean similarity across every method and drawn from three bands of that
-ranking, so the material judged spans the likely-related and the plainly-unrelated
-regions of the space instead of only the top of it.
-
-The band sizes below carry no weighting role in the current evaluation -- they only
-control how many pairs each region contributes. Provenance for the labels this
-produced, retained so the reference set can be traced back.
+Widens the purposive pilot pool: pairs are ranked by mean similarity across every
+method and drawn from three bands of that ranking, so the judged material spans
+the likely-related and the plainly-unrelated regions.
 
 Writes data/baseline/reference_pool.csv.
 """
@@ -28,9 +22,8 @@ OUT = DATA / "baseline" / "reference_pool.csv"
 SEED = 20260804
 
 # Fractions of the ranked candidate space, and how many pairs to draw from each.
-# Allocation is deliberately disproportionate: relations concentrate at the top of the
-# ranking, so most of the annotation budget goes there. Every band still contributes,
-# which is what keeps hard negatives in the pool.
+# Disproportionate by design: most of the budget goes to the top, but every band
+# contributes, which keeps hard negatives in the pool.
 STRATA = [
     ("H", 0.10, 250),
     ("M", 0.30, 200),
@@ -39,8 +32,8 @@ STRATA = [
 
 
 def percentile_ranks(matrix: np.ndarray) -> np.ndarray:
-    # Average ranking for ties: the TF-IDF matrix is mostly zeros, and breaking those
-    # ties by index order would let array layout rather than similarity drive the strata.
+    # Average ranking for ties: the TF-IDF matrix is mostly zeros, and index-order
+    # tie-breaking would let array layout drive the bands.
     ranks = pd.Series(matrix.ravel()).rank(method="average", pct=True).to_numpy()
     return ranks.reshape(matrix.shape)
 
@@ -48,9 +41,8 @@ def percentile_ranks(matrix: np.ndarray) -> np.ndarray:
 def screening_scores(src_ids: list[str], tgt_ids: list[str]) -> pd.DataFrame:
     """Mean percentile rank across every similarity method.
 
-    Averaging keeps the stratification method-agnostic; stratifying on a single
-    method's scores would sample densely exactly where that method is confident and
-    quietly favour it in the evaluation.
+    Averaging keeps the banding method-agnostic; banding on one method's scores
+    would sample densely where it is confident and favour it at evaluation.
     """
     ranked = []
     for method, path in sorted(SIM_MATRICES.items()):

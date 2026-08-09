@@ -53,8 +53,8 @@ if __name__ == "__main__":
     errors: list[str] = []
     checked = 0
 
-    # A method that has been run but has no thesis row is the drift this guard
-    # exists to catch, so only methods absent from the data are skipped.
+    # Only methods absent from the data are skipped; a run method with no thesis
+    # row is the drift this guard catches.
     evaluated = {label: key for label, key in ROWS.items() if key in summary}
 
     det = parse_rows(tex, "tab:detection")

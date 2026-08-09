@@ -1,14 +1,12 @@
 """
 Natural language inference as compliance mapping.
 
-Every other method here reduces a pair of provisions to one symmetric number,
-which is why none of them can express subsumption: cosine(a, b) cannot say which
-provision is the broader one. A cross-encoder reads both provisions together and
-answers a directional question -- does the first entail the second -- so running
-it in both directions recovers the direction the taxonomy asks for.
+A cross-encoder reads both provisions together and answers whether the first
+entails the second, so scoring each pair in both directions recovers subsumption
+direction, which a symmetric cosine cannot express.
 
-Each pair is scored twice, as (src premise, tgt hypothesis) and the reverse, and
-the entailment probabilities decide the label:
+Each pair is scored as (src premise, tgt hypothesis) and the reverse, and the
+entailment probabilities decide the label:
 
     both directions entail          -> EQUIVALENCE
     src entails tgt only            -> SUBSUMPTION_B_BROADER  (tgt is the weaker claim)
@@ -16,11 +14,9 @@ the entailment probabilities decide the label:
     neither, but some entailment    -> OVERLAP
     no entailment either way        -> NO_RELATION
 
-Both cut points are fixed before the evaluation: 0.50 is the ordinary
-probability convention, and 0.20 is the floor below which the model is treated
-as having found nothing. The stored similarity matrix is the larger of the two
-entailment probabilities, so the method can be swept and recalibrated on the
-same footing as the embedding methods.
+Both cut points are fixed before the evaluation. The stored similarity matrix is
+the larger of the two entailment probabilities, so the method can be swept and
+recalibrated like the embedding methods.
 
 Costs 2 x 4,968 forward passes; a few minutes on Apple Silicon.
 """
@@ -44,10 +40,8 @@ FLOOR_T = METHOD.threshold   # below this, no relation is emitted at all
 # under that for most pairs.
 MAX_LENGTH = 320
 
-# Deliberately small. This model is run on a laptop with 8 GB of unified memory
-# shared between CPU and GPU, and a larger batch pushes the machine into swap,
-# where throughput collapses by an order of magnitude. Both are overridable for
-# a machine with more headroom.
+# Small on purpose: on 8 GB of unified memory a larger batch swaps and throughput
+# collapses. Override on a machine with more headroom.
 BATCH_SIZE = int(os.environ.get("NLI_BATCH_SIZE", "8"))
 
 

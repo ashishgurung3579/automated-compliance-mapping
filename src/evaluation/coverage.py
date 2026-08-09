@@ -1,25 +1,14 @@
 """
 Coverage and gap analysis over the full candidate space.
 
-The evaluation chapters answer how often a method is right. This one answers the
-question a standards practitioner actually asks: which parts of \\standardA{} have
-a counterpart in \\standardB{}, and which have none. It is the automated form of
-the coverage statement and unmapped-requirement list that manual comparative
-studies of security standards produce.
+Reports which provisions of one standard have a predicted counterpart in the other
+and which have none, the automated form of the coverage statement and
+unmapped-requirement list a manual comparative study produces.
 
-Everything here is a *prediction*, produced by the best-scoring method at its
-calibrated threshold, and that method's precision is far below one. The figures
-and tables written by this module therefore carry the method's measured precision
-and its confidence interval in their captions, and nothing here should be read as
-a verified mapping.
-
-One caveat governs every number this module writes, and it is stated in the output
-rather than left to the reader. The precision quoted was measured on a reference set
-built to be half positive; the full candidate space is far sparser than that. Applied
-to 4,968 candidates the same threshold therefore yields a lower precision than the
-figure shown, which stands as an upper bound rather than an estimate. Quantifying the
-gap would need a sample drawn with known inclusion probabilities, which this design
-does not have.
+Everything here is a prediction from the best-scoring method at its calibrated
+threshold, not a verified mapping. That threshold was fitted on a reference set
+built to be half positive, so the precision printed in the captions is an upper
+bound on its precision across all 4,968 candidates.
 
 Writes data/evaluation/coverage.json, thesis/figures/coverage_heatmap.pdf and
 the generated tables under thesis/tables/.
