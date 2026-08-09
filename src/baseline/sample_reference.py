@@ -29,8 +29,8 @@ SEED = 20260804
 
 # Fractions of the ranked candidate space, and how many pairs to draw from each.
 # Allocation is deliberately disproportionate: relations concentrate at the top of the
-# ranking, but every stratum keeps a positive inclusion probability so the estimator
-# stays unbiased.
+# ranking, so most of the annotation budget goes there. Every band still contributes,
+# which is what keeps hard negatives in the pool.
 STRATA = [
     ("H", 0.10, 250),
     ("M", 0.30, 200),

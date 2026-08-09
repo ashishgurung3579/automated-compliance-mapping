@@ -21,9 +21,9 @@ by external domain experts; a protocol for the external study is given in
 Appendix~\ref{app:survey} but was not carried out, and Section~\ref{sec:threats}
 states what this costs the RQ3 answer.
 
-The workflow has five stages --- extraction, ground-truth construction,
-automated mapping, evaluation, and reporting --- described in the remainder of
-this chapter and implemented in the pipeline of Chapter~\ref{ch:prototype}.
+The workflow has five stages: extraction, ground-truth construction,
+automated mapping, evaluation, and reporting. Each is described in the remainder
+of this chapter and implemented in the pipeline of Chapter~\ref{ch:prototype}.
 
 \section{Data: standards and provision extraction}\label{sec:data}
 
@@ -44,8 +44,8 @@ with \texttt{pdftotext}, recurring page headers and footers are stripped, and
 provisions are located by their clause identifiers (e.g., ``Provision
 5.3-3'' in \standardA{}, numbered requirement clauses in \standardB{}). For
 each provision the pipeline records: the provision identifier, source
-standard, section number and title, the full provision text, and its modality
---- whether the provision uses \emph{shall} (mandatory), \emph{should}
+standard, section number and title, the full provision text, and its modality,
+that is whether the provision uses \emph{shall} (mandatory), \emph{should}
 (recommended), or \emph{may} (permitted).
 
 The extraction yields 69 provisions from \standardA{} and 72 from \standardB{},
@@ -125,12 +125,12 @@ related are 79\% related, which tells us about the selection rather than about
 the standards.
 
 The \textbf{screened round} widened the pool. Pairs were ordered by a screening
-score --- the mean percentile rank of each pair across every similarity matrix
---- and 650 were drawn from three bands of that ordering, 250 from the top tenth,
-200 from the next three tenths and 200 from the bottom six tenths. Averaging over
-the methods keeps the screen neutral between them; screening on one model's
-scores would sample densely wherever that model is confident and quietly flatter
-it at evaluation. Batches were shuffled under a fixed seed, and the 107 pilot
+score, the mean percentile rank of each pair across every similarity matrix, and
+650 were drawn from three bands of that ordering: 250 from the top tenth, 200
+from the next three tenths and 200 from the bottom six tenths. Averaging over the
+methods keeps the screen neutral between them. Screening on one model's scores
+would sample densely wherever that model is confident and so flatter it at
+evaluation. Batches were shuffled under a fixed seed, and the 107 pilot
 pairs were mixed into the stream unmarked, so re-labelling them was blind and
 their agreement with the earlier reviewed labels can be read as a check on the
 new annotation (Section~\ref{sec:agreementresults}).
@@ -139,19 +139,19 @@ The \textbf{targeted round} went looking for the two classes the first two had
 barely reached. Across the 727 pairs judged by then, \textsc{Equivalence}
 appeared three times and \textsc{Subsumption} ten. Because those counts cannot
 support a per-class result, the 300 highest-ranked pairs that no round had yet
-judged --- ranked by the same method-agnostic screen, so no evaluated method is
-privileged --- were annotated in eight further batches.
+judged were annotated in eight further batches. They were ranked by the same
+method-agnostic screen, so no evaluated method is privileged.
 
 That round returned \emph{no} equivalence or subsumption pairs at all: 184
-\textsc{No relation}, 65 \textsc{Overlap}, 51 \textsc{Complementarity}. The
-result is worth stating as a finding rather than a shortfall. Among the pairs
-already judged, the rare classes occur at roughly one in 250 even in the
+\textsc{No relation}, 65 \textsc{Overlap}, 51 \textsc{Complementarity}. This is
+a property of the two documents and not a shortfall of the search. Among the
+pairs already judged, the rare classes occur at roughly one in 250 even in the
 top-ranked region where they concentrate, so reaching twenty of each would
 require annotating more pairs than the candidate space contains. \standardA{}
 governs a physical consumer device and \standardB{} an AI lifecycle and the
-organizations around it; a strict-superset or same-scope relation rarely survives
-that difference in layer. For this pair of standards the typed taxonomy is
-effectively a three-class problem.
+organizations around it, and a strict-superset or same-scope relation rarely
+survives that difference in layer. For this pair of standards the typed taxonomy
+is effectively a three-class problem.
 
 Two consequences are carried forward. Per-class results for \textsc{Equivalence}
 and \textsc{Subsumption} rest on single-digit support and are reported for
@@ -168,13 +168,13 @@ half the set; positives are balanced across the five positive classes as far as
 the annotated material allows.}
 
 Each half of the rule does one job. Half negatives keeps the trivial classifier
-that calls every pair related from scoring near the top of the scale --- at a
+that calls every pair related from scoring near the top of the scale: at a
 positive rate of one half it scores $F_1 = 0.667$, which every detection table
 in Chapter~\ref{ch:results} carries as its final row. Balancing the positives
 keeps the typed task from becoming a report on whichever relationship happens to
 be most common. Where a class cannot meet its share it contributes everything it
-has and the remainder is redistributed, which is what the scarcity of the rare
-classes forces here.
+has and the remainder is redistributed, which the scarcity of the rare classes
+forces here.
 
 \begin{table}[htbp]
 \centering
@@ -203,15 +203,26 @@ The realised set is given in Table~\ref{tab:sampling}: 200 pairs, exactly half
 related, of which 37 come from the author-reviewed pilot. The over-supplied
 classes are drawn under a fixed seed, so the set reproduces exactly.
 
-One limitation follows directly from the rule and is stated here rather than
-left to the reader. A positive rate of one half is a design choice, not a
-property of the corpus, and precision and F1 both move with it. Every figure
-reported in Chapter~\ref{ch:results} therefore describes performance on a
-balanced set and is an upper bound on what the same operating point achieves
-across the full 4{,}968 candidates, which are far sparser. Quantifying that gap
-would require a sample drawn with known inclusion probabilities; this design does
-not have one, and Section~\ref{sec:futurework} names it as the first extension
-the work should receive.
+Two questions about this design deserve an answer before the results are read.
+
+The first is why the evaluation uses 200 pairs when 1{,}027 were judged. Scoring
+the whole pool would give narrower intervals, but the pool is 68\% negative and
+its positive half is dominated by \textsc{Overlap} and \textsc{Complementarity},
+so both the detection baseline and the typed baseline would be set by a class
+balance that no design decision controls. Drawing to a fixed composition makes
+both baselines known quantities and keeps the typed task from reducing to a
+report on the most common positive label. The price is statistical power, and the
+full judged pool ships with the repository so the alternative can be computed.
+
+The second is what the balance costs in generality. A positive rate of one half
+is a design choice rather than a property of the corpus, and precision and F1
+both move with it. Every figure reported in Chapter~\ref{ch:results} therefore
+describes performance on a balanced set and is an upper bound on what the same
+operating point achieves across the full 4{,}968 candidates, which are far
+sparser. Quantifying that gap would require a sample drawn with known inclusion
+probabilities. This design does not have one, and the future work of
+Chapter~\ref{ch:conclusion} names it as the first extension the work should
+receive.
 
 \subsection{Reliability of the reference set}\label{sec:gtvalidation}
 
@@ -220,9 +231,9 @@ first is agreement between the sample and the author-reviewed pilot labels on th
 pairs they share, using raw agreement and Cohen's kappa~\cite{cohen1960kappa}
 with the bands of Landis and Koch~\cite{landis1977kappa}. The second is
 calibration: whether recorded annotation confidence predicts where the two label
-sets diverge. The third is a contrast rather than a validation --- the
-run-to-run self-agreement of the evaluated LLM on identical input, which
-establishes what an unreliable annotation source looks like on the same scale.
+sets diverge. The third is a contrast rather than a validation: the run-to-run
+self-agreement of the evaluated LLM on identical input, which shows what an
+unreliable annotation source looks like on the same scale.
 
 Cross-model agreement using Gemini is deliberately excluded. Gemini is one of the
 evaluated methods, so its labels cannot serve as an independent check on a
@@ -279,8 +290,8 @@ scored by the cosine of the two vectors.
 
 Three masked language models with no sentence-similarity training, mean-pooled
 over token embeddings and L2-normalised. They are included to separate two
-explanations for embedding performance that are easily confused --- the size of
-the model, and whether it was ever trained to make its geometry mean something.
+explanations for embedding performance that are easily confused: the size of the
+model, and whether it was ever trained to make its geometry mean something.
 
 \begin{itemize}
   \item \textbf{BERT} (\texttt{bert-base-uncased})~\cite{devlin2019bert}, the
@@ -328,7 +339,7 @@ prompt containing both provision texts and the six label definitions asks
 \texttt{gemini-2.5-flash-lite} to answer with exactly one label. Jobs are
 submitted through the batch API. Unlike the similarity methods, this approach
 predicts a relationship type directly and can, in principle, distinguish
-overlap from complementarity --- something a scalar similarity cannot.
+overlap from complementarity, which a scalar similarity cannot.
 
 \subsection{From similarity scores to labels}\label{sec:thresholds}
 
@@ -397,9 +408,9 @@ output count as predicted \textsc{No relation}. Reported metrics are overall
 accuracy and macro-averaged precision, recall, and F1 over the five classes,
 plus per-class scores. Macro averaging weights all classes equally, which is
 appropriate in principle because the rare classes (equivalence, subsumption) are
-exactly the ones a compliance analyst cares most about --- but with three and ten
-supporting pairs respectively, those two components move substantially on a
-single prediction, and the macro average inherits that instability. The
+exactly the ones a compliance analyst cares most about. With three and ten
+supporting pairs respectively, however, those two components move substantially
+on a single prediction, and the macro average inherits that instability. The
 majority-class classifier, which predicts \textsc{No relation} for everything,
 scores 0.500 accuracy and 0.133 macro-F1 on this set and is the reference the
 typed results are read against.
@@ -420,7 +431,7 @@ method with its calibration. The second point is chosen on the reference set
 itself: F1 is maximised on four folds and scored on the fifth, over 20 repeats,
 with folds stratified by label. Candidate cut-offs are quantiles of each
 method's own score distribution rather than a shared absolute grid, since the
-methods occupy ranges that differ by an order of magnitude in width --- TF--IDF
+methods occupy ranges that differ by an order of magnitude in width. TF--IDF
 tops out at 0.190 while SecureBERT never drops below 0.875, so an absolute grid
 would give one of them a hundred candidate cut points and the other three. The
 reported threshold is the median of the 100 selections, so the point estimate
@@ -435,14 +446,14 @@ identical pairs and their errors are correlated.
 
 Which comparisons are made is decided by a rule, not by inspection. Eleven
 methods admit fifty-five pairwise contrasts, and fifty-five uncorrected 95\%
-intervals will contain false findings whatever the data say. Two questions carry the argument --- whether a
-method beats the all-positive baseline, and whether anything beats the
-best-scoring method --- so each method is compared against those two references
-and against nothing else. One caveat attaches to the second reference: it is
-selected as the maximum on this sample, and a difference measured against a
-selected maximum is biased in that maximum's favour, because the selection
-absorbs part of the sampling noise. Those intervals describe the gap to the
-leader; they are not a test that the leader is genuinely best.
+intervals will contain false findings whatever the data say. Two questions carry
+the argument: whether a method beats the all-positive baseline, and whether
+anything beats the best-scoring method. Each method is therefore compared against
+those two references and against nothing else. One caveat attaches to the second
+reference. It is selected as the maximum on this sample, and a difference
+measured against a selected maximum is biased in that maximum's favour, because
+the selection absorbs part of the sampling noise. Those intervals describe the
+gap to the leader; they are not a test that the leader is genuinely best.
 
 \subsection{Efficiency and interpretability}
 

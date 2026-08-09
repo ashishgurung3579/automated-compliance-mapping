@@ -1,17 +1,180 @@
-# Automated Compliance Mapping - Project Notes
+# Automated Compliance Mapping — Project Notes
 
-This project compares two ETSI security standards and checks which requirements are related to each other.
+Two parts. **Part I** explains what the project is and what it found, for someone who
+needs the whole picture in fifteen minutes. **Part II** is the operational record: every
+stage, every command, every file it touches.
 
-- **ETSI EN 303 645**: cybersecurity requirements for consumer IoT devices.
-- **ETSI EN 304 223**: cybersecurity requirements for AI systems.
-
-Main question:
-
-> "Does this IoT security requirement match, overlap with, or relate to this AI security requirement?"
-
-The project tests eleven mapping methods, compares them against two reference sets, and writes an evaluation report.
+- Part I — [What this is](#part-i--what-this-is)
+- Part II — [How to run it](#part-ii--how-to-run-it) (numbered sections 1–26)
 
 ---
+
+# Part I — What this is
+
+## The problem
+
+A company shipping an AI-enabled IoT device has to satisfy several security standards at
+once. Those standards overlap heavily, the same underlying requirement appearing in two
+documents in different words, but nobody publishes a map between them. Building that map
+by hand needs an expert in both domains and takes weeks.
+
+- **ETSI EN 303 645** — cybersecurity for consumer IoT devices. 69 provisions extracted.
+- **ETSI EN 304 223** — cybersecurity for AI systems. 72 provisions extracted.
+
+69 × 72 = **4,968 candidate pairs**, each of which has to be judged.
+
+## What "related" means
+
+A binary related/unrelated verdict throws away what a compliance officer needs, so the
+project uses six labels:
+
+| Label | Meaning |
+| --- | --- |
+| `EQUIVALENCE` | same requirement, different wording |
+| `OVERLAP` | partly the same; neither contains the other |
+| `SUBSUMPTION_A_BROADER` | the IoT provision is the broader of the two |
+| `SUBSUMPTION_B_BROADER` | the AI provision is the broader |
+| `COMPLEMENTARITY` | different aspects of one security goal |
+| `NO_RELATION` | no meaningful connection |
+
+For evaluation the two subsumption directions merge into one class, leaving five.
+
+## The reference set
+
+Three annotation rounds produced **1,027 judged pairs**: a 107-pair pilot chosen
+purposively and reviewed by the authors, a 650-pair screened round drawn from three bands
+of a method-agnostic similarity ranking, and a 300-pair targeted round aimed at the rare
+classes. All were annotated with LLM assistance (Claude Opus 5, deliberately a different
+model family from every evaluated method) against the written codebook in
+`annotation_codebook.md`. This is disclosed in the thesis rather than hidden.
+
+The **200-pair evaluated set** (`data/baseline/reference_set.csv`) is drawn from that pool
+under one rule: negatives are half the set, and positives are balanced across the five
+positive classes as far as the material allows.
+
+| Label | Judged | In the evaluated set |
+| --- | ---: | ---: |
+| `NO_RELATION` | 701 | 100 |
+| `OVERLAP` | 174 | 44 |
+| `COMPLEMENTARITY` | 139 | 43 |
+| `SUBSUMPTION_B_BROADER` | 6 | 6 |
+| `SUBSUMPTION_A_BROADER` | 4 | 4 |
+| `EQUIVALENCE` | 3 | 3 |
+| **total** | **1,027** | **200** |
+
+Half negatives fixes the score of the trivial "everything is related" classifier at
+**F1 0.667**, which is the bar every method has to clear and is printed as a row in every
+detection table. It also means every reported figure is an **upper bound** on corpus-scale
+performance, since the full candidate space is far sparser than half positive.
+
+The pilot pairs were mixed unmarked into the screened round, so re-judging them was blind.
+They agree with the reviewed originals at Cohen's **κ = 0.51** on the binary call and
+**κ = 0.40** on the six-label call. Moderate: good enough to rank methods against a common
+target, not good enough to certify anyone's absolute accuracy.
+
+## The eleven methods
+
+Five families, chosen so the comparison says something about kinds of approach and not
+about individual models.
+
+| Family | Method | Model |
+| --- | --- | --- |
+| Lexical | TF–IDF | — |
+| Lexical | Security-keyword Jaccard | — |
+| Sentence-embedding | SBERT | `all-MiniLM-L6-v2` |
+| Sentence-embedding | MPNet | `all-mpnet-base-v2` |
+| Sentence-embedding | BGE | `BAAI/bge-base-en-v1.5` |
+| Contextual-embedding | BERT | `bert-base-uncased` |
+| Contextual-embedding | SecureBERT | `ehsanaghaei/SecureBERT` |
+| Contextual-embedding | CySecBERT | `markusbayer/CySecBERT` |
+| Cross-encoder | NLI | `cross-encoder/nli-deberta-v3-base` |
+| API | Gemini embeddings | `gemini-embedding-2` |
+| API | Gemini LLM | `gemini-2.5-flash-lite` |
+
+Nine of the eleven run locally and free. The two Gemini methods are the only paid ones and
+their outputs are stored in the repo, so nothing has to be re-queried.
+
+The NLI cross-encoder is the one methodological addition rather than just an eleventh
+model. It reads both provisions together and answers a directional question, so running it
+in both directions recovers the direction the taxonomy asks for:
+
+```
+both directions entail       -> EQUIVALENCE
+A entails B only             -> SUBSUMPTION_B_BROADER
+B entails A only             -> SUBSUMPTION_A_BROADER
+neither, but some entailment -> OVERLAP
+nothing                      -> NO_RELATION
+```
+
+Every other method reduces a pair to one symmetric number, so it is the only method in the
+study that can express subsumption at all.
+
+## What was found
+
+**1. Four methods ship as constant functions.** At their default thresholds SecureBERT,
+CySecBERT and Gemini embeddings mark every one of the 200 annotated pairs as related, and
+BERT marks all but one. Their F1 of 0.667–0.669 is what the all-positive baseline scores on
+the same pairs.
+
+**2. Most of that is calibration, but calibration does not buy much.** Re-selecting each
+threshold by repeated cross-validation:
+
+| Method | Threshold | Precision | F1 |
+| --- | ---: | ---: | ---: |
+| Gemini embeddings | 0.713 | 0.774 | **0.782** |
+| MPNet | 0.353 | 0.732 | 0.721 |
+| BGE | 0.537 | 0.583 | 0.711 |
+| TF–IDF | 0.001 | 0.572 | 0.703 |
+| SBERT | 0.246 | 0.569 | 0.700 |
+| BERT | 0.769 | 0.542 | 0.693 |
+| CySecBERT | 0.804 | 0.521 | 0.685 |
+| NLI | 0.000 | 0.513 | 0.673 |
+| SecureBERT | 0.932 | 0.533 | 0.667 |
+| *all-positive baseline* | — | *0.500* | *0.667* |
+
+Only Gemini embeddings (+0.116), BGE (+0.044) and CySecBERT (+0.018) beat the baseline by a
+margin whose paired-bootstrap interval excludes zero.
+
+**3. Cybersecurity pretraining did not help, twice.** SecureBERT lands exactly on the
+baseline even recalibrated; CySecBERT, built independently by another group, finishes below
+the plain BERT both were adapted from. What a model was trained *to do* predicts its
+behaviour here; what it was trained *on* does not.
+
+**4. One free local model matches the paid one.** MPNet is the only method the paired
+bootstrap cannot separate from Gemini embeddings (−0.061, [−0.137, 0.015]), and it runs in
+under four seconds with no per-query cost and reproduces bit-identically.
+
+**5. Typing the relationship is not solved.** Best accuracy is 0.505 against a
+majority-class baseline of 0.500. No method exceeds it.
+
+**6. The LLM classifier does not agree with itself.** Two runs at temperature 0 over
+byte-identical prompts agree on 69% of pairs but reach κ = 0.02, because the model assigns
+`COMPLEMENTARITY` to 81% of everything.
+
+**7. Equivalence and subsumption are nearly absent from the corpus.** 13 pairs among the
+1,027 judged, and the 300-pair targeted search for more returned none. A device-level
+standard and a lifecycle-level standard produce overlap and complementarity in quantity and
+strict containment almost never, so the six-label taxonomy is effectively a three-label one
+here.
+
+**8. Coverage.** At its calibrated threshold the best method flags 1,018 of the 4,968 pairs
+(20.5%). Seven EN 303 645 provisions and three EN 304 223 provisions receive no predicted
+counterpart. These are predictions, not verified mappings.
+
+## What is missing
+
+- No corpus-base-rate measurement. Every figure is conditioned on a set built to be half
+  positive, and the gap to the sparse reality of 4,968 pairs is unquantified.
+- The expert survey in `expert_survey.md` was designed and **not run**. No number anywhere
+  in this repository comes from it.
+- Only 37 of the 200 evaluated pairs were reviewed by the authors pair by pair; the rest
+  rest on the blind comparison against the pilot.
+- Ranking metrics are computed but not reported: the judged fraction of each ranking is thin
+  enough that precision among judged candidates is 1.000 for every method.
+
+---
+
+# Part II — How to run it
 
 ## 1. Main Folder Structure
 
@@ -42,17 +205,17 @@ What each folder means:
 
 - `data/raw/`: original PDF standards.
 - `data/extracted/`: provisions extracted from the PDFs as JSON.
-- `data/baseline/`: the two reference sets, also called ground truth.
-- `data/annotation/`: the 19 emitted annotation batches and their labels.
+- `data/baseline/`: the evaluated reference set and the three annotation rounds it draws from.
+- `data/annotation/`: the annotation batches and their labels (19 screened, 8 targeted).
 - `data/mappings/`: prediction files created by the different mapping methods.
-- `data/evaluation/`: evaluation metrics, error files, comparison files, corpus estimates, and final report.
+- `data/evaluation/`: evaluation metrics, calibration analysis, error files, comparison files, and the final report.
 - `data/validation/`: inter-annotator agreement results.
 - `src/methods.py`: the registry where every method is defined once.
 - `src/extraction/`: code that reads PDFs and extracts provisions.
 - `src/baseline/`: code that runs the three annotation rounds and assembles the reference set from them.
 - `src/mapping/`: code for all automatic mapping methods.
 - `src/validation/`: code for inter-rater agreement.
-- `src/evaluation/`: code that compares predictions against the reference sets.
+- `src/evaluation/`: code that compares predictions against the reference set.
 - `src/report/`: code that creates the Markdown report, the thesis figures, and the table-value guard.
 - `thesis/`: LaTeX source of the thesis, with generated figures and tables.
 
@@ -159,7 +322,7 @@ Total possible pairs:
 
 ---
 
-## 5. Step 2 - Create the Reference Sets (Ground Truth)
+## 5. Step 2 - Create the Pilot Reference Set (Ground Truth)
 
 Script:
 
@@ -232,7 +395,7 @@ Each method tries to predict related provision pairs.
 
 Every method — its model, family, threshold, and output filenames — is defined
 once in `src/methods.py`. Adding a method means adding one entry there; the
-evaluation, the corpus estimates, the figures, and the guard that checks the
+evaluation, the calibration analysis, the figures, and the guard that checks the
 thesis tables all read from it.
 
 ---
@@ -623,7 +786,7 @@ data/evaluation/analysis.json
 
 ---
 
-## 15. Probability Sample and Reference-Set Reliability
+## 15. The Annotation Rounds and the Reference Set
 
 Scripts:
 
@@ -857,7 +1020,7 @@ data/evaluation/runtimes.json
 This is a frozen measurement, not a pipeline output: wall-clock seconds per
 stage on an 8 GB Apple Silicon MacBook, recorded once with models already
 cached. No script regenerates it; it exists as provenance for the runtime
-claims made in the thesis and in `explainer.md`.
+claims made in the thesis and in Part I.
 
 ---
 
@@ -870,7 +1033,8 @@ If starting from the raw PDFs, the full order is:
 
 ```bash
 python3 -m src.extraction.provision_extractor
-python3 -m src.baseline.create_baseline
+python3 -m src.baseline.create_baseline      # pilot round -> gt.csv
+python3 -m src.baseline.build_reference      # evaluated set -> reference_set.csv
 python3 -m src.mapping.rule_based
 python3 -m src.mapping.run_embedding --all
 python3 -m src.mapping.nli_mapping
@@ -893,7 +1057,7 @@ python3 -m src.mapping.gemini_mapping
 Only run the Gemini commands when `GEMINI_API_KEY` is configured and external
 API calls are intended.
 
-The probability-sample reference set is already complete in the repo. To rebuild
+The reference set is already complete in the repo. To rebuild
 it from scratch, run the sampling and annotation commands from section 15 before
 and `python3 -m src.validation.agreement` afterwards.
 
@@ -922,7 +1086,7 @@ Evaluation JSON, error CSV, prediction-vs-ground-truth CSV
   |
   | src/evaluation/analysis.py, ranking.py, coverage.py
   v
-Corpus estimates, ranking metrics, coverage tables and heatmap
+Calibrated thresholds, ranking metrics, coverage tables and heatmap
   |
   | src/report/generate_report.py, figures.py
   v
@@ -939,69 +1103,43 @@ Current results from:
 data/evaluation/evaluation_summary.json
 ```
 
-Metrics are computed only against the 107 annotated pilot pairs. Predictions outside GT scope are excluded from all calculations.
+Metrics are computed only against the 200 annotated pairs of `reference_set.csv`.
+Predictions outside that scope are excluded from every calculation. The thresholds below
+are the ones each method ships with; the calibrated operating points are in
+`analysis.json` and in Part I.
 
 | Method             | Detection Precision | Detection Recall | Detection F1 | Classification Accuracy | Macro F1 |
 | ------------------ | ------------------: | ---------------: | -----------: | ----------------------: | -------: |
-| Rule-based TF-IDF  |               1.000 |            0.035 |        0.068 |                   0.215 |    0.086 |
-| Rule-based Jaccard |               1.000 |            0.071 |        0.132 |                   0.224 |    0.179 |
-| SBERT              |               1.000 |            0.176 |        0.300 |                   0.224 |    0.099 |
-| MPNet              |               1.000 |            0.165 |        0.283 |                   0.224 |    0.100 |
-| BGE                |               0.833 |            0.882 |        0.857 |                   0.243 |    0.149 |
-| BERT               |               0.809 |            1.000 |        0.895 |                   0.411 |    0.172 |
-| SecureBERT         |               0.794 |            1.000 |        0.885 |                   0.028 |    0.011 |
-| CySecBERT          |               0.794 |            1.000 |        0.885 |                   0.196 |    0.087 |
-| NLI cross-encoder  |               1.000 |            0.059 |        0.111 |                   0.215 |    0.102 |
-| Gemini Embedding   |               0.794 |            1.000 |        0.885 |                   0.477 |    0.279 |
-| Gemini LLM         |               0.777 |            0.859 |        0.816 |                   0.187 |    0.088 |
-
-In the current saved results, **Gemini Embedding** has the highest classification macro-F1.
+| Rule-based TF-IDF  |               0.500 |            0.010 |        0.020 |                   0.495 |    0.133 |
+| Rule-based Jaccard |               0.545 |            0.060 |        0.108 |                   0.490 |    0.248 |
+| SBERT              |               0.882 |            0.150 |        0.256 |                   0.505 |    0.159 |
+| MPNet              |               0.857 |            0.120 |        0.210 |                   0.505 |    0.159 |
+| BGE                |               0.525 |            0.930 |        0.671 |                   0.280 |    0.133 |
+| BERT               |               0.502 |            1.000 |        0.669 |                   0.135 |    0.065 |
+| SecureBERT         |               0.500 |            1.000 |        0.667 |                   0.015 |    0.006 |
+| CySecBERT          |               0.500 |            1.000 |        0.667 |                   0.045 |    0.031 |
+| NLI cross-encoder  |               0.875 |            0.070 |        0.130 |                   0.500 |    0.161 |
+| Gemini Embedding   |               0.500 |            1.000 |        0.667 |                   0.270 |    0.238 |
+| Gemini LLM         |               0.492 |            0.880 |        0.631 |                   0.225 |    0.098 |
+| *Label everything related* |       *0.500* |          *1.000* |      *0.667* |                       - |        - |
 
 Two caveats matter when reading this table:
 
-- Detection precision counts false positives only on the 22 annotated negatives, so a
+- Detection precision counts false positives only on the 100 annotated negatives, so a
   method that predicts almost nothing (TF-IDF, Jaccard, SBERT at its default threshold)
-  can reach precision 1.000 while missing nearly every true pair.
-- With 85 of the 107 annotated pairs being positives, predicting "related" for everything
-  already yields detection F1 = 0.885. BERT, SecureBERT, CySecBERT, and Gemini Embedding
-  are at or near that value, so detection F1 barely separates them; `analysis.json`
-  (confusion matrices, threshold sweeps, calibrated operating points, bootstrap intervals)
-  (corpus-level estimates) carry the informative differences.
+  can reach high precision while missing nearly every true pair.
+- The set is half positive by construction, so predicting "related" for everything already
+  yields detection F1 = 0.667. SecureBERT, CySecBERT and Gemini Embedding land exactly
+  there and BERT within one pair, so detection at shipped thresholds separates almost
+  nothing. `analysis.json` (confusion matrices, threshold sweeps, calibrated operating
+  points, bootstrap intervals) carries the informative differences.
 
 ---
 
-## 26. Simple Explanation of the Whole Project
+## 26. Where to Read Next
 
-This project starts with two security-standard PDFs.
-
-First, it extracts individual security provisions from both PDFs and saves them as JSON.
-
-Then, reference answer keys are created in `gt.csv` (a 107-pair pilot) and
-`reference_set.csv` (the 200 evaluated pairs). They say which
-provision pairs are truly related and what kind of relationship they have.
-
-After that, eleven automatic methods try to find related provision pairs:
-
-- TF-IDF word matching
-- cybersecurity keyword matching (Jaccard)
-- SBERT, MPNet, and BGE sentence embeddings
-- BERT, SecureBERT, and CySecBERT contextual embeddings
-- an NLI cross-encoder
-- Gemini embeddings
-- Gemini LLM classification
-
-Each method writes its predictions to `data/mappings/`.
-
-Then the evaluation script compares those predictions against the pilot answer
-key, and the weighted-metrics script estimates performance over the whole
-balanced reference set. They measure how many true pairs
-were found, how many wrong pairs were predicted, and how accurate the
-relationship labels were.
-
-Finally, the report script creates a readable Markdown report at:
-
-```text
-data/evaluation/report.md
-```
-
-That report is the final output of the project.
+- **Part I** of this document summarises what the project is and what it found.
+- `data/evaluation/report.md` is the generated results report.
+- `thesis/main.pdf` is the degree project report itself.
+- `annotation_codebook.md` holds the label definitions the annotation followed.
+- `expert_survey.md` holds the expert validation instrument, designed and not run.

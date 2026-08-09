@@ -89,9 +89,9 @@ pooling coverage rather than ranking quality.
 data/raw/         original ETSI standard PDFs
 data/extracted/   provisions extracted from the PDFs (JSON)
 data/baseline/    reference_set.csv (evaluated), plus the three rounds it draws from
-data/annotation/  the 19 emitted annotation batches and their labels
+data/annotation/  annotation batches and their labels (19 screened, 8 targeted)
 data/mappings/    predictions per method + similarity matrices (.npy)
-data/evaluation/  metrics, corpus estimates, error analyses, prediction-vs-GT comparisons
+data/evaluation/  metrics, calibration analysis, error analyses, prediction-vs-GT comparisons
 data/validation/  inter-annotator agreement results
 src/extraction/   PDF → provision JSON
 src/baseline/     ground-truth construction, sampling, annotation harness
@@ -136,13 +136,14 @@ quantiles of the method's own scores — because several methods ship at a point
 pair on one side of the line. Method orderings are claimed only where a paired
 bootstrap on the difference excludes zero.
 
-## Probability sample and reference-set reliability
+## Rebuilding the reference set, and its reliability
 
 ```bash
-python3 -m src.baseline.sample_reference        # stratified sample of all 4,968 pairs
+python3 -m src.baseline.sample_reference        # score-banded draw over all 4,968 pairs
 python3 -m src.baseline.annotate_sample emit    # next unlabelled batch of 40
 python3 -m src.baseline.annotate_sample ingest  # fold batch_NNN_labels.json back in
 python3 -m src.baseline.annotate_sample status  # progress across the 19 batches
+python3 -m src.baseline.rare_class_search status  # progress across the 8 targeted batches
 python3 -m src.validation.agreement             # kappa, confidence calibration, LaTeX table
 ```
 

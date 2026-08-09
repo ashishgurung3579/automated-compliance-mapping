@@ -32,6 +32,3 @@ thesis/*.toc
 thesis/*.fls
 thesis/*.fdb_latexmk
 thesis/*.synctex.gz
-
-# Old local draft name
-explainer.md

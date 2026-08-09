@@ -1,7 +1,7 @@
 {
   "_note": "Wall-clock seconds on an 8 GB Apple Silicon MacBook, single run, models already downloaded to the local Hugging Face cache. Embedding stages use the Metal (MPS) backend when available; the figures therefore exclude the one-off download, which is about 2 GB in total and dominates a cold first run. Gemini methods run through the batch API; end-to-end time depends on queueing and is reported qualitatively in the thesis.",
   "extraction": 0.9,
-  "create_baseline": 0.1,
+  "build_reference": 0.1,
   "rule_based_tfidf_and_jaccard": 3.5,
   "sbert": 1.8,
   "mpnet": 3.9,

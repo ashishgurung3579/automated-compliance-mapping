@@ -14,7 +14,7 @@ provisions relate is partly feasible; determining \emph{how} they relate is not.
 The detection result turns on calibration. The reference set was built to be half
 related and half not, so the classifier that calls every pair related scores
 $F_1 = 0.667$ on it, and that figure is the bar every method has to clear. At the
-thresholds they ship with, four of the eleven methods do not clear it at all ---
+thresholds they ship with, four of the eleven methods do not clear it at all.
 SecureBERT, CySecBERT, Gemini embeddings and, to within one pair, BERT mark
 \emph{every} annotated pair as related and reproduce the trivial score exactly.
 Re-selecting each threshold by cross-validation changes that picture, though less
@@ -22,10 +22,10 @@ than the collapse might suggest. Gemini embeddings reach F1 0.782 at precision
 0.774, a margin of $+0.116$ [0.050, 0.188] over the baseline; BGE and CySecBERT
 clear it by smaller margins whose intervals also exclude zero; and the remaining
 methods gain something whose interval does not. Calibration is therefore worth
-having, and the practical lesson is sharper than a warning about optimistic
-benchmarks: a threshold fixed without knowing where a model's scores fall does not
-merely cost a little accuracy, it can turn a working model into a constant
-function. What calibration does not do is turn a modest margin into a large one.
+having. The practical lesson is stronger than a warning about optimistic
+benchmarks: a threshold fixed without knowing where a model's scores fall can
+turn a working model into a constant function. It does not, however, turn a
+modest margin into a large one.
 
 Determining how two provisions relate is not solved. The best typed accuracy,
 0.505, is what predicting the majority class for every pair achieves, and no
@@ -35,29 +35,28 @@ confirms both halves of it: reading each pair in both directions does recover
 subsumption, producing 123 such labels where the other ten methods produce none,
 but at a recall too low to be useful and at roughly sixty times the compute.
 
-Two failure mechanisms recur across the experiments --- the anisotropy of
+Two failure mechanisms recur across the experiments: the anisotropy of
 general-purpose embedding spaces, which drives BERT-family models into degenerate
 ``everything is similar'' behaviour, and the mismatch between scalar similarity
-and a typed relationship taxonomy. Notably, cybersecurity-specific pretraining did
-not help in either of the two independent attempts tested (SecureBERT,
-CySecBERT), while task-specific training for sentence comparison did in all three
+and a typed relationship taxonomy. Cybersecurity-specific pretraining did not help
+in either of the two independent attempts tested (SecureBERT, CySecBERT), while
+task-specific training for sentence comparison did help in all three
 (Sentence-BERT, MPNet, BGE). What the model was trained to do predicts its
 behaviour here; what it was trained on does not.
 
 A third finding came from the annotation rather than the models. Equivalence and
-subsumption are not merely under-sampled in this study, they are close to absent
-from the corpus: 13 pairs among 1{,}027 judged, and none at all among the 300
-highest-ranked unjudged pairs annotated specifically to find more. A device-level
-standard and a lifecycle-level standard produce overlapping and complementary
-obligations in quantity, and identical or strictly-containing ones almost never.
-For this pair of standards the six-label taxonomy is effectively a three-label
-one.
+subsumption are close to absent from the corpus: 13 pairs among the 1{,}027
+judged, and none at all among the 300 highest-ranked unjudged pairs annotated
+specifically to find more. A device-level standard and a lifecycle-level standard
+produce overlapping and complementary obligations in quantity, and identical or
+strictly-containing ones almost never. For this pair of standards the six-label
+taxonomy is effectively a three-label one.
 
-For practice, the results position automated compliance mapping as
-decision support: rank candidates automatically, let humans assign the
-relationship labels. For a compliance team, even that reduced role is
-valuable --- the ranking step compresses 4{,}968 candidate pairs into a short
-review list in under a minute of computation.
+For practice, the results position automated compliance mapping as decision
+support: rank candidates automatically, let humans assign the relationship
+labels. Even that reduced role is valuable to a compliance team, since the
+ranking step compresses 4{,}968 candidate pairs into a short review list in under
+a minute of computation.
 
 \subsection*{Critical discussion}
 
@@ -72,17 +71,15 @@ not to certify an absolute accuracy. A fully expert-built reference would be
 stronger, and the survey in Appendix~\ref{app:survey} is the direct path to one.
 
 Second, and most consequentially, the reference set was built to a positive rate
-of one half. That choice was made so that the trivial classifier would not score
-near the top of the scale, and it succeeded in that: the degeneracy of four
-methods is visible directly in Table~\ref{tab:detection} rather than hidden
-behind a high number. But one half is a design parameter, not a property of the
-corpus, which is far sparser. Precision and F1 both move with the positive rate,
-so every performance figure in this thesis describes a balanced set and stands as
-an upper bound on what the same operating point achieves across all 4{,}968
-candidates. The size of that gap is not measured here and cannot be measured from
-this design. Readers should treat the coverage analysis of
-Section~\ref{sec:coverage} accordingly --- it establishes the shape of the
-predicted mapping, not its accuracy at corpus scale.
+of one half. That choice succeeded in what it was for: the degeneracy of four
+methods is visible directly in Table~\ref{tab:detection} instead of being hidden
+behind a high number. One half is nonetheless a design parameter and the corpus is
+far sparser, so every performance figure in this thesis stands as an upper bound
+on what the same operating point achieves across all 4{,}968 candidates
+(Section~\ref{sec:refset}). The size of that gap cannot be measured from this
+design. The coverage analysis of Section~\ref{sec:coverage} should be read
+accordingly, as the shape of the predicted mapping and not its accuracy at corpus
+scale.
 
 Third, reporting two operating points per method rather than one doubles the
 tables but is the only way to separate what a model can represent from where its
@@ -96,7 +93,7 @@ contextual embeddings is a documented model property, not a dataset accident; th
 inability of symmetric scores to express asymmetric relationships holds for any
 standard pair; and the observation that detection is calibration-limited while
 typed classification fails outright should recur wherever two related security
-frameworks are mapped. The pipeline itself is standard-agnostic --- any pair of
+frameworks are mapped. The pipeline itself is standard-agnostic, and any pair of
 documents with identifiable normative clauses can be substituted.
 
 \subsection*{Future work}\label{sec:futurework}
@@ -128,9 +125,9 @@ come from other standard pairs.
 
 Fourth, revisit the prompt given to the LLM classifier. Its overuse of
 complementarity tracks the wording of the label definition rather than the
-difficulty of the pairs --- ``related but different concerns that work together''
-admits almost any two security requirements --- which suggests the ceiling
-measured here is the definition's, not the model's.
+difficulty of the pairs, since ``related but different concerns that work
+together'' admits almost any two security requirements. The ceiling measured here
+may therefore be the definition's rather than the model's.
 
 Beyond these, ranking metrics such as precision at $k$ and mean average precision
 would decouple the evaluation from the positive rate altogether, since they

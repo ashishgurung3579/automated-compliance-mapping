@@ -36,8 +36,8 @@ AI systems face threats that classical software security does not fully cover:
 training data poisoning, model manipulation and theft, adversarial inputs, and
 prompt injection in systems built on large models~\cite{chen2024mlsecurity,
 he2025aisecurity}. Security work for AI must therefore address the model
-life cycle --- data collection, training, deployment, maintenance, and
-disposal --- rather than only the running system.
+life cycle (data collection, training, deployment, maintenance, and
+disposal) and not only the running system.
 
 \standardB{} (\textit{Securing Artificial Intelligence: Baseline Cyber
 Security Requirements}) structures its provisions along exactly that life
@@ -76,7 +76,7 @@ is accuracy, and that is the subject of this thesis.
 \subsection{NLP and LLM techniques for requirement analysis}
 
 \paragraph{Semantic similarity.}
-Standards frequently express similar objectives with different terminology ---
+Standards frequently express similar objectives with different terminology:
 device-focused language in \standardA{}, life-cycle and governance language in
 \standardB{}. Keyword matching fails on such vocabulary mismatch, a problem
 long recognised in requirements traceability
@@ -91,7 +91,7 @@ concepts, detecting language defects, and establishing traceability links
 ~\cite{zhao2021nlp4re,sonbol2022representation}. A typical pipeline extracts
 normative statements, normalises the text, and converts each requirement into
 a numerical representation suitable for comparison. Legal and regulatory text
-adds difficulties of its own --- context-dependent terminology, implicit
+adds difficulties of its own: context-dependent terminology, implicit
 meaning, and complex cross-references~\cite{ariai2025legal}.
 
 \paragraph{Transformer models.}
@@ -104,10 +104,10 @@ semantic relatedness, making large-scale pairwise comparison cheap.
 SecureBERT~\cite{aghaei2022securebert} adapts a RoBERTa-based model to
 cybersecurity text, motivating its inclusion here as a domain-tuned
 alternative. One caveat known from the literature is that the embedding spaces
-of contextual models are anisotropic --- vectors concentrate in a narrow cone,
+of contextual models are anisotropic: vectors concentrate in a narrow cone,
 so unrelated sentences can still receive high cosine
-similarity~\cite{ethayarajh2019contextual}. This property turns out to matter
-for the results in Chapter~\ref{ch:results}.
+similarity~\cite{ethayarajh2019contextual}. This property matters for the
+results in Chapter~\ref{ch:results}.
 
 \paragraph{Large language models.}
 LLMs can be prompted to compare two requirements directly and output a
@@ -134,14 +134,14 @@ ISA/IEC 62443-3-3:2019 and \standardA{}, and their method is explicitly
 interpretive: controls are matched by \emph{teleological interpretation}, that
 is, by the goal a control is intended to realise rather than by the words it
 uses, and the authors state a deliberate preference for under-mapping over
-over-mapping when a match is uncertain. Their taxonomy is binary --- two
+over-mapping when a match is uncertain. Their taxonomy is binary: two
 controls are \emph{Equivalent} when wording and purpose coincide, and
 \emph{Related} when the wording differs but the security objective is the same.
 
 Their results are the reference point for what a careful manual mapping of
 \standardA{} produces. All 68 provisions of \standardA{} could be aligned with
 29 controls of ISO/IEC 27001:2022, while 64 of that standard's 93 controls had
-no counterpart in \standardA{} at all --- almost entirely the organizational
+no counterpart in \standardA{} at all, almost entirely the organizational
 and people controls, which have no meaning for a device. For ISA/IEC 62443-3-3
 they report 84 of 100 requirements mapped, and tabulate the unmapped remainder
 individually rather than reporting only a coverage figure. The complete
@@ -150,24 +150,23 @@ mappings are given as appendix tables, one row per aligned control pair.
 Two features of that study shape this one. The first is the sparsity: a
 standards pair drawn from different domains produces far more non-matches than
 matches, and a mapping method that does not reproduce that asymmetry is not
-reproducing the task. The second is the form of the output --- a typed
-relation, a coverage statement, and an explicit list of what was left
-unmapped --- which is what Section~\ref{sec:coverage} reproduces
-automatically.
+reproducing the task. The second is the form of the output: a typed
+relation, a coverage statement, and an explicit list of what was left unmapped.
+Section~\ref{sec:coverage} produces those three artefacts automatically.
 
 \subsection{Automated compliance mapping in cybersecurity}
 
 Bar-Haim et al.~\cite{barhaim2023cloud} automate the assessment of
 organizational cybersecurity posture in cloud environments by mapping
-free-text security requirements to control frameworks --- a NIST-based
-framework of 280 controls in 22 families and a finer-grained three-level risk
+free-text security requirements to two control frameworks: a NIST-based
+framework of 280 controls in 22 families, and a finer-grained three-level risk
 framework of 169 categories. They formulate mapping as supervised text-pair
 classification with RoBERTa and SBERT models and use hard negative sampling to
 force the models to separate semantically close but non-equivalent controls.
 Their best combined model reaches about 72\% precision@1 for control-family
 mapping and 55\% for individual controls, degrading as granularity increases.
-The authors conclude the approach suits a human-in-the-loop workflow rather
-than autonomous operation --- a conclusion this thesis revisits for the
+The authors conclude that the approach suits a human-in-the-loop workflow
+rather than autonomous operation, a conclusion this thesis revisits for the
 standard-to-standard setting.
 
 \subsection{NLP and semantic techniques for requirement mapping}
@@ -182,7 +181,7 @@ F-measure from 0.83 to 0.91 and performs mapping evaluated against
 expert-created references at a 0.85 similarity threshold. The study
 demonstrates that ontology-supported NLP can automate requirement mapping,
 while noting that ambiguity and implicit, domain-specific meaning remain the
-hard part --- the same difficulties observed with the standards studied here.
+hard part. The same difficulties appear with the standards studied here.
 
 \subsection{LLM-based compliance analysis}
 
@@ -201,20 +200,20 @@ project.
 Prior work automates mapping between requirements and control frameworks
 ~\cite{barhaim2023cloud}, between regulations and business processes
 ~\cite{sapkota2016regcmantic}, and classification within privacy policies
-~\cite{rodriguez2024llm}. Mapping two security standards to each other ---
-with a typed relationship taxonomy rather than a binary match --- has not, to
-our knowledge, been evaluated systematically for the IoT/AI standard pair.
+~\cite{rodriguez2024llm}. Mapping two security standards to each other, with
+a typed relationship taxonomy instead of a binary match, has not to our
+knowledge been evaluated systematically for the IoT/AI standard pair.
 
 The relationship to \cite{djebbar2023comparative} is the one worth stating
 plainly, because this thesis attempts by machine what that study did by hand.
 It takes the same interpretive task to a standard pair that study does not
 cover, \standardA{} against \standardB{}; it refines the Equivalent/Related
 distinction into six typed relations, so that partial and directional
-alignment can be expressed rather than collapsed; and it asks a question a
-manual study cannot answer about itself --- how much of that judgement
-survives automation, and at what error rate. Where the manual study reports
-its mapping, this one reports a mapping together with a measurement of how often
-it is wrong, scored against an annotated reference set on which the trivial
-answer is held to a known score rather than flattered by a hand-picked subset. The comparison of eleven methods that
-follows is a comparison of how closely each approximates the judgement
-\cite{djebbar2023comparative} exercised directly.
+alignment can be expressed instead of collapsed; and it asks a question a manual
+study cannot answer about itself, namely how much of that judgement survives
+automation and at what error rate. Where the manual study reports its mapping,
+this one reports a mapping together with a measurement of how often it is wrong,
+scored against an annotated reference set on which the trivial answer is held to
+a known score. The comparison of eleven methods that follows measures how closely
+each approximates the judgement \cite{djebbar2023comparative} exercised
+directly.

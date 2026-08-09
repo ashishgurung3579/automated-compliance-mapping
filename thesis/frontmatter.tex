@@ -71,18 +71,16 @@ slow and demands expertise in both domains. This thesis examines how far that
 alignment can be automated for two ETSI standards: EN~303~645 for consumer IoT
 security and EN~304~223 for AI system security. A pipeline was built that extracts
 141 normative provisions from the two standards (69 and 72 respectively) and maps
-them to each other with eleven methods spanning five families: TF--IDF
-similarity and security-keyword matching; three sentence-embedding models
-(Sentence-BERT, MPNet, BGE); three contextual-embedding models pooled from
-masked language models (BERT, SecureBERT, CySecBERT); an NLI cross-encoder that
-reads each pair in both directions and is the only method able to express
-subsumption; Gemini text embeddings; and a Gemini LLM prompted to classify each
-of the 4{,}968 possible pairs into one of six relationship types. Predictions were evaluated
-against a 200-pair reference set built by LLM-assisted annotation, drawn from
-1{,}027 pairs judged across three rounds and composed so that related and
-unrelated pairs are equally represented --- which fixes the score of the trivial
-``everything is related'' classifier at F1 0.667 and makes it the bar every
-method must clear.
+them to each other with eleven methods in five families: TF--IDF similarity and
+security-keyword matching; three sentence-embedding models (Sentence-BERT, MPNet,
+BGE); three contextual-embedding models pooled from masked language models (BERT,
+SecureBERT, CySecBERT); an NLI cross-encoder that reads each pair in both
+directions; Gemini text embeddings; and a Gemini LLM prompted to classify each of
+the 4{,}968 possible pairs into one of six relationship types. Predictions were
+evaluated against a 200-pair reference set built by LLM-assisted annotation, drawn
+from 1{,}027 pairs judged across three rounds. Related and unrelated pairs are
+equally represented in it, which fixes the score of the trivial ``everything is
+related'' classifier at F1 0.667 and makes that the bar every method must clear.
 
 Four of the eleven methods do not clear it. At the thresholds they ship with,
 SecureBERT, CySecBERT, Gemini embeddings and, to within one pair, BERT mark every
@@ -91,18 +89,18 @@ general-purpose embedding spaces score nearly all provisions as highly similar.
 Re-selecting each threshold by cross-validation lifts Gemini embeddings to F1
 0.78 at precision 0.77, a margin over the baseline that a paired bootstrap
 separates from zero, with MPNet the only freely available local model that cannot
-be told apart from it. Calibration is therefore worth having, though at this base
-rate it buys most methods less than the initial collapse suggests. Domain-adapted
-cybersecurity models fare worst: SecureBERT lands exactly on the baseline even
+be told apart from it. Calibration is worth having, though at this base rate it
+buys most methods less than the initial collapse suggests. The domain-adapted
+cybersecurity models fare worst. SecureBERT lands exactly on the baseline even
 recalibrated, and CySecBERT, adapted independently by another group, finishes
 below the general-purpose BERT both were built from.
-Assigning the correct relationship type is not solved: the best method reaches
+Assigning the correct relationship type is not solved. The best method reaches
 0.51 accuracy, matching but not exceeding the majority-class baseline. Two further
 findings concern the data rather than the models. Equivalence and subsumption are
-close to absent between these standards --- 13 pairs among 1{,}027 judged, and
-none among 300 top-ranked pairs annotated specifically to find more --- so the
-typed taxonomy is effectively a three-class problem here. And the LLM classifier's
-labels agree with themselves at $\kappa = 0.02$ across two runs on identical
+close to absent between these standards: 13 pairs among the 1{,}027 judged, and
+none among 300 top-ranked pairs annotated specifically to find more, so the typed
+taxonomy is effectively a three-class problem here. The LLM classifier's labels
+also agree with themselves at only $\kappa = 0.02$ across two runs on identical
 input, so its reported scores are not stable properties of the method. Because the
 reference set is balanced by design while the candidate space is sparse, the
 figures reported are upper bounds on corpus-scale performance. The results support

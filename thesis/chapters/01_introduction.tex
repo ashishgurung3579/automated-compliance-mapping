@@ -24,7 +24,7 @@ natural language, at different levels of abstraction and with
 domain-specific vocabulary, so this mapping work is done manually today. It is
 slow, error-prone, and requires expertise in both IoT and AI
 security~\cite{kosenkov2025systematic,djebbar2023comparative}. The burden grows
-with every additional regulation --- the EU Cyber Resilience Act and the AI Act
+with every additional regulation, as the EU Cyber Resilience Act and the AI Act
 add their own requirement catalogues on top of the sector
 standards~\cite{canavese2026uncovering}.
 
@@ -33,18 +33,17 @@ effort. Embedding models built on transformers can measure semantic similarity
 between sentences even when the wording differs~\cite{devlin2019bert,
 reimers2019sbert}, and large language models can be prompted to judge the
 relationship between two requirements directly~\cite{rodriguez2024llm}. Whether
-these techniques are accurate enough for security standards --- where precision
-and traceability matter --- is still an open question, and that question is what
-this thesis investigates.
+these techniques are accurate enough for security standards, where precision and
+traceability matter, is still an open question. This thesis investigates it.
 
 \section{Motivation}\label{sec:motivation}
 
 Compliance mapping sits in an awkward middle ground. It is too language-heavy
 for classical rule-based tooling, yet too consequential to hand over to an
 opaque model without evidence of its reliability. Published work on automated
-compliance analysis reports promising results in neighbouring domains ---
-privacy policies, GDPR data processing agreements, cloud security
-posture~\cite{rodriguez2024llm,cejas2023gdpr,barhaim2023cloud} --- but the
+compliance analysis reports promising results in neighbouring domains such as
+privacy policies, GDPR data processing agreements, and cloud security
+posture~\cite{rodriguez2024llm,cejas2023gdpr,barhaim2023cloud}, but the
 specific task of mapping one security standard onto another has received little
 systematic evaluation. By implementing a spectrum of methods, from keyword
 matching to LLM classification, and scoring them against a common expert
@@ -76,12 +75,12 @@ framework.
   semantic relationships (equivalence, overlap, subsumption, complementarity)
   between security requirements in \standardA{} and \standardB{}, and what are
   the fundamental challenges and limitations?
-  \item How do different automated approaches --- lexical baselines (TF--IDF,
-  security-keyword Jaccard), sentence-embedding models (Sentence-BERT, MPNet,
-  BGE), contextual-embedding models (BERT, SecureBERT, CySecBERT), a
-  cross-encoder trained for natural language inference, and hosted API methods
-  (Gemini embeddings and Gemini prompt classification) --- compare on the
-  compliance mapping task?
+  \item How do different automated approaches compare on the compliance mapping
+  task: lexical baselines (TF--IDF, security-keyword Jaccard),
+  sentence-embedding models (Sentence-BERT, MPNet, BGE), contextual-embedding
+  models (BERT, SecureBERT, CySecBERT), a cross-encoder trained for natural
+  language inference, and hosted API methods (Gemini embeddings and Gemini
+  prompt classification)?
   \item How does automated mapping compare to expert judgement in terms of
   accuracy, coverage, efficiency, and interpretability?
 \end{enumerate}
@@ -97,10 +96,10 @@ The main contributions of this degree project are:
   1{,}027 pairs judged across three annotation rounds and balanced so that the
   trivial ``everything is related'' classifier does not score near the top of
   the scale.
-  \item An open, reproducible pipeline implementing eleven mapping methods ---
-  TF--IDF, security-keyword Jaccard matching, Sentence-BERT, MPNet, BGE, BERT,
+  \item An open, reproducible pipeline implementing eleven mapping methods
+  (TF--IDF, security-keyword Jaccard matching, Sentence-BERT, MPNet, BGE, BERT,
   SecureBERT, CySecBERT, an NLI cross-encoder, Gemini embeddings, and Gemini LLM
-  classification --- with a common evaluation harness.
+  classification) behind a common evaluation harness.
   \item An empirical comparison of these methods on pair detection and
   relationship classification, including confidence intervals, threshold
   sensitivity analysis, and qualitative error analysis.
@@ -109,9 +108,9 @@ The main contributions of this degree project are:
   pretraining did not help in either independent attempt tested, and on the
   practical role automated mapping can play in compliance work today.
   \item The finding that equivalence and subsumption are close to absent between
-  these two standards --- 13 pairs among 1{,}027 judged, and none among 300
-  top-ranked pairs searched specifically to find more --- which bounds what any
-  typed mapping between a device-level and a lifecycle-level standard can report.
+  these two standards: 13 pairs among the 1{,}027 judged, and none among 300
+  top-ranked pairs searched specifically to find more. This bounds what any typed
+  mapping between a device-level and a lifecycle-level standard can report.
 \end{itemize}
 
 \section{Outline}

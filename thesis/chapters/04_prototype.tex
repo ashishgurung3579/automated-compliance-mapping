@@ -19,7 +19,7 @@ and what was reused, and the artefacts each stage produces.
 ]
 \node[stage] (ex) {Extraction};
 \node[stage, right=of ex] (gt) {Ground\\truth};
-\node[stage, right=of gt] (map) {Mapping\\(7 methods)};
+\node[stage, right=of gt] (map) {Mapping\\(11 methods)};
 \node[stage, right=of map] (ev) {Evaluation};
 \node[stage, right=of ev] (rep) {Reporting};
 \draw[arr] (ex) -- (gt);
@@ -58,17 +58,19 @@ records for \standardA{}, 72 for \standardB{}.
 as \texttt{reference\_set.csv}, holding for each pair the source and target
 identifiers, one of six relationship labels, a one-sentence justification, a
 confidence score, the round the pair came from, and whether the authors reviewed
-it. Companion modules run the three annotation rounds --- the screened draw, the
-resumable emit/ingest batch harness, and the targeted search for the rare classes
---- assemble the evaluated set from their combined output under the composition
-rule of Section~\ref{sec:refset}, and compute the agreement statistics of
-Section~\ref{sec:gtvalidation}.
+it. Companion modules run the three annotation rounds (the screened draw, the
+resumable emit/ingest batch harness, and the targeted search for the rare
+classes), assemble the evaluated set from their combined output under the
+composition rule of Section~\ref{sec:refset}, and compute the agreement
+statistics of Section~\ref{sec:gtvalidation}.
 
 \paragraph{Mapping.} One module per method. The rule-based module computes
 TF--IDF cosine similarity (scikit-learn) and security-keyword Jaccard scores.
 The six local transformer modules share a common embedding helper that
 loads the model (Hugging Face), embeds all provisions, normalises the
 vectors, and computes the full $69 \times 72$ cosine similarity matrix. The
+cross-encoder module runs its own loop, scoring each pair twice so that the
+direction of entailment is recorded. The
 Gemini embedding module obtains vectors through the Google GenAI API; the
 Gemini classification module builds one prompt per pair and submits them
 through the batch API, then parses the returned labels. Every
@@ -90,12 +92,12 @@ Chapter~\ref{ch:results} (matplotlib), in print-ready PDF form.
 
 The extraction logic, the keyword baseline, the ground-truth tooling, the
 evaluation harness with its bootstrap and sweep analyses, and the reporting
-layer were developed for this project. The heavy lifting inside the mapping
-methods deliberately reuses standard components: scikit-learn's TF--IDF
-vectoriser, pretrained models from Hugging Face (MiniLM Sentence-BERT, BERT
-base, SecureBERT), and Google's hosted Gemini models. No model was trained or
-fine-tuned; assembling and evaluating existing components under controlled,
-identical conditions is precisely the contribution.
+layer were developed for this project. The mapping methods themselves reuse
+standard components: scikit-learn's TF--IDF vectoriser, seven pretrained models
+from Hugging Face (Sentence-BERT, MPNet, BGE, BERT, SecureBERT, CySecBERT and
+the DeBERTa-v3 NLI cross-encoder), and Google's hosted Gemini models. No model
+was trained or fine-tuned. The contribution is the assembly and the evaluation
+of existing components under identical conditions.
 
 \section{Reproducibility}
 

@@ -17,28 +17,21 @@ pairs and 100 annotated negatives (Figure~\ref{fig:gtdist}). Metrics outside the
 annotated scope are not computable and are not claimed.
 
 Two properties of that set govern how every number below should be read. The
-first is the deliberate half-and-half split between related and unrelated pairs.
-Precision and F1 both move with the positive rate of the set they are measured
-on, so the rate is a design parameter rather than a discovered quantity, and it
-was fixed at one half so that the trivial classifier which calls every pair
-related scores $F_1 = 0.667$ rather than something close to the top of the
-scale. Every detection table below carries that baseline as its final row, and a
-method is interesting only in as much as it clears it.
+first is the half-and-half split between related and unrelated pairs, fixed by
+the composition rule of Section~\ref{sec:refset}. It holds the trivial classifier
+that calls every pair related to $F_1 = 0.667$, and every detection table below
+carries that value as its final row. It also means the figures reported here
+describe a balanced set and bound from above what the same operating points
+achieve at corpus scale.
 
 The second is the scarcity of the rare classes. \textsc{Overlap} (44 pairs) and
 \textsc{Complementarity} (43) make up almost all the positives, while
-\textsc{Subsumption} contributes 10 pairs and \textsc{Equivalence} 3. This is not
-an artefact of how the set was drawn. Across all 1{,}027 pairs judged over three
-annotation rounds only 13 fall into those two classes, and a targeted search
-described in Section~\ref{sec:gt} --- the 300 highest-ranked unjudged pairs under
-a method-agnostic similarity screen, chosen specifically to find more of them ---
-returned none at all. The two standards genuinely contain almost no equivalent or
-subsuming provision pairs: \standardA{} governs a physical consumer device while
-\standardB{} governs an AI lifecycle and the organizations around it, and a
-strict-superset relation rarely survives that gap in layer. The consequence for
-the results is that per-class figures for \textsc{Equivalence} and
-\textsc{Subsumption} rest on single-digit support and are reported for
-completeness rather than as measurements.
+\textsc{Subsumption} contributes 10 pairs and \textsc{Equivalence} 3. As
+Section~\ref{sec:sampling} reports, this reflects the two standards rather than
+the draw: only 13 of the 1{,}027 judged pairs fall into those classes, and the
+targeted search for more returned none. Per-class figures for \textsc{Equivalence}
+and \textsc{Subsumption} therefore rest on single-digit support and are reported
+for completeness rather than as measurements.
 
 \begin{figure}[htbp]
 \centering
@@ -97,23 +90,20 @@ pair-detection F1 and classification macro-F1.}
 \label{fig:cis}
 \end{figure}
 
-The table splits the methods into two regimes, and the baseline row is what
-makes the split legible. The lexical baselines, both smaller sentence-embedding
-models at their default operating points, and the cross-encoder predict very few
-relations. What they do predict is largely correct --- Sentence-BERT reaches
-precision 0.882 and the cross-encoder 0.875 --- but recall between 0.01 and 0.15
-makes none of them usable as a stand-alone detector.
+The baseline row splits the methods into two regimes. The lexical baselines,
+both smaller sentence-embedding models at their default operating points, and the
+cross-encoder predict very few relations. What they do predict is largely correct,
+with Sentence-BERT reaching precision 0.882 and the cross-encoder 0.875, but
+recall between 0.01 and 0.15 makes none of them usable as a stand-alone detector.
 
-The remaining methods sit at the opposite extreme, and this is the more
-important half of the table. SecureBERT, CySecBERT and Gemini embeddings mark
-\emph{every one} of the 200 annotated pairs as related; BERT marks all but one.
-Their F1 of 0.667--0.669 is therefore not a result but an identity: it is what
-the all-positive baseline scores on the same pairs, to three decimals. These
-four methods, at the thresholds they ship with, implement the constant function.
-BGE clears the baseline by 0.004 and the Gemini LLM falls below it. Detection at
-shipped thresholds, in other words, separates almost nothing --- but unlike a
-benchmark stacked with positives, the balanced set makes that visible in the
-table itself rather than hiding it behind a high number.
+The remaining methods sit at the opposite extreme. SecureBERT, CySecBERT and
+Gemini embeddings mark \emph{every one} of the 200 annotated pairs as related,
+and BERT marks all but one. Their F1 of 0.667--0.669 is what the all-positive
+baseline scores on the same pairs, to three decimals. At the thresholds they ship
+with, these four methods implement the constant function. BGE clears the baseline
+by 0.004 and the Gemini LLM falls below it. Detection at shipped thresholds
+separates almost nothing, and the balanced set makes that visible in the table
+itself.
 
 \section{Similarity structure}\label{sec:simstructure}
 
@@ -128,8 +118,8 @@ distributions within a panel, not where either sits.}
 \end{figure}
 
 Figure~\ref{fig:simdist} explains the degenerate behaviour, and with eleven
-methods the pattern is legible as a family property rather than a quirk of one
-model. All three contextual-embedding models compress: BERT places every pair,
+methods the pattern is legible as a family property and not a quirk of one model.
+All three contextual-embedding models compress: BERT places every pair,
 related or not, between 0.570 and 0.914; CySecBERT between 0.707 and 0.925;
 SecureBERT is the extreme case, packing the entire corpus into
 $[0.875, 0.971]$, a band 0.096 wide. With ranges that narrow, the fixed label
@@ -140,23 +130,21 @@ ever reaching \textsc{No relation}. This matches the known anisotropy of
 contextual embedding spaces~\cite{ethayarajh2019contextual}: mean-pooled vectors
 from models never trained for sentence similarity crowd into a narrow cone, and
 cosine similarity loses its discriminative meaning. Adding cybersecurity
-vocabulary does not repair the geometry --- both domain-adapted models are more
-compressed than the general-purpose model they descend from, not less.
+vocabulary does not repair the geometry: both domain-adapted models are more
+compressed than the general-purpose model they descend from.
 
 The sentence-embedding models spread out, as their training intends.
 Sentence-BERT and MPNet span roughly $[-0.05, 0.8]$ and visibly separate the two
-distributions --- yet even there the overlap is substantial, confirming that the
-annotated negatives are genuinely hard rather than obviously unrelated. BGE is
-the instructive intermediate: it is trained for similarity and separates the
-classes well, but its scores never fall below 0.345, so a threshold chosen for
-its family lands beneath its entire distribution. Its saturation is an artefact
-of where its scores sit, not of what they encode --- which is exactly the
-distinction the recalibration in Section~\ref{sec:thresholdresults} isolates.
-Gemini embeddings sit between the extremes: a compressed range of 0.297, but
-with related pairs shifted consistently above negatives, which is what lets it
-lead the calibrated table. The NLI cross-encoder is unlike all of them,
-producing a probability rather than a cosine and placing the bulk of pairs near
-zero, which is why its panel looks empty on the right.
+distributions, though even there the overlap is substantial, which confirms that
+the annotated negatives are genuinely hard. BGE sits in between. It is trained for
+similarity and separates the classes well, but its scores never fall below 0.345,
+so a threshold chosen for its family lands beneath its entire distribution. Its
+saturation comes from where its scores sit and not from what they encode, and the
+recalibration in Section~\ref{sec:thresholdresults} isolates that distinction.
+Gemini embeddings have a compressed range of 0.297 but shift related pairs
+consistently above negatives, which is what lets them lead the calibrated table.
+The NLI cross-encoder produces a probability rather than a cosine and places the
+bulk of pairs near zero, which is why its panel looks empty on the right.
 
 \section{Threshold calibration}\label{sec:thresholdresults}
 
@@ -178,15 +166,14 @@ distinguished by colour, and the families are what the comparison is about.}
 \label{fig:sweep}
 \end{figure}
 
-Because the methods occupy incomparable score ranges --- TF--IDF tops out at
-0.190 while SecureBERT never drops below 0.875 --- candidate thresholds are taken
-as quantiles of each method's own score distribution rather than from a shared
-absolute grid, which would otherwise hand one method a hundred usable cut points
-and another three. Selecting a threshold on the same pairs the score is reported
-on inflates it, so selection is wrapped in 5-fold cross-validation repeated 20
-times, stratified on the label: the threshold is chosen on four folds and scored
-on the fifth, and the threshold reported is the median of the 100 selections
-rather than the in-sample optimum.
+The methods occupy incomparable score ranges: TF--IDF tops out at 0.190 while
+SecureBERT never drops below 0.875. Candidate thresholds are therefore taken as
+quantiles of each method's own score distribution and not from a shared absolute
+grid, which would hand one method a hundred usable cut points and another three.
+Selecting a threshold on the same pairs the score is reported on inflates it, so
+selection is wrapped in 5-fold cross-validation repeated 20 times, stratified on
+the label: the threshold is chosen on four folds and scored on the fifth, and the
+reported threshold is the median of the 100 selections.
 
 \begin{table}[htbp]
 \centering
@@ -226,12 +213,11 @@ deviation). Right: the threshold each set of training folds selected.}
 \end{figure}
 
 Recalibration changes the diagnosis, but far less than the shipped-threshold
-table might suggest, and the difference between those two statements is the main
-result of this section. Comparisons use a preregistered contrast set fixed before
-the results were read --- every method against the all-positive baseline, and
-every method against whichever method scores highest --- with paired bootstrap
-intervals, since the methods are scored on identical pairs and the paired
-variance is far smaller than the marginal intervals imply.
+table might suggest. Comparisons use a preregistered contrast set fixed before
+the results were read: every method against the all-positive baseline, and every
+method against whichever method scores highest. The intervals are paired
+bootstrap intervals, since the methods are scored on identical pairs and the
+paired variance is far smaller than the marginal intervals imply.
 
 Against the baseline, only three of the nine continuous methods clear it by a
 margin whose interval excludes zero: Gemini embeddings at $+0.116$
@@ -240,47 +226,47 @@ margin whose interval excludes zero: Gemini embeddings at $+0.116$
 [$-0.019$, 0.129], and TF--IDF, Sentence-BERT and BERT sit between $+0.026$ and
 $+0.036$ with intervals that also include zero. SecureBERT clears it by
 \emph{exactly} nothing, $+0.000$ [$-0.038$, 0.036], and the NLI cross-encoder
-falls fractionally below at $-0.004$. Two conclusions follow. Calibration is
-worth having --- Gemini embeddings move from 0.667 to 0.782, and MPNet from 0.210
-to 0.721 --- but at a base rate where the trivial answer already scores 0.667, a
-recalibrated threshold buys most methods very little that survives the interval.
+falls fractionally below at $-0.004$. Calibration is worth having: Gemini
+embeddings move from 0.667 to 0.782 and MPNet from 0.210 to 0.721. At a base rate
+where the trivial answer already scores 0.667, however, a recalibrated threshold
+buys most methods very little that survives the interval.
 
 The leader is separable this time. Measured against Gemini embeddings, every
-method except MPNet ($-0.061$, [$-0.137$, 0.015]) has an interval excluding
-zero, so on this set the hosted commercial embedding does hold a measurable
-advantage over the free local models, with MPNet the only one that cannot be
-told apart from it. That is a weaker result than a tie but a more useful one:
-MPNet reaches specificity 0.740 against the leader's 0.770 while running locally
-in under four seconds, which is the relevant comparison for a practitioner.
+method except MPNet ($-0.061$, [$-0.137$, 0.015]) has an interval excluding zero.
+On this set the hosted commercial embedding therefore holds a measurable
+advantage over the free local models, with MPNet the only one that cannot be told
+apart from it. For a practitioner the relevant comparison is that MPNet reaches
+specificity 0.740 against the leader's 0.770 while running locally in under four
+seconds.
 
-The failure of the domain-adapted models is the sharpest structural finding, and
-recalibration does not rescue it. SecureBERT's scores occupy a band 0.096 wide
-across the entire corpus, so no threshold placed anywhere in that band separates
-the classes, and its calibrated F1 lands precisely on the baseline. CySecBERT,
-adapted to the same domain from a different base model by a different group,
-recovers enough range to clear the baseline --- but only by 0.018, and it still
-finishes below the plain BERT it was adapted from. Two independent attempts at
-cybersecurity domain adaptation both end up worse than the general-purpose model
-they were built from, which is a stronger statement than either could make alone.
+Recalibration does not rescue the domain-adapted models. SecureBERT's scores
+occupy a band 0.096 wide across the entire corpus, so no threshold placed
+anywhere in that band separates the classes, and its calibrated F1 lands
+precisely on the baseline. CySecBERT, adapted to the same domain from a different
+base model by a different group, recovers enough range to clear the baseline, but
+only by 0.018, and it still finishes below the plain BERT it was adapted from.
+Two independent attempts at cybersecurity domain adaptation both end up worse
+than the general-purpose model they were built from, which is a stronger
+statement than either could make alone.
 
-A practical warning also survives. The optimism between in-sample and held-out F1
-is small everywhere (0.010 to 0.035), so a single tuned parameter over 200 points
-has little room to overfit. What differs across methods is the stability of the
-threshold itself: Gemini embeddings settle on $0.713 \pm 0.004$ across all 100
-fits and BGE on $0.537 \pm 0.011$, whereas MPNet ranges over $0.353 \pm 0.023$.
-Thresholds must be calibrated per corpus and per model --- fixed literature values
-do not transfer, and the shipped-threshold column of Table~\ref{tab:detection} is
-what happens when they are assumed to.
+The optimism between in-sample and held-out F1 is small everywhere (0.010 to
+0.035), so a single tuned parameter over 200 points has little room to overfit.
+What differs across methods is the stability of the threshold itself: Gemini
+embeddings settle on $0.713 \pm 0.004$ across all 100 fits and BGE on
+$0.537 \pm 0.011$, whereas MPNet ranges over $0.353 \pm 0.023$. Thresholds must be
+calibrated per corpus and per model. Fixed literature values do not transfer, and
+the shipped-threshold column of Table~\ref{tab:detection} shows what happens when
+they are assumed to.
 
 \paragraph{What this supports.} Even recalibrated, no method here supports an
-automated accept/reject decision. The best F1 is 0.782 at precision 0.774,
-measured on a set built to be half positive; on the full candidate space, which
-is far sparser, precision at the same threshold will be lower. The defensible use
-is the one Section~\ref{sec:discussion} describes --- ranking candidates for a
-human reviewer --- and the choice of configuration depends on which end of the
-trade-off matters. Sentence-BERT at its shipped threshold surfaces 17 pairs and
-is right about seven times in eight; Gemini embeddings recalibrated recover 79\%
-of the related pairs at 77\% precision. Neither removes the reviewer.
+automated accept/reject decision. The best F1 is 0.782 at precision 0.774, and on
+the far sparser full candidate space precision at the same threshold will be
+lower. The defensible use is the one Section~\ref{sec:discussion} describes,
+ranking candidates for a human reviewer, and the choice of configuration depends
+on which end of the trade-off matters. Sentence-BERT at its shipped threshold
+surfaces 17 pairs and is right about seven times in eight; Gemini embeddings
+recalibrated recover 79\% of the related pairs at 77\% precision. Neither removes
+the reviewer.
 
 \section{Relationship classification}\label{sec:classresults}
 
@@ -322,17 +308,15 @@ CMP = complementarity, NONE = no relation.}
 \label{fig:confusion}
 \end{figure}
 
-Classification is where every method fails, and on the balanced set the failure
-is unambiguous. The comparison that matters is against the trivial classifier
-that assigns the majority label to everything: \textsc{No relation} accounts for
-100 of the 200 pairs, so always predicting it yields 0.500 accuracy. The best
-methods --- Sentence-BERT and MPNet at 0.505, the cross-encoder at 0.500 --- match
-that figure and none exceeds it by a margin worth reporting. The same trivial
-classifier scores 0.133 macro-F1, which several methods do beat, keyword Jaccard
-highest at 0.248 and Gemini embeddings next at 0.238, so the methods are not
-uniformly worthless at distributing predictions across classes. But the headline
-has to be stated plainly: on the five-label task, none of the eleven methods
-learns the distinction the task is about.
+Every method fails at classification. The comparison that matters is against the
+trivial classifier that assigns the majority label to everything: \textsc{No
+relation} accounts for 100 of the 200 pairs, so always predicting it yields 0.500
+accuracy. The best methods match that figure without exceeding it, Sentence-BERT
+and MPNet at 0.505 and the cross-encoder at 0.500. The same trivial classifier
+scores 0.133 macro-F1, which several methods do beat, keyword Jaccard highest at
+0.248 and Gemini embeddings next at 0.238, so the methods are not uniformly
+worthless at distributing predictions across classes. On the five-label task,
+however, none of the eleven methods learns the distinction the task is about.
 
 The confusion matrices in Figure~\ref{fig:confusion} show how each one fails:
 
@@ -343,67 +327,59 @@ The confusion matrices in Figure~\ref{fig:confusion} show how each one fails:
   name, and their macro-F1 of 0.159 reflects it.
   \item \textbf{Gemini embeddings} funnel most predictions into
   \textsc{Overlap}, which was the majority class on the earlier pilot set but is
-  not on this one --- hence the drop in accuracy to 0.270 alongside the second-best
+  not on this one, hence the drop in accuracy to 0.270 alongside the second-best
   macro-F1. It reaches \textsc{Equivalence} at precision 1.00 and recall 0.33,
   correctly recovering one of the three equivalence pairs.
   \item \textbf{BERT and the two cybersecurity models} collapse. SecureBERT's
-  uniform \textsc{Equivalence} output produces 0.015 accuracy --- exactly the
-  three equivalence pairs in the reference set --- and CySecBERT reaches 0.045.
+  uniform \textsc{Equivalence} output produces 0.015 accuracy, exactly the three
+  equivalence pairs in the reference set, and CySecBERT reaches 0.045.
   \item \textbf{The Gemini LLM} is the only method that predicts labels from
-  provision content rather than a score band, and it does recognise
-  complementarity (recall 0.84) --- but it heavily overuses it, and it assigns a
+  provision content instead of a score band, and it does recognise
+  complementarity (recall 0.84). It heavily overuses it, however, and assigns a
   relation to 91 of the 100 annotated negatives, reaching \textsc{No relation}
   with recall 0.09.
   \item \textbf{The NLI cross-encoder} is the only method that predicts
-  \textsc{Subsumption} at all. Over the full corpus it emits 123 subsumption
-  labels where every other method emits none, because every other method scores
-  pairs with a symmetric function and direction is not recoverable from one. Its
-  macro-F1 of 0.161 is nonetheless unremarkable, and the reason is instructive:
-  it is extremely conservative, flagging 142 of 4{,}968 pairs, so it reaches the
-  directional label on too few pairs to score well. The capability is real and
-  the recall is not. This is the one structural gap in the taxonomy that a
-  different architecture --- rather than a better-calibrated threshold --- does
-  close, which is why it is worth reporting despite the weak headline number.
+  \textsc{Subsumption} at all, for the reason given in
+  Section~\ref{sec:nlimethod}. Over the full corpus it emits 123 subsumption
+  labels where every other method emits none. Its macro-F1 of 0.161 is
+  nonetheless unremarkable, because it is extremely conservative: it flags 142 of
+  4{,}968 pairs, so it reaches the directional label on too few pairs to score
+  well. This is the one gap in the taxonomy that a change of architecture closes
+  where a better-calibrated threshold does not.
 \end{itemize}
 
 The scarcity documented in Section~\ref{sec:setup} bounds what any of this can
 establish. \textsc{Equivalence} is supported by three pairs and
 \textsc{Subsumption} by ten, so the per-class scores for those two rows move by
 large amounts on a single prediction and the macro-F1 that averages them inherits
-that instability. The classes where the reference set has real support ---
-\textsc{Overlap}, \textsc{Complementarity} and \textsc{No relation} --- are where
-the failure is measured, and it is on the overlap/complementarity boundary that
-both the methods and the annotators disagree most, a point the validation study
-below quantifies.
+that instability. The failure is measured on the classes where the reference set
+has real support, \textsc{Overlap}, \textsc{Complementarity} and \textsc{No
+relation}, and it is on the overlap/complementarity boundary that both the methods
+and the annotators disagree most. The validation study below quantifies that.
 
 \section{Coverage and gaps}\label{sec:coverage}
 
 The preceding sections measure how often a method is right. This one asks what
 the method actually says about the two standards, which is the question a
 compliance practitioner brings to a mapping exercise: which provisions of
-\standardA{} have a counterpart in \standardB{}, and which have none. The
-manual study closest to this one~\cite{djebbar2023comparative} reports exactly
-that --- a coverage statement and an explicit list of unmapped requirements ---
-so producing the same two artefacts automatically is the fairest way to show
-what the automation delivers.
+\standardA{} have a counterpart in \standardB{}, and which have none. The manual
+study closest to this one~\cite{djebbar2023comparative} reports a coverage
+statement and an explicit list of unmapped requirements, so producing the same
+two artefacts automatically is the fairest way to show what the automation
+delivers.
 
-Everything in this section is a prediction from a single method, the
-best-scoring one at its calibrated operating point, and one caveat governs all of
-it. That method's measured precision is 0.774 [0.691, 0.851], but it was measured
-on a reference set built to be half positive, while the full candidate space is
-far sparser. Applied to all 4{,}968 candidates the same threshold therefore
-yields a lower precision than that figure, which stands as an \emph{upper bound}
-rather than an estimate. Quantifying the shortfall would require a sample drawn
-with known inclusion probabilities, which this design does not have; the
-consequence is that the numbers below establish the shape of the predicted
-mapping and not its accuracy. The section is included because a shortlist with a
-bounded error rate is a usable artefact and a mapping with an unknown one is not.
+Everything in this section is a prediction from a single method, the best-scoring
+one at its calibrated operating point. Its measured precision is 0.774
+[0.691, 0.851] on the reference set, which by the argument of
+Section~\ref{sec:refset} is an upper bound on its precision across all 4{,}968
+candidates. The numbers below therefore establish the shape of the predicted
+mapping and not its accuracy.
 
 At its calibrated threshold the method flags 1{,}018 of the 4{,}968 candidate
 pairs, 20.5\% of the space. That is a high rate for a corpus whose related pairs
-are plainly a minority, and it is the expected consequence of fitting a threshold
-where positives are half the data: the operating point is tuned for a base rate
-the corpus does not share, so applied at corpus scale it over-predicts.
+are plainly a minority, and it follows from fitting a threshold where positives
+are half the data: the operating point is tuned for a base rate the corpus does
+not share, so at corpus scale it over-predicts.
 
 \begin{figure}[htbp]
   \centering
@@ -420,14 +396,13 @@ Figure~\ref{fig:coverage} shows where the predicted relations concentrate. The
 density is uneven in a way that follows the structure of the two documents
 rather than the behaviour of the model.
 
-The gap side is the more informative one, and it is the part a similarity
-threshold can state cleanly. Seven of the 69 \standardA{} provisions and three
-of the 72 \standardB{} provisions receive no predicted counterpart at all;
-Table~\ref{tab:unmapped} lists them. A gap here is a weaker claim than a gap in
-a manual study: it means the method found nothing, not that nothing is there,
-and at a recall below one the two are different statements. The list is useful in
-the direction that a false gap is cheap to check --- an analyst reads ten
-provisions --- and expensive to miss.
+The gaps are the part a similarity threshold can state cleanly. Seven of the 69
+\standardA{} provisions and three of the 72 \standardB{} provisions receive no
+predicted counterpart at all; Table~\ref{tab:unmapped} lists them. A gap here is a
+weaker claim than a gap in a manual study: it means the method found nothing, not
+that nothing is there, and at a recall below one the two are different statements.
+The list is still useful, because checking a false gap costs an analyst ten
+provisions and missing a real one costs more.
 
 \begin{table}[htbp]
   \centering
@@ -439,10 +414,10 @@ provisions --- and expensive to miss.
   \input{tables/unmapped_provisions}
 \end{table}
 
-The full predicted mapping --- all 1{,}018 pairs with their scores --- is given in
-Appendix~\ref{app:mapping}. Both the table above and that appendix are
-generated directly from the evaluation outputs, so neither can drift from the
-numbers reported here.
+The full predicted mapping, all 1{,}018 pairs with their scores, is given in
+Appendix~\ref{app:mapping}. Both the table above and that appendix are generated
+directly from the evaluation outputs, so neither can drift from the numbers
+reported here.
 
 \section{Ground-truth validation}\label{sec:agreementresults}
 
@@ -474,11 +449,11 @@ Evaluated LLM vs.\ itself, identical input & 4\,968 & 0.69 & 0.02 & 0.81 & $-$0.
 \end{table}
 
 Agreement with the pilot reaches $\kappa = 0.51$ on the detection decision and
-$\kappa = 0.40$ on the six-label scheme --- moderate and fair respectively on the
+$\kappa = 0.40$ on the six-label scheme, moderate and fair respectively on the
 Landis--Koch scale~\cite{landis1977kappa}. A reference set at $\kappa = 0.51$ on
 its central decision is usable for comparing methods against each other, since
 every method is scored against the same labels, but it is not precise enough to
-certify an absolute performance level, and the rankings in
+certify an absolute performance level. The rankings in
 Section~\ref{sec:thresholdresults} should be read with that ceiling in mind.
 
 Disagreements are not scattered across the label space. They cluster on the
@@ -487,20 +462,19 @@ the least determinate distinction in the taxonomy, and on the general-process
 provisions covered by the codebook amendment recorded during annotation. Recorded
 confidence tracks them: pairs marked confidence 3 agree with the pilot 77\% of
 the time ($n = 51$) against 46\% for confidence 2 ($n = 56$). The scale collapsed
-in practice to those two values --- no pair was recorded at 1 --- so this is a
-two-level contrast rather than a calibration curve, but it does show the field
-carries information rather than noise.
+in practice to those two values, since no pair was recorded at 1, so this is a
+two-level contrast and not a calibration curve. It does show that the field
+carries information.
 
 The second row of Table~\ref{tab:agreement} is the more instructive one. The
 evaluated LLM was run twice at temperature 0 over byte-identical prompts. The two
-runs agree on 69\% of pairs --- \emph{higher} raw agreement than the human comparison
---- yet reach $\kappa = 0.02$. The explanation is that the model assigns
+runs agree on 69\% of pairs, \emph{higher} raw agreement than the human
+comparison, yet reach $\kappa = 0.02$. The model assigns
 \textsc{Complementarity} to 81\% of all pairs, so two runs coincide frequently
 without either run carrying information. Raw agreement rewards a degenerate
-marginal; $\kappa$ does not. This is why the reliability of an annotation source
-cannot be read off its agreement percentage, and it is the clearest single
-demonstration in this study of why the LLM classifier's headline scores should
-not be taken at face value.
+marginal; $\kappa$ does not. The reliability of an annotation source therefore
+cannot be read off its agreement percentage, and the LLM classifier's headline
+scores should not be taken at face value.
 
 \section{Efficiency and interpretability}\label{sec:efficiency}
 
@@ -535,75 +509,73 @@ Calibration and bootstrap analysis & 58 s\\
 \end{table}
 
 Every local method runs in seconds or minutes on commodity hardware
-(Table~\ref{tab:runtime}); by comparison, the three annotation rounds behind the
+(Table~\ref{tab:runtime}). By comparison, the three annotation rounds behind the
 reference set occupied several working weeks even with LLM assistance. The cost
 structure separates the two architectures cleanly. A bi-encoder embeds each
 provision once, so the work is linear in the 141 provisions and the 4{,}968
-similarities are a single matrix product --- which is why every embedding stage
+similarities are a single matrix product, which is why every embedding stage
 finishes in under six seconds. A cross-encoder must run the model once per pair
 per direction, so its work is quadratic in the provisions: 9{,}936 forward passes
 and 327 seconds, roughly sixty times the cost of the slowest bi-encoder for the
 same corpus. On this pair of standards that is affordable; on a pair ten times
 larger it would not be.
 
-Interpretability differs more than runtime: the keyword baseline can show
+Interpretability differs more than runtime. The keyword baseline can show
 \emph{which} terms matched, embedding methods offer only an opaque score, the
 cross-encoder additionally reports which direction the entailment ran, and the
-LLM can produce a textual rationale on request --- though its rationale quality
-was not separately evaluated here.
+LLM can produce a textual rationale on request, though its rationale quality was
+not separately evaluated here.
 
 \section{Discussion}\label{sec:discussion}
 
 \paragraph{RQ1 --- feasibility and limits.}
-Automated methods can \emph{shortlist} related provisions, and calibration is
-what makes the difference between a usable ranking and a constant function: at
-their shipped thresholds four of the eleven methods reproduce the all-positive
-baseline exactly, while a cross-validated threshold lifts the best of them to
-F1 0.782 at precision 0.774. That margin over the trivial answer is real but
-modest --- $+0.116$ on a baseline of 0.667 --- and it is measured where positives
-are half the data. Identifying the \emph{type} of relationship is a different
-matter and is not solved at all. The best classification accuracy, 0.505, is the
-majority-class strategy under another name, and the structural reason is visible:
-the overlap/complementarity boundary requires judging \emph{objectives}, not
-surface meaning, and a scalar similarity collapses precisely the distinctions the
-taxonomy is designed to capture.
+Automated methods can \emph{shortlist} related provisions, and calibration makes
+the difference between a usable ranking and a constant function. At their shipped
+thresholds four of the eleven methods reproduce the all-positive baseline
+exactly, while a cross-validated threshold lifts the best of them to F1 0.782 at
+precision 0.774. That margin over the trivial answer is real but modest, $+0.116$
+on a baseline of 0.667, and it is measured where positives are half the data.
+Identifying the \emph{type} of relationship is not solved at all. The best
+classification accuracy, 0.505, is the majority-class strategy under another
+name. The reason is structural: the overlap/complementarity boundary requires
+judging \emph{objectives} rather than surface meaning, and a scalar similarity
+collapses exactly the distinctions the taxonomy is designed to capture.
 
-One of those limits turns out to be architectural rather than fundamental.
-Symmetric similarity cannot express directional subsumption --- but the NLI
-cross-encoder, which asks a directional question by construction, predicts 123
-subsumption relations where the other ten methods predict none. It does so at
-too low a recall to be useful on its own, so the practical conclusion is
-unchanged; the theoretical one is not. The distinction the taxonomy needs is
-reachable, just not by the family of methods that dominates this literature.
+One of those limits turns out to be architectural. Symmetric similarity cannot
+express directional subsumption, but the NLI cross-encoder, which asks a
+directional question by construction, predicts 123 subsumption relations where
+the other ten methods predict none. Its recall is too low for it to be useful on
+its own, so the practical conclusion is unchanged. The distinction the taxonomy
+needs is reachable, though not by the family of methods that dominates this
+literature.
 
 A finding that emerged from the annotation rather than the models belongs here
-too. The two rarest relations are rare in the corpus, not merely in the sample:
-13 pairs of the 1{,}027 judged, and none among the 300 highest-ranked unjudged
-pairs searched specifically to find more. For this pair of standards the typed
-taxonomy is effectively a three-class problem, and the two classes that motivated
-the directional machinery barely occur.
+too. The two rarest relations are rare in the corpus and not only in the
+reference set: 13 pairs of the 1{,}027 judged, and none among the 300
+highest-ranked unjudged pairs searched specifically to find more. For this pair
+of standards the typed taxonomy is effectively a three-class problem, and the two
+classes that motivated the directional machinery barely occur.
 
 \paragraph{RQ2 --- method comparison.}
-No method family wins outright; they fail differently, and with three models
-in each of the two embedding families the failures separate by family rather
-than by model. Lexical baselines are precise but nearly blind at their shipped
-thresholds (recall $\leq$ 0.06), though TF--IDF recalibrated reaches F1 0.703,
-which says more about how weak the bar is at this base rate than about TF--IDF.
-Contextual embeddings saturate: anisotropy makes their cosine scores unusable
-without calibration, and all three sit at the bottom of the calibrated ranking.
-Domain pretraining makes this worse rather than better, and that now rests on two
-independent models --- SecureBERT and CySecBERT, built by different groups from
-different base models --- both of which finish below the plain BERT they were
-adapted from. The intuition that cybersecurity vocabulary is the missing
-ingredient is not merely unsupported; it is contradicted twice.
+No method family wins outright. They fail differently, and with three models in
+each of the two embedding families the failures separate by family and not by
+model. Lexical baselines are precise but nearly blind at their shipped thresholds
+(recall $\leq$ 0.06), though TF--IDF recalibrated reaches F1 0.703, which says
+more about how weak the bar is at this base rate than about TF--IDF. Contextual
+embeddings saturate: anisotropy makes their cosine scores unusable without
+calibration, and all three sit at the bottom of the calibrated ranking. Domain
+pretraining makes this worse, and that now rests on two independent models,
+SecureBERT and CySecBERT, built by different groups from different base models,
+both of which finish below the plain BERT they were adapted from. The intuition
+that cybersecurity vocabulary is the missing ingredient is contradicted twice.
 
 Gemini embeddings top the calibrated table at F1 0.782 and the paired bootstrap
 separates them from every method except MPNet ($-0.061$, [$-0.137$, 0.015]). The
-practical answer to whether the paid model is needed is therefore a qualified
-one. MPNet is the only free local model that cannot be told apart from it, and it
-runs in under four seconds with no per-query cost and reproduces bit-identically
-across runs, whereas the Gemini embeddings depend on a hosted model that can
-change under the same name --- and the LLM replicate of
+practical answer to whether the paid model is needed is therefore qualified.
+MPNet is the only free local model that cannot be told apart from it. It runs in
+under four seconds with no per-query cost and reproduces bit-identically across
+runs, whereas the Gemini embeddings depend on a hosted model that can change
+under the same name, and the LLM replicate of
 Section~\ref{sec:agreementresults} shows what hosted non-determinism costs.
 Calibrated MPNet for ranking, plus human labelling of the shortlist, is the
 defensible configuration; the paid model earns its place where the marginal F1 it
@@ -645,19 +617,13 @@ remaining 163 pairs were not reviewed pair by pair, and their reliability rests
 instead on the blind comparison with the reviewed pilot reported in
 Section~\ref{sec:agreementresults}.
 
-\paragraph{External validity.} Two limits bound generalisation, and the first is
-introduced by the design rather than discovered. The reference set was
-constructed to be half positive so that the trivial classifier would not score
-near the top of the scale; the full candidate space is far sparser than that.
-Precision and F1 both move with the positive rate, so every figure in
-Sections~\ref{sec:detectionresults}--\ref{sec:classresults} describes performance
-on a balanced set and is an upper bound on what the same threshold achieves at
-corpus scale. How much lower is not quantified here, and could not be without a
-sample drawn with known inclusion probabilities --- which
-Section~\ref{sec:futurework} names as the first thing this design should gain.
-The second limit is scope: results belong to this pair of standards and these
-model versions, and the specific numbers should not be transferred to another
-pair without re-measurement.
+\paragraph{External validity.} Two limits bound generalisation. The first is the
+balanced composition of the reference set: as Section~\ref{sec:refset} sets out,
+every figure in Sections~\ref{sec:detectionresults}--\ref{sec:classresults} is an
+upper bound on what the same threshold achieves at corpus scale, and how much
+lower is not quantified here. The second is scope. The results belong to this
+pair of standards and these model versions, and the specific numbers should not
+be transferred to another pair without re-measurement.
 
 \paragraph{Statistical conclusion validity.} Three limits constrain how far the
 numbers can be pushed. First, the rare classes are rare: with three
@@ -667,11 +633,11 @@ averages them inherits that instability. The targeted search reported in
 Section~\ref{sec:setup} establishes that this cannot be fixed by annotating more
 pairs from the same corpus. Second, the operating points in
 Table~\ref{tab:calibrated} are selected by cross-validation on the same set they
-are scored on. The residual optimism is measured rather than assumed --- between
-0.010 and 0.035 across methods --- and is small relative to the differences
+are scored on. The residual optimism is measured rather than assumed, at between
+0.010 and 0.035 across methods, and is small relative to the differences
 reported, but the point estimates remain the optimistic end of their range.
-Third, the paired comparisons follow a preregistered contrast set --- each method
-against the baseline and against the leader --- rather than all pairs, because
+Third, the paired comparisons follow a preregistered contrast set, each method
+against the baseline and against the leader, instead of all pairs, because
 fifty-five uncorrected intervals would guarantee false findings among them. The
 leader is nonetheless the sample maximum, so differences measured against it are
 biased in its favour and are read as descriptive rather than as a test that it is

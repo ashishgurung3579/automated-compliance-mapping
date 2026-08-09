@@ -20,13 +20,15 @@ Run from the repository root, in order:
 
 \begin{verbatim}
 python3 -m src.extraction.provision_extractor   # ~1 s
-python3 -m src.baseline.create_baseline         # <1 s
+python3 -m src.baseline.build_reference         # <1 s
 python3 -m src.mapping.rule_based               # ~4 s
 python3 -m src.mapping.run_embedding --all      # ~2 min, six models
-python3 -m src.mapping.nli_mapping              # ~20 min
+python3 -m src.mapping.nli_mapping              # ~6 min
 python3 -m src.evaluation.evaluate              # ~1 s
 python3 -m src.evaluation.analysis              # ~1 min
+python3 -m src.evaluation.ranking               # ~2 s
 python3 -m src.evaluation.coverage              # ~2 s
+python3 -m src.report.generate_report           # ~1 s
 python3 -m src.report.figures                   # ~15 s
 \end{verbatim}
 
@@ -67,8 +69,7 @@ GEMINI_OUTPUT_SUFFIX=rep2 python3 -m src.mapping.gemini_mapping
 python3 -m src.baseline.sample_reference    # screened round
 python3 -m src.baseline.annotate_sample status
 python3 -m src.baseline.rare_class_search status
-python3 -m src.baseline.build_reference     # -> reference_set.csv
-python3 -m src.validation.agreement          # kappa + table
+python3 -m src.validation.agreement         # kappa + table
 \end{verbatim}
 
 \noindent The annotation batches for all three rounds are stored under
