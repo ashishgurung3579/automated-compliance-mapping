@@ -13,6 +13,6 @@
   "gemini_embedding": null,
   "gemini_llm": null,
   "evaluate": 1.4,
-  "analysis": 105.0,
-  "weighted_metrics": 612.0
+  "analysis": 58.0,
+  "coverage": 2.1
 }

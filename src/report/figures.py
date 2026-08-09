@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from src.methods import (CONFUSION_SUBSET, FAMILY_LABELS, PREVALENCE_SUBSET,
+from src.methods import (CONFUSION_SUBSET, FAMILY_LABELS,
                          by_family, labels, with_matrix)
 
 BASE = Path(__file__).parents[2]
@@ -139,7 +139,7 @@ def fig_confusion(analysis, methods=CONFUSION_SUBSET):
 
 
 def fig_similarity_distributions():
-    gt = pd.read_csv(BASE / "data" / "baseline" / "gt.csv")
+    gt = pd.read_csv(BASE / "data" / "baseline" / "reference_set.csv")
     src = json.loads((BASE / "data" / "extracted" / "en303645_provisions.json").read_text())
     tgt = json.loads((BASE / "data" / "extracted" / "en304223_provisions.json").read_text())
     src_idx = {p["provision_id"]: i for i, p in enumerate(src)}
@@ -216,7 +216,7 @@ def fig_threshold_sweep(analysis):
 
 
 def fig_gt_distribution():
-    gt = pd.read_csv(BASE / "data" / "baseline" / "gt.csv")
+    gt = pd.read_csv(BASE / "data" / "baseline" / "reference_set.csv")
     counts = gt["relationship"].value_counts()
     order = ["OVERLAP", "COMPLEMENTARITY", "NO_RELATION", "SUBSUMPTION_A_BROADER",
              "SUBSUMPTION_B_BROADER", "EQUIVALENCE"]
@@ -236,90 +236,6 @@ def fig_gt_distribution():
     ax.grid(axis="y", visible=False)
     ax.spines[["top", "right"]].set_visible(False)
     fig.savefig(FIG_DIR / "gt_distribution.pdf")
-    plt.close(fig)
-
-
-def load_weighted() -> dict:
-    return json.loads((EVAL_DIR / "weighted_metrics.json").read_text())
-
-
-def fig_precision_prevalence(weighted):
-    """Precision implied by each method's sensitivity and specificity as the base
-    rate varies. Sensitivity and specificity do not depend on prevalence, so a
-    single measured pair fixes the whole curve."""
-    shown = [m for m in PREVALENCE_SUBSET if m in weighted["methods"]]
-    styles = [(C1, "-"), (C2, "--"), (C3, "-."), (C4, ":")]
-    pi = np.linspace(0.01, 0.99, 400)
-    fig, ax = plt.subplots(figsize=(5.2, 3.0))
-    for m, (color, ls) in zip(shown, styles):
-        p = weighted["methods"][m]["point"]
-        sens, spec = p["recall"], p["specificity"]
-        prec = pi * sens / (pi * sens + (1 - pi) * (1 - spec))
-        ax.plot(pi, prec, color=color, linestyle=ls, linewidth=1.6,
-                label=METHOD_LABELS[m])
-
-    corpus = weighted["prevalence"]["any_relationship"]["prevalence"]
-    for x, y, text in [(corpus, 0.02, f"corpus {corpus:.2f}"),
-                       (0.794, 0.93, "pilot 0.79")]:
-        ax.axvline(x, color=MUTED, linewidth=0.8, linestyle=(0, (2, 2)))
-        ax.text(x + 0.012, y, text, fontsize=7, color=MUTED, va="bottom")
-    lo, hi = weighted["prevalence"]["any_relationship"]["ci"]
-    ax.axvspan(lo, hi, color=MUTED, alpha=0.12, linewidth=0)
-
-    ax.set_xlabel("Prevalence of related pairs")
-    ax.set_ylabel("Precision")
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1.02)
-    ax.text(0.66, 0.55, "precision = prevalence:\nno discrimination", fontsize=7,
-            color=MUTED, rotation=30, ha="center", va="center")
-    ax.legend(frameon=False, fontsize=8, loc="lower right")
-    ax.grid(axis="x", visible=False)
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.savefig(FIG_DIR / "precision_vs_prevalence.pdf")
-    plt.close(fig)
-
-
-def fig_stratum_yield(weighted):
-    sample = pd.read_csv(BASE / "data" / "baseline" / "gt_sample.csv").dropna(subset=["stratum"])
-    sample = sample.assign(positive=sample.relationship != "NO_RELATION")
-    strata = ["H", "M", "L"]
-    names = {"H": "H\ntop 10%", "M": "M\nnext 30%", "L": "L\nbottom 60%"}
-    grouped = sample.groupby("stratum")
-    frame = grouped.agg(n=("positive", "size"), pos=("positive", "sum"),
-                        N=("N_stratum", "first")).reindex(strata)
-    x = np.arange(len(strata))
-
-    fig, axes = plt.subplots(1, 2, figsize=(6.2, 2.5))
-    ax = axes[0]
-    ax.bar(x - 0.2, frame.N, width=0.36, color=C1, label="In corpus")
-    ax.bar(x + 0.2, frame.n, width=0.36, color=C4, label="Annotated")
-    for xi, (big, small) in enumerate(zip(frame.N, frame.n)):
-        ax.text(xi - 0.2, big + 60, f"{int(big)}", ha="center", fontsize=7, color=INK)
-        ax.text(xi + 0.2, small + 60, f"{int(small)}", ha="center", fontsize=7, color=INK)
-    ax.set_xticks(x, [names[s] for s in strata], fontsize=8)
-    ax.set_ylabel("Pairs")
-    ax.set_ylim(0, frame.N.max() * 1.18)
-    ax.legend(frameon=False, fontsize=7.5, loc="upper left")
-    style_axes(ax)
-
-    ax = axes[1]
-    rate = frame.pos / frame.n
-    ax.bar(x, rate, width=0.5, color=C3)
-    for xi, (r, p, n) in enumerate(zip(rate, frame.pos, frame.n)):
-        ax.text(xi, r + 0.015, f"{r:.2f}  ({int(p)}/{int(n)})", ha="center",
-                fontsize=7, color=INK)
-    corpus = weighted["prevalence"]["any_relationship"]["prevalence"]
-    ax.axhline(corpus, color=C2, linewidth=1.2, linestyle=(0, (3, 2)))
-    ax.text(len(strata) - 0.45, corpus + 0.02, f"corpus {corpus:.2f}",
-            ha="right", fontsize=7, color=C2)
-    ax.set_xticks(x, [names[s] for s in strata], fontsize=8)
-    ax.set_xlim(-0.6, len(strata) - 0.4)
-    ax.set_ylabel("Share related")
-    ax.set_ylim(0, 0.55)
-    style_axes(ax)
-
-    fig.tight_layout()
-    fig.savefig(FIG_DIR / "stratum_yield.pdf")
     plt.close(fig)
 
 
@@ -344,7 +260,7 @@ def fig_cv_threshold(analysis):
     style_axes(ax)
 
     ax = axes[1]
-    ax.errorbar([c["threshold_mean"] for c in cv], x[::-1],
+    ax.errorbar([c["threshold"] for c in cv], x[::-1],
                 xerr=[c["threshold_sd"] for c in cv], fmt="o", color=C2, ecolor=C2,
                 elinewidth=1.2, capsize=2.5, markersize=4.5)
     ax.set_yticks(x[::-1], [METHOD_LABELS[m] for m in methods])
@@ -358,59 +274,15 @@ def fig_cv_threshold(analysis):
     plt.close(fig)
 
 
-def fig_calibration_gap(weighted):
-    """Corpus F1 at the shipped operating point against one calibrated on the sample.
-
-    The shipped thresholds were tuned on the pilot set, where 79% of pairs are
-    related. Applying them to a corpus where 12% are is what produces the collapse
-    onto the all-positive baseline; the second bar shows how much of that collapse
-    is calibration rather than the model.
-    """
-    methods = [m for m in ORDER if "corpus_calibrated" in weighted["methods"].get(m, {})]
-    x = np.arange(len(methods))
-    w = 0.36
-
-    shipped = [weighted["methods"][m]["point"]["f1"] for m in methods]
-    tuned = [weighted["methods"][m]["corpus_calibrated"]["point"]["f1"] for m in methods]
-    err = [[t - weighted["methods"][m]["corpus_calibrated"]["ci"]["f1"][0] for t, m
-            in zip(tuned, methods)],
-           [weighted["methods"][m]["corpus_calibrated"]["ci"]["f1"][1] - t for t, m
-            in zip(tuned, methods)]]
-
-    fig, ax = plt.subplots(figsize=(1.4 + 0.55 * len(methods), 3.0))
-    ax.bar(x - w / 2, shipped, w, color=MUTED, label="Pilot-calibrated threshold")
-    ax.bar(x + w / 2, tuned, w, yerr=err, color=C3, ecolor=INK, capsize=2.5,
-           error_kw={"elinewidth": 0.8}, label="Corpus-calibrated threshold")
-
-    base = weighted["baseline_all_positive"]["f1"]
-    ax.axhline(base, color=C2, linestyle=(0, (4, 3)), linewidth=1.1,
-               label=f"All-positive baseline ({base:.2f})")
-
-    ax.set_xticks(x, [METHOD_LABELS[m] for m in methods], rotation=22, ha="right")
-    ax.set_ylabel("Corpus pair-detection F1")
-    ax.set_ylim(0, 0.68)
-    ax.legend(frameon=False, fontsize=8, loc="upper left", ncols=2,
-              columnspacing=1.2)
-    ax.grid(axis="x", visible=False)
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.tight_layout()
-    fig.savefig(FIG_DIR / "calibration_gap.pdf")
-    plt.close(fig)
-
-
 if __name__ == "__main__":
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     summary = load_summary()
     analysis = load_analysis()
-    weighted = load_weighted()
     fig_detection_metrics(summary)
     fig_f1_ci(analysis)
     fig_confusion(analysis)
     fig_similarity_distributions()
     fig_threshold_sweep(analysis)
     fig_gt_distribution()
-    fig_precision_prevalence(weighted)
-    fig_stratum_yield(weighted)
     fig_cv_threshold(analysis)
-    fig_calibration_gap(weighted)
     print(f"Figures written to {FIG_DIR}")

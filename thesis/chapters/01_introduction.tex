@@ -76,10 +76,12 @@ framework.
   semantic relationships (equivalence, overlap, subsumption, complementarity)
   between security requirements in \standardA{} and \standardB{}, and what are
   the fundamental challenges and limitations?
-  \item How do different automated approaches --- rule-based methods,
-  transformer embedding models (Sentence-BERT, BERT, SecureBERT), and
-  LLM-based methods (Gemini embeddings and Gemini prompt classification) ---
-  compare on the compliance mapping task?
+  \item How do different automated approaches --- lexical baselines (TF--IDF,
+  security-keyword Jaccard), sentence-embedding models (Sentence-BERT, MPNet,
+  BGE), contextual-embedding models (BERT, SecureBERT, CySecBERT), a
+  cross-encoder trained for natural language inference, and hosted API methods
+  (Gemini embeddings and Gemini prompt classification) --- compare on the
+  compliance mapping task?
   \item How does automated mapping compare to expert judgement in terms of
   accuracy, coverage, efficiency, and interpretability?
 \end{enumerate}
@@ -90,21 +92,26 @@ The main contributions of this degree project are:
 
 \begin{itemize}
   \item A structured dataset of 141 normative provisions extracted from
-  \standardA{} and \standardB{}, and two reference mappings annotated with six
-  relationship types, justifications, and confidence scores: a purposive pilot
-  of 107 pairs, and a stratified probability sample of 650 pairs with known
-  inclusion probabilities, which permits estimates for the full 4{,}968-pair
-  candidate space rather than for a hand-picked subset of it.
+  \standardA{} and \standardB{}, and a reference mapping of 200 pairs annotated
+  with six relationship types, justifications, and confidence scores, drawn from
+  1{,}027 pairs judged across three annotation rounds and balanced so that the
+  trivial ``everything is related'' classifier does not score near the top of
+  the scale.
   \item An open, reproducible pipeline implementing eleven mapping methods ---
-  TF--IDF, security-keyword Jaccard matching, Sentence-BERT, BERT, SecureBERT,
-  Gemini embeddings, and Gemini LLM classification --- with a common evaluation
-  harness.
+  TF--IDF, security-keyword Jaccard matching, Sentence-BERT, MPNet, BGE, BERT,
+  SecureBERT, CySecBERT, an NLI cross-encoder, Gemini embeddings, and Gemini LLM
+  classification --- with a common evaluation harness.
   \item An empirical comparison of these methods on pair detection and
   relationship classification, including confidence intervals, threshold
   sensitivity analysis, and qualitative error analysis.
   \item Evidence-based observations on why general-purpose embedding models
-  overestimate similarity between security requirements, and on the practical
-  role automated mapping can play in compliance work today.
+  overestimate similarity between security requirements, why cybersecurity-specific
+  pretraining did not help in either independent attempt tested, and on the
+  practical role automated mapping can play in compliance work today.
+  \item The finding that equivalence and subsumption are close to absent between
+  these two standards --- 13 pairs among 1{,}027 judged, and none among 300
+  top-ranked pairs searched specifically to find more --- which bounds what any
+  typed mapping between a device-level and a lifecycle-level standard can report.
 \end{itemize}
 
 \section{Outline}

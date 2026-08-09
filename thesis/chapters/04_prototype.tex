@@ -27,7 +27,7 @@ and what was reused, and the artefacts each stage produces.
 \draw[arr] (map) -- (ev);
 \draw[arr] (ev) -- (rep);
 \node[art, below=2.5mm of ex] {provision\\JSON};
-\node[art, below=2.5mm of gt] {gt.csv\\(107 pairs)};
+\node[art, below=2.5mm of gt] {reference\_set.csv\\(200 pairs)};
 \node[art, below=2.5mm of map] {predictions,\\similarity matrices};
 \node[art, below=2.5mm of ev] {metrics, errors,\\confidence intervals};
 \node[art, below=2.5mm of rep] {tables,\\figures};
@@ -54,16 +54,19 @@ provision identifiers with pattern matching, and writes one JSON record per
 provision with identifier, section, title, text, and modality. Output: 69
 records for \standardA{}, 72 for \standardB{}.
 
-\paragraph{Ground truth.} Materialises the reviewed annotation of
-Section~\ref{sec:gt} as \texttt{gt.csv}: source and target provision
-identifiers, one of six relationship labels, a one-sentence justification,
-and a confidence score. A companion module draws the stratified probability
-sample, emits and ingests the annotation batches, and computes the agreement
-statistics of Section~\ref{sec:gtvalidation}.
+\paragraph{Ground truth.} Materialises the annotation of Section~\ref{sec:gt}
+as \texttt{reference\_set.csv}, holding for each pair the source and target
+identifiers, one of six relationship labels, a one-sentence justification, a
+confidence score, the round the pair came from, and whether the authors reviewed
+it. Companion modules run the three annotation rounds --- the screened draw, the
+resumable emit/ingest batch harness, and the targeted search for the rare classes
+--- assemble the evaluated set from their combined output under the composition
+rule of Section~\ref{sec:refset}, and compute the agreement statistics of
+Section~\ref{sec:gtvalidation}.
 
 \paragraph{Mapping.} One module per method. The rule-based module computes
 TF--IDF cosine similarity (scikit-learn) and security-keyword Jaccard scores.
-The three local transformer modules share a common embedding helper that
+The six local transformer modules share a common embedding helper that
 loads the model (Hugging Face), embeds all provisions, normalises the
 vectors, and computes the full $69 \times 72$ cosine similarity matrix. The
 Gemini embedding module obtains vectors through the Google GenAI API; the

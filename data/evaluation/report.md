@@ -1,6 +1,6 @@
 # Automated Compliance Mapping - Evaluation Report
 
-**Generated**: 2026-08-07  
+**Generated**: 2026-08-09  
 **Standards**: ETSI EN 303 645 (IoT security) x ETSI EN 304 223 (AI security)  
 **Ground truth**: 107 annotated pairs (85 positive, 22 negative)  
 
@@ -10,22 +10,22 @@
 
 | Method | Det. P | Det. R | Det. F1 | Cls. Accuracy | Macro-F1 |
 |--------|-------:|-------:|--------:|--------------:|---------:|
-| TF-IDF cosine similarity | 100.0% | 3.5% | 6.8% | 21.5% | 8.6% |
-| Security-keyword Jaccard overlap | 100.0% | 7.1% | 13.2% | 22.4% | 17.9% |
-| Sentence-BERT (all-MiniLM-L6-v2) | 100.0% | 17.6% | 30.0% | 22.4% | 9.9% |
-| Sentence-BERT (all-mpnet-base-v2) | 100.0% | 16.5% | 28.3% | 22.4% | 10.0% |
-| BGE (BAAI/bge-base-en-v1.5) | 83.3% | 88.2% | 85.7% | 24.3% | 14.9% |
-| BERT (bert-base-uncased), mean-pooled | 81.0% | 100.0% | 89.5% | 41.1% | 17.2% |
-| SecureBERT (ehsanaghaei/SecureBERT) | 79.4% | 100.0% | 88.5% | 2.8% | 1.1% |
-| CySecBERT (markusbayer/CySecBERT) | 79.4% | 100.0% | 88.5% | 19.6% | 8.7% |
-| NLI cross-encoder (nli-deberta-v3-base) | 100.0% | 5.9% | 11.1% | 21.5% | 10.2% |
-| Gemini embeddings (gemini-embedding-2) | 79.4% | 100.0% | 88.5% | 47.7% | 27.9% |
-| Gemini LLM classification (gemini-2.5-flash-lite) | 77.7% | 85.9% | 81.6% | 18.7% | 8.8% |
+| TF-IDF cosine similarity | 50.0% | 1.0% | 2.0% | 49.5% | 13.3% |
+| Security-keyword Jaccard overlap | 54.5% | 6.0% | 10.8% | 49.0% | 24.8% |
+| Sentence-BERT (all-MiniLM-L6-v2) | 88.2% | 15.0% | 25.6% | 50.5% | 15.9% |
+| Sentence-BERT (all-mpnet-base-v2) | 85.7% | 12.0% | 21.1% | 50.5% | 15.9% |
+| BGE (BAAI/bge-base-en-v1.5) | 52.5% | 93.0% | 67.2% | 28.0% | 13.3% |
+| BERT (bert-base-uncased), mean-pooled | 50.2% | 100.0% | 66.9% | 13.5% | 6.5% |
+| SecureBERT (ehsanaghaei/SecureBERT) | 50.0% | 100.0% | 66.7% | 1.5% | 0.6% |
+| CySecBERT (markusbayer/CySecBERT) | 50.0% | 100.0% | 66.7% | 4.5% | 3.1% |
+| NLI cross-encoder (nli-deberta-v3-base) | 87.5% | 7.0% | 13.0% | 50.0% | 16.1% |
+| Gemini embeddings (gemini-embedding-2) | 50.0% | 100.0% | 66.7% | 27.0% | 23.8% |
+| Gemini LLM classification (gemini-2.5-flash-lite) | 49.2% | 88.0% | 63.1% | 22.5% | 9.8% |
 
 
 ## Best Performing Method
 
-**Gemini embeddings (gemini-embedding-2)** achieved the highest macro-F1 of **27.9%** on classification, with pair detection precision 79.4% / recall 100.0% / F1 88.5%.
+**Security-keyword Jaccard overlap** achieved the highest macro-F1 of **24.8%** on classification, with pair detection precision 54.5% / recall 6.0% / F1 10.8%.
 
 ---
 
@@ -35,308 +35,308 @@
 
 **Pair detection**
 
-- Precision: 1.000  
-- Recall: 0.035  
-- F1: 0.068  
-- True positives: 3 / 85  
-- False positives (on GT negatives): 0  
-- False negatives: 82  
-- Predicted positive pairs within GT scope: 3  
+- Precision: 0.500  
+- Recall: 0.010  
+- F1: 0.020  
+- True positives: 1 / 100  
+- False positives (on GT negatives): 1  
+- False negatives: 99  
+- Predicted positive pairs within GT scope: 2  
 
 **Classification**
 
-- Overall accuracy: 0.215  
-- Macro-F1: 0.086  
+- Overall accuracy: 0.495  
+- Macro-F1: 0.133  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.333 | 0.045 | 0.080 |
+| COMPLEMENTARITY | 43 | 0.000 | 0.000 | 0.000 |
 | EQUIVALENCE | 3 | 0.000 | 0.000 | 0.000 |
-| NO_RELATION | 22 | 0.211 | 1.000 | 0.349 |
-| OVERLAP | 51 | 0.000 | 0.000 | 0.000 |
-| SUBSUMPTION | 9 | 0.000 | 0.000 | 0.000 |
+| NO_RELATION | 100 | 0.500 | 0.990 | 0.664 |
+| OVERLAP | 44 | 0.000 | 0.000 | 0.000 |
+| SUBSUMPTION | 10 | 0.000 | 0.000 | 0.000 |
 
 
 ### Security-keyword Jaccard overlap
 
 **Pair detection**
 
-- Precision: 1.000  
-- Recall: 0.071  
-- F1: 0.132  
-- True positives: 6 / 85  
-- False positives (on GT negatives): 0  
-- False negatives: 79  
-- Predicted positive pairs within GT scope: 6  
+- Precision: 0.545  
+- Recall: 0.060  
+- F1: 0.108  
+- True positives: 6 / 100  
+- False positives (on GT negatives): 5  
+- False negatives: 94  
+- Predicted positive pairs within GT scope: 11  
 
 **Classification**
 
-- Overall accuracy: 0.224  
-- Macro-F1: 0.179  
+- Overall accuracy: 0.490  
+- Macro-F1: 0.248  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.000 | 0.000 | 0.000 |
+| COMPLEMENTARITY | 43 | 0.111 | 0.023 | 0.038 |
 | EQUIVALENCE | 3 | 1.000 | 0.333 | 0.500 |
-| NO_RELATION | 22 | 0.218 | 1.000 | 0.358 |
-| OVERLAP | 51 | 1.000 | 0.020 | 0.038 |
-| SUBSUMPTION | 9 | 0.000 | 0.000 | 0.000 |
+| NO_RELATION | 100 | 0.503 | 0.950 | 0.657 |
+| OVERLAP | 44 | 1.000 | 0.023 | 0.044 |
+| SUBSUMPTION | 10 | 0.000 | 0.000 | 0.000 |
 
 
 ### Sentence-BERT (all-MiniLM-L6-v2)
 
 **Pair detection**
 
-- Precision: 1.000  
-- Recall: 0.176  
-- F1: 0.300  
-- True positives: 15 / 85  
-- False positives (on GT negatives): 0  
-- False negatives: 70  
-- Predicted positive pairs within GT scope: 15  
+- Precision: 0.882  
+- Recall: 0.150  
+- F1: 0.256  
+- True positives: 15 / 100  
+- False positives (on GT negatives): 2  
+- False negatives: 85  
+- Predicted positive pairs within GT scope: 17  
 
 **Classification**
 
-- Overall accuracy: 0.224  
-- Macro-F1: 0.099  
+- Overall accuracy: 0.505  
+- Macro-F1: 0.159  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.143 | 0.091 | 0.111 |
+| COMPLEMENTARITY | 43 | 0.188 | 0.070 | 0.102 |
 | EQUIVALENCE | 3 | 0.000 | 0.000 | 0.000 |
-| NO_RELATION | 22 | 0.239 | 1.000 | 0.386 |
-| OVERLAP | 51 | 0.000 | 0.000 | 0.000 |
-| SUBSUMPTION | 9 | 0.000 | 0.000 | 0.000 |
+| NO_RELATION | 100 | 0.535 | 0.980 | 0.693 |
+| OVERLAP | 44 | 0.000 | 0.000 | 0.000 |
+| SUBSUMPTION | 10 | 0.000 | 0.000 | 0.000 |
 
 
 ### Sentence-BERT (all-mpnet-base-v2)
 
 **Pair detection**
 
-- Precision: 1.000  
-- Recall: 0.165  
-- F1: 0.283  
-- True positives: 14 / 85  
-- False positives (on GT negatives): 0  
-- False negatives: 71  
+- Precision: 0.857  
+- Recall: 0.120  
+- F1: 0.210  
+- True positives: 12 / 100  
+- False positives (on GT negatives): 2  
+- False negatives: 88  
 - Predicted positive pairs within GT scope: 14  
 
 **Classification**
 
-- Overall accuracy: 0.224  
-- Macro-F1: 0.100  
+- Overall accuracy: 0.505  
+- Macro-F1: 0.159  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.167 | 0.091 | 0.118 |
+| COMPLEMENTARITY | 43 | 0.250 | 0.070 | 0.109 |
 | EQUIVALENCE | 3 | 0.000 | 0.000 | 0.000 |
-| NO_RELATION | 22 | 0.237 | 1.000 | 0.383 |
-| OVERLAP | 51 | 0.000 | 0.000 | 0.000 |
-| SUBSUMPTION | 9 | 0.000 | 0.000 | 0.000 |
+| NO_RELATION | 100 | 0.527 | 0.980 | 0.685 |
+| OVERLAP | 44 | 0.000 | 0.000 | 0.000 |
+| SUBSUMPTION | 10 | 0.000 | 0.000 | 0.000 |
 
 
 ### BGE (BAAI/bge-base-en-v1.5)
 
 **Pair detection**
 
-- Precision: 0.833  
-- Recall: 0.882  
-- F1: 0.857  
-- True positives: 75 / 85  
-- False positives (on GT negatives): 15  
-- False negatives: 10  
-- Predicted positive pairs within GT scope: 90  
+- Precision: 0.525  
+- Recall: 0.930  
+- F1: 0.671  
+- True positives: 93 / 100  
+- False positives (on GT negatives): 84  
+- False negatives: 7  
+- Predicted positive pairs within GT scope: 177  
 
 **Classification**
 
-- Overall accuracy: 0.243  
-- Macro-F1: 0.149  
+- Overall accuracy: 0.280  
+- Macro-F1: 0.133  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.198 | 0.773 | 0.315 |
+| COMPLEMENTARITY | 43 | 0.227 | 0.907 | 0.363 |
 | EQUIVALENCE | 3 | 0.000 | 0.000 | 0.000 |
-| NO_RELATION | 22 | 0.412 | 0.318 | 0.359 |
-| OVERLAP | 51 | 0.500 | 0.039 | 0.073 |
-| SUBSUMPTION | 9 | 0.000 | 0.000 | 0.000 |
+| NO_RELATION | 100 | 0.696 | 0.160 | 0.260 |
+| OVERLAP | 44 | 0.200 | 0.023 | 0.041 |
+| SUBSUMPTION | 10 | 0.000 | 0.000 | 0.000 |
 
 
 ### BERT (bert-base-uncased), mean-pooled
 
 **Pair detection**
 
-- Precision: 0.809  
+- Precision: 0.502  
 - Recall: 1.000  
-- F1: 0.895  
-- True positives: 85 / 85  
-- False positives (on GT negatives): 20  
+- F1: 0.669  
+- True positives: 100 / 100  
+- False positives (on GT negatives): 99  
 - False negatives: 0  
-- Predicted positive pairs within GT scope: 105  
+- Predicted positive pairs within GT scope: 199  
 
 **Classification**
 
-- Overall accuracy: 0.411  
-- Macro-F1: 0.172  
+- Overall accuracy: 0.135  
+- Macro-F1: 0.065  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.000 | 0.000 | 0.000 |
-| EQUIVALENCE | 3 | 0.062 | 0.333 | 0.105 |
-| NO_RELATION | 22 | 1.000 | 0.091 | 0.167 |
-| OVERLAP | 51 | 0.461 | 0.804 | 0.586 |
-| SUBSUMPTION | 9 | 0.000 | 0.000 | 0.000 |
+| COMPLEMENTARITY | 43 | 0.000 | 0.000 | 0.000 |
+| EQUIVALENCE | 3 | 0.017 | 0.333 | 0.032 |
+| NO_RELATION | 100 | 1.000 | 0.010 | 0.020 |
+| OVERLAP | 44 | 0.179 | 0.568 | 0.272 |
+| SUBSUMPTION | 10 | 0.000 | 0.000 | 0.000 |
 
 
 ### SecureBERT (ehsanaghaei/SecureBERT)
 
 **Pair detection**
 
-- Precision: 0.794  
+- Precision: 0.500  
 - Recall: 1.000  
-- F1: 0.885  
-- True positives: 85 / 85  
-- False positives (on GT negatives): 22  
+- F1: 0.667  
+- True positives: 100 / 100  
+- False positives (on GT negatives): 100  
 - False negatives: 0  
-- Predicted positive pairs within GT scope: 107  
+- Predicted positive pairs within GT scope: 200  
 
 **Classification**
 
-- Overall accuracy: 0.028  
-- Macro-F1: 0.011  
+- Overall accuracy: 0.015  
+- Macro-F1: 0.006  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.000 | 0.000 | 0.000 |
-| EQUIVALENCE | 3 | 0.028 | 1.000 | 0.054 |
-| NO_RELATION | 22 | 0.000 | 0.000 | 0.000 |
-| OVERLAP | 51 | 0.000 | 0.000 | 0.000 |
-| SUBSUMPTION | 9 | 0.000 | 0.000 | 0.000 |
+| COMPLEMENTARITY | 43 | 0.000 | 0.000 | 0.000 |
+| EQUIVALENCE | 3 | 0.015 | 1.000 | 0.030 |
+| NO_RELATION | 100 | 0.000 | 0.000 | 0.000 |
+| OVERLAP | 44 | 0.000 | 0.000 | 0.000 |
+| SUBSUMPTION | 10 | 0.000 | 0.000 | 0.000 |
 
 
 ### CySecBERT (markusbayer/CySecBERT)
 
 **Pair detection**
 
-- Precision: 0.794  
+- Precision: 0.500  
 - Recall: 1.000  
-- F1: 0.885  
-- True positives: 85 / 85  
-- False positives (on GT negatives): 22  
+- F1: 0.667  
+- True positives: 100 / 100  
+- False positives (on GT negatives): 100  
 - False negatives: 0  
-- Predicted positive pairs within GT scope: 107  
+- Predicted positive pairs within GT scope: 200  
 
 **Classification**
 
-- Overall accuracy: 0.196  
-- Macro-F1: 0.087  
+- Overall accuracy: 0.045  
+- Macro-F1: 0.031  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.000 | 0.000 | 0.000 |
-| EQUIVALENCE | 3 | 0.037 | 0.667 | 0.070 |
-| NO_RELATION | 22 | 0.000 | 0.000 | 0.000 |
-| OVERLAP | 51 | 0.358 | 0.372 | 0.365 |
-| SUBSUMPTION | 9 | 0.000 | 0.000 | 0.000 |
+| COMPLEMENTARITY | 43 | 0.000 | 0.000 | 0.000 |
+| EQUIVALENCE | 3 | 0.015 | 0.667 | 0.030 |
+| NO_RELATION | 100 | 0.000 | 0.000 | 0.000 |
+| OVERLAP | 44 | 0.100 | 0.159 | 0.123 |
+| SUBSUMPTION | 10 | 0.000 | 0.000 | 0.000 |
 
 
 ### NLI cross-encoder (nli-deberta-v3-base)
 
 **Pair detection**
 
-- Precision: 1.000  
-- Recall: 0.059  
-- F1: 0.111  
-- True positives: 5 / 85  
-- False positives (on GT negatives): 0  
-- False negatives: 80  
-- Predicted positive pairs within GT scope: 5  
+- Precision: 0.875  
+- Recall: 0.070  
+- F1: 0.130  
+- True positives: 7 / 100  
+- False positives (on GT negatives): 1  
+- False negatives: 93  
+- Predicted positive pairs within GT scope: 8  
 
 **Classification**
 
-- Overall accuracy: 0.215  
-- Macro-F1: 0.102  
+- Overall accuracy: 0.500  
+- Macro-F1: 0.161  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.000 | 0.000 | 0.000 |
+| COMPLEMENTARITY | 43 | 0.000 | 0.000 | 0.000 |
 | EQUIVALENCE | 3 | 0.000 | 0.000 | 0.000 |
-| NO_RELATION | 22 | 0.216 | 1.000 | 0.355 |
-| OVERLAP | 51 | 0.000 | 0.000 | 0.000 |
-| SUBSUMPTION | 9 | 0.250 | 0.111 | 0.154 |
+| NO_RELATION | 100 | 0.516 | 0.990 | 0.678 |
+| OVERLAP | 44 | 0.000 | 0.000 | 0.000 |
+| SUBSUMPTION | 10 | 0.167 | 0.100 | 0.125 |
 
 
 ### Gemini embeddings (gemini-embedding-2)
 
 **Pair detection**
 
-- Precision: 0.794  
+- Precision: 0.500  
 - Recall: 1.000  
-- F1: 0.885  
-- True positives: 85 / 85  
-- False positives (on GT negatives): 22  
+- F1: 0.667  
+- True positives: 100 / 100  
+- False positives (on GT negatives): 100  
 - False negatives: 0  
-- Predicted positive pairs within GT scope: 107  
+- Predicted positive pairs within GT scope: 200  
 
 **Classification**
 
-- Overall accuracy: 0.477  
-- Macro-F1: 0.279  
+- Overall accuracy: 0.270  
+- Macro-F1: 0.238  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.217 | 0.227 | 0.222 |
+| COMPLEMENTARITY | 43 | 0.145 | 0.256 | 0.185 |
 | EQUIVALENCE | 3 | 1.000 | 0.333 | 0.500 |
-| NO_RELATION | 22 | 0.000 | 0.000 | 0.000 |
-| OVERLAP | 51 | 0.542 | 0.882 | 0.672 |
-| SUBSUMPTION | 9 | 0.000 | 0.000 | 0.000 |
+| NO_RELATION | 100 | 0.000 | 0.000 | 0.000 |
+| OVERLAP | 44 | 0.342 | 0.955 | 0.503 |
+| SUBSUMPTION | 10 | 0.000 | 0.000 | 0.000 |
 
 
 ### Gemini LLM classification (gemini-2.5-flash-lite)
 
 **Pair detection**
 
-- Precision: 0.777  
-- Recall: 0.859  
-- F1: 0.816  
-- True positives: 73 / 85  
-- False positives (on GT negatives): 21  
+- Precision: 0.492  
+- Recall: 0.880  
+- F1: 0.631  
+- True positives: 88 / 100  
+- False positives (on GT negatives): 91  
 - False negatives: 12  
-- Predicted positive pairs within GT scope: 94  
+- Predicted positive pairs within GT scope: 179  
 
 **Classification**
 
-- Overall accuracy: 0.187  
-- Macro-F1: 0.088  
+- Overall accuracy: 0.225  
+- Macro-F1: 0.098  
 
 **Per-class F1**
 
 | Class | Support | Precision | Recall | F1 |
 |-------|--------:|----------:|-------:|---:|
-| COMPLEMENTARITY | 22 | 0.198 | 0.773 | 0.315 |
+| COMPLEMENTARITY | 43 | 0.216 | 0.837 | 0.343 |
 | EQUIVALENCE | 3 | 0.000 | 0.000 | 0.000 |
-| NO_RELATION | 22 | 0.077 | 0.045 | 0.057 |
-| OVERLAP | 51 | 0.286 | 0.039 | 0.069 |
-| SUBSUMPTION | 9 | 0.000 | 0.000 | 0.000 |
+| NO_RELATION | 100 | 0.429 | 0.090 | 0.149 |
+| OVERLAP | 44 | 0.000 | 0.000 | 0.000 |
+| SUBSUMPTION | 10 | 0.000 | 0.000 | 0.000 |
 
 
 ---

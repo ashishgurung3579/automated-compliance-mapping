@@ -25,7 +25,7 @@ python3 -m src.mapping.rule_based               # ~4 s
 python3 -m src.mapping.run_embedding --all      # ~2 min, six models
 python3 -m src.mapping.nli_mapping              # ~20 min
 python3 -m src.evaluation.evaluate              # ~1 s
-python3 -m src.evaluation.analysis              # ~2 min
+python3 -m src.evaluation.analysis              # ~1 min
 python3 -m src.evaluation.coverage              # ~2 s
 python3 -m src.report.figures                   # ~15 s
 \end{verbatim}
@@ -61,19 +61,22 @@ byte-identical prompts, written to a separate file:
 GEMINI_OUTPUT_SUFFIX=rep2 python3 -m src.mapping.gemini_mapping
 \end{verbatim}
 
-\section*{Probability sample and reliability}
+\section*{Reference set and reliability}
 
 \begin{verbatim}
-python3 -m src.baseline.sample_reference    # seed 20260804
+python3 -m src.baseline.sample_reference    # screened round
 python3 -m src.baseline.annotate_sample status
-python3 -m src.evaluation.weighted_metrics  # corpus estimates
-python3 -m src.validation.agreement         # kappa + table
+python3 -m src.baseline.rare_class_search status
+python3 -m src.baseline.build_reference     # -> reference_set.csv
+python3 -m src.validation.agreement          # kappa + table
 \end{verbatim}
 
-\noindent The 19 annotation batches are stored in \texttt{data/annotation/}, so
-these steps reproduce the reported estimates without re-annotating. Rebuilding
-the reference set from scratch instead requires the \texttt{emit} and
-\texttt{ingest} subcommands of \texttt{annotate\_sample} once per batch.
+\noindent The annotation batches for all three rounds are stored under
+\texttt{data/annotation/}, so these steps rebuild the 200-pair reference set
+without re-annotating anything. Rebuilding a round from scratch instead requires
+the \texttt{emit} and \texttt{ingest} subcommands of \texttt{annotate\_sample}
+(screened round) or \texttt{rare\_class\_search} (targeted round) once per
+batch.
 
 \section*{Building the report}
 

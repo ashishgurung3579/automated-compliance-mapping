@@ -103,112 +103,115 @@ connection did not hold up against the original standard texts. Each retained
 pair carries a short written justification and a reviewer confidence score
 from 1 (uncertain) to 3 (certain).
 
-The resulting ground truth contains 107 pairs: 85 positive pairs (3
-equivalence, 51 overlap, 9 subsumption across both directions, 22
-complementarity) and 22 explicit \textsc{No relation} pairs. The negative
-pairs were chosen to be non-trivial --- provisions that share surface
-vocabulary but differ in objective --- so that methods relying on word overlap
-are actually tested. The class distribution is skewed towards
-\textsc{Overlap}, which reflects the real relationship between a device-level
-and a life-cycle-level standard: near-identical requirements are rare.
-
 Using an LLM in the annotation loop creates a risk of circularity, since one
 of the evaluated methods is itself an LLM. Two design choices reduce this
 risk: the annotation model (Claude) is from a different family than the
 evaluated model (Gemini), and the labels follow a codebook written before any
-were drafted. Human review, however, covers only the 107 pilot pairs. The
-650-pair probability sample of Section~\ref{sec:sampling} was not reviewed pair
-by pair --- at that size it would have consumed the project's remaining budget
---- so its reliability rests on the blind comparison against the reviewed pilot
-reported in Section~\ref{sec:gtvalidation}. The residual risk is examined there
-and discussed in Section~\ref{sec:threats}.
+were drafted, reproduced in Appendix~\ref{app:labels}. It states the decision
+procedure, the overlap-versus-complementarity test that carries most of the
+difficulty, and one amendment made partway through and applied from that point
+onward.
 
-\subsection{A probability sample of the candidate space}\label{sec:sampling}
+\subsection{Three annotation rounds}\label{sec:sampling}
 
-The pilot set of Section~\ref{sec:gt} was assembled purposively, by examining
-pairs that looked promising. That makes it useful for developing the method and
-unusable for estimating anything about the corpus: its pairs have no inclusion
-probabilities, so its 79.4\% positive rate cannot be corrected toward the rate a
-deployed system would meet. A second reference set was therefore drawn as a
-probability sample.
+Annotation proceeded in three rounds, each addressing a limitation of the one
+before, and the reference set is assembled from their combined output.
 
-Pairs were first ordered by a screening score: the mean percentile rank of each
-pair across all five similarity matrices. Averaging over the methods keeps the
-strata neutral between them. Stratifying on one model's scores would instead
-sample densely wherever that model is confident, and quietly flatter it at
-evaluation. The ordered space was then cut into three strata and sampled at
-deliberately unequal rates.
+The \textbf{pilot round} produced 107 pairs by examining candidates that looked
+promising and reviewing every draft label. Both authors reviewed these pairs, so
+they are the closest thing to a human-verified anchor the project has. Their
+weakness is the same as their construction: pairs chosen because they looked
+related are 79\% related, which tells us about the selection rather than about
+the standards.
+
+The \textbf{screened round} widened the pool. Pairs were ordered by a screening
+score --- the mean percentile rank of each pair across every similarity matrix
+--- and 650 were drawn from three bands of that ordering, 250 from the top tenth,
+200 from the next three tenths and 200 from the bottom six tenths. Averaging over
+the methods keeps the screen neutral between them; screening on one model's
+scores would sample densely wherever that model is confident and quietly flatter
+it at evaluation. Batches were shuffled under a fixed seed, and the 107 pilot
+pairs were mixed into the stream unmarked, so re-labelling them was blind and
+their agreement with the earlier reviewed labels can be read as a check on the
+new annotation (Section~\ref{sec:agreementresults}).
+
+The \textbf{targeted round} went looking for the two classes the first two had
+barely reached. Across the 727 pairs judged by then, \textsc{Equivalence}
+appeared three times and \textsc{Subsumption} ten. Because those counts cannot
+support a per-class result, the 300 highest-ranked pairs that no round had yet
+judged --- ranked by the same method-agnostic screen, so no evaluated method is
+privileged --- were annotated in eight further batches.
+
+That round returned \emph{no} equivalence or subsumption pairs at all: 184
+\textsc{No relation}, 65 \textsc{Overlap}, 51 \textsc{Complementarity}. The
+result is worth stating as a finding rather than a shortfall. Among the pairs
+already judged, the rare classes occur at roughly one in 250 even in the
+top-ranked region where they concentrate, so reaching twenty of each would
+require annotating more pairs than the candidate space contains. \standardA{}
+governs a physical consumer device and \standardB{} an AI lifecycle and the
+organizations around it; a strict-superset or same-scope relation rarely survives
+that difference in layer. For this pair of standards the typed taxonomy is
+effectively a three-class problem.
+
+Two consequences are carried forward. Per-class results for \textsc{Equivalence}
+and \textsc{Subsumption} rest on single-digit support and are reported for
+completeness, not as measurements. And because the rare-class pairs that do exist
+were partly located by a targeted search, per-class \emph{recall} for those two
+classes is conditioned on the screen and is not an unbiased quantity; what those
+rows support is the structure of the confusion, not a recall estimate.
+
+\subsection{Assembling the reference set}\label{sec:refset}
+
+The three rounds leave a pool of 1{,}027 judged pairs. From that pool the
+evaluation set is drawn under one rule, fixed in advance: \emph{negatives are
+half the set; positives are balanced across the five positive classes as far as
+the annotated material allows.}
+
+Each half of the rule does one job. Half negatives keeps the trivial classifier
+that calls every pair related from scoring near the top of the scale --- at a
+positive rate of one half it scores $F_1 = 0.667$, which every detection table
+in Chapter~\ref{ch:results} carries as its final row. Balancing the positives
+keeps the typed task from becoming a report on whichever relationship happens to
+be most common. Where a class cannot meet its share it contributes everything it
+has and the remainder is redistributed, which is what the scarcity of the rare
+classes forces here.
 
 \begin{table}[htbp]
 \centering
-\caption{Stratified sampling design over the 4{,}968 candidate pairs. Unequal
-allocation concentrates annotation where relations are common while keeping every
-inclusion probability strictly positive, which is what keeps the estimator
-unbiased.}
+\caption{Composition of the 200-pair reference set. \textsc{Equivalence} and
+\textsc{Subsumption} enter at their full available count rather than at the
+balanced target, because the corpus contains no more of them.}
 \label{tab:sampling}
 \small
-\begin{tabular}{lrrrr}
+\begin{tabular}{lrrl}
 \toprule
-Stratum & Screening rank & $N$ & $n$ & Weight $N/n$\\
+Label & Judged & In set & \\
 \midrule
-H & top 10\%    &   497 & 250 & 1.99\\
-M & next 30\%   & 1\,490 & 200 & 7.45\\
-L & bottom 60\% & 2\,981 & 200 & 14.91\\
+\textsc{No relation}           & 701 & 100 & half the set by rule\\
+\textsc{Overlap}               & 174 &  44 & \\
+\textsc{Complementarity}       & 139 &  43 & \\
+\textsc{Subsumption} (B broader) &   6 &   6 & all available\\
+\textsc{Subsumption} (A broader) &   4 &   4 & all available\\
+\textsc{Equivalence}           &   3 &   3 & all available\\
 \midrule
-  &             & 4\,968 & 650 & \\
+                               & 1\,027 & 200 & positive rate 0.500\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Each pair stores its stratum and weight, so corpus-level precision, recall,
-specificity and prevalence follow by Horvitz--Thompson estimation, with
-confidence intervals from a bootstrap that resamples within stratum. Batches are
-shuffled under a fixed seed before annotation, so a partially completed pass is
-still a random subsample rather than a biased prefix. All 650 designed pairs were
-annotated, in 19 batches of 40, together with the 107 pilot pairs mixed into the
-same stream.
+The realised set is given in Table~\ref{tab:sampling}: 200 pairs, exactly half
+related, of which 37 come from the author-reviewed pilot. The over-supplied
+classes are drawn under a fixed seed, so the set reproduces exactly.
 
-Disproportionate allocation buys efficiency at a price in variance. The weights
-span 1.99 to 14.91, giving a Kish design effect of 1.49: the 650 pairs carry the
-information of about 437 drawn with equal probability. This is reported alongside
-the estimates in Section~\ref{sec:prevalence} rather than left implicit, since a
-weighted sample whose nominal size is quoted without its design effect overstates
-its own precision.
-
-Annotation followed a written codebook fixed before labelling began, reproduced
-in Appendix~\ref{app:labels}. It states the decision procedure, the
-overlap-versus-complementarity test that carries most of the difficulty, and one
-amendment made partway through and applied from that point onward. The 107 pilot
-pairs were mixed into the stream unmarked, so re-labelling them was blind and
-their agreement with the earlier author-reviewed labels can be read as a check on
-the new annotation (Section~\ref{sec:agreementresults}).
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{figures/stratum_yield}
-\caption[Sampling strata and observed yield]{Left: size of each stratum in the
-candidate space against the number of pairs annotated from it. Right: the share
-of annotated pairs in each stratum carrying a relationship, with the
-weighted corpus estimate for reference. The monotone gradient across strata is
-evidence that the screening score orders the space as intended; the corpus
-estimate sits below all but the lowest stratum because that stratum holds three
-pairs in five.}
-\label{fig:strata}
-\end{figure}
-
-Figure~\ref{fig:strata} shows the realised sample. The stratum yields (0.42,
-0.18, 0.04) confirm the screening score separates the space, and they are also
-why the design is efficient: an unstratified sample of the same size would spend
-three annotations in five on a region where one pair in twenty-five is related.
-
-One class stayed out of reach. The sample contains no \textsc{Equivalence} pair
-at all, despite covering half of the top-decile stratum, so no weighted per-class
-estimate can be given for it; the three instances in the corpus known to the
-project all come from the purposive pilot. That is itself a measurement --- two
-standards written for different layers of a system produce overlapping and
-complementary obligations, but almost never identical ones --- and it is the
-reason per-class results in Section~\ref{sec:classresults} are reported on the
-pilot set only.
+One limitation follows directly from the rule and is stated here rather than
+left to the reader. A positive rate of one half is a design choice, not a
+property of the corpus, and precision and F1 both move with it. Every figure
+reported in Chapter~\ref{ch:results} therefore describes performance on a
+balanced set and is an upper bound on what the same operating point achieves
+across the full 4{,}968 candidates, which are far sparser. Quantifying that gap
+would require a sample drawn with known inclusion probabilities; this design does
+not have one, and Section~\ref{sec:futurework} names it as the first extension
+the work should receive.
 
 \subsection{Reliability of the reference set}\label{sec:gtvalidation}
 
@@ -345,13 +348,14 @@ the representation and not the calibration.
 
 That decision has a consequence worth stating in advance rather than
 discovering in the results. A threshold chosen a priori is a threshold chosen
-without knowing the base rate of related pairs, and
-Section~\ref{sec:prevalence} shows the base rate is far lower than the pilot
-set suggests. Several methods therefore ship at operating points that are badly
-wrong for the corpus, which is why every method with a continuous score is also
-reported at a threshold recalibrated on the probability sample. The threshold
-sensitivity analysis in Section~\ref{sec:thresholdresults} shows how much of
-each method's performance is representation and how much is calibration.
+without knowing where a method's scores actually fall, and
+Section~\ref{sec:simstructure} shows that several methods occupy ranges their
+family default does not reach into at all. Those methods therefore ship at
+operating points that place every pair on one side of the line, which is why
+every method with a continuous score is also reported at a threshold
+recalibrated on the reference set. The calibration analysis in
+Section~\ref{sec:thresholdresults} shows how much of each method's performance
+is representation and how much is the choice of operating point.
 
 Subsumption cannot be expressed as a symmetric similarity band at all, so ten
 of the eleven methods cannot predict it by construction. Only the cross-encoder
@@ -359,7 +363,7 @@ can, which is the reason it is in the study.
 
 \section{Evaluation framework}\label{sec:evaluation}
 
-Evaluation is restricted to the 107 annotated pairs; predictions outside the
+Evaluation is restricted to the 200 annotated pairs; predictions outside the
 annotated set are ignored, since their true labels are unknown. Two views are
 computed for every method.
 
@@ -374,55 +378,64 @@ scope:
   \text{Recall} = \frac{TP}{TP+FN}, \qquad
   F_1 = \frac{2PR}{P+R}.
 \end{equation}
-One consequence of scoping deserves emphasis: false positives can only be
-counted on the 22 annotated negative pairs. A method that predicts relations
-sparsely can therefore show precision of 1.0 while missing nearly everything;
-precision values must be read together with recall and with the
-predicted-positive counts reported alongside.
+Two consequences of scoping deserve emphasis. False positives can only be
+counted on the 100 annotated negative pairs, so a method that predicts relations
+sparsely can show high precision while missing nearly everything; precision
+values must be read together with recall and with the predicted-positive counts
+reported alongside. And because the set is half positive by construction, the
+classifier that calls every pair related scores $F_1 = 0.667$ on it. That figure
+is reported as a row in every detection table, since a detection score means
+little except in relation to what the trivial answer achieves on the same
+pairs.
 
 \subsection{Relationship classification}
 
 Classification asks whether the predicted label matches the ground truth,
-over all 107 pairs, with the subsumption directions merged
+over all 200 pairs, with the subsumption directions merged
 (Section~\ref{sec:taxonomy}). Ground-truth pairs absent from a method's
 output count as predicted \textsc{No relation}. Reported metrics are overall
 accuracy and macro-averaged precision, recall, and F1 over the five classes,
 plus per-class scores. Macro averaging weights all classes equally, which is
-appropriate here because the rare classes (equivalence, subsumption) are
-exactly the ones a compliance analyst cares most about.
+appropriate in principle because the rare classes (equivalence, subsumption) are
+exactly the ones a compliance analyst cares most about --- but with three and ten
+supporting pairs respectively, those two components move substantially on a
+single prediction, and the macro average inherits that instability. The
+majority-class classifier, which predicts \textsc{No relation} for everything,
+scores 0.500 accuracy and 0.133 macro-F1 on this set and is the reference the
+typed results are read against.
 
 \subsection{Uncertainty and sensitivity}
 
-With 107 evaluation pairs, point estimates alone would overstate certainty.
+With 200 evaluation pairs, point estimates alone would overstate certainty.
 Nonparametric bootstrap confidence intervals (2{,}000 resamples of the
 annotated pairs, percentile method, 95\% level) are reported for detection F1
 and macro-F1. For every method with a stored similarity matrix, detection
-metrics are additionally computed across the full threshold range
-$[0.05, 0.975]$ to separate the quality of the underlying representation from
-the choice of operating point.
+metrics are additionally computed across the method's full score range, to
+separate the quality of the underlying representation from the choice of
+operating point.
 
-Corpus-level results are reported at two operating points, because the shipped
-thresholds were selected on the pilot set and applying them to a corpus with a
-different base rate confounds the method with its calibration. The second point
-is chosen on the probability sample itself: weighted F1 is maximised on four
-folds and scored on the fifth, over 20 repeats, with folds stratified by
-sampling stratum so each carries all three weight classes. Candidate cut-offs
-are quantiles of each method's own score distribution rather than a shared
-absolute grid, since the methods occupy ranges that differ by an order of
-magnitude in width. The reported threshold is the median of the 100 selections,
-so the point estimate that follows is not the in-sample optimum; the gap between
-it and the cross-validated mean is reported as the residual optimism.
+Results are reported at two operating points, because the shipped thresholds
+were fixed per family before any evaluation and applying them confounds the
+method with its calibration. The second point is chosen on the reference set
+itself: F1 is maximised on four folds and scored on the fifth, over 20 repeats,
+with folds stratified by label. Candidate cut-offs are quantiles of each
+method's own score distribution rather than a shared absolute grid, since the
+methods occupy ranges that differ by an order of magnitude in width --- TF--IDF
+tops out at 0.190 while SecureBERT never drops below 0.875, so an absolute grid
+would give one of them a hundred candidate cut points and the other three. The
+reported threshold is the median of the 100 selections, so the point estimate
+that follows is not the in-sample optimum; the gap between it and the
+cross-validated mean is reported as the residual optimism.
 
 Comparisons between methods use a paired bootstrap on the difference: both
-methods are scored on the same within-stratum resample, and only differences
-whose interval excludes zero are reported as orderings. Two marginal intervals
-overlapping is not evidence that the methods are equivalent, because the
-methods are scored on identical pairs and their errors are correlated.
+methods are scored on the same resample, and only differences whose interval
+excludes zero are reported as orderings. Two marginal intervals overlapping is
+not evidence that the methods are equivalent, because the methods are scored on
+identical pairs and their errors are correlated.
 
 Which comparisons are made is decided by a rule, not by inspection. Eleven
-methods and their recalibrated variants admit more than two hundred pairwise
-contrasts, and two hundred uncorrected 95\% intervals will contain false
-findings whatever the data say. Two questions carry the argument --- whether a
+methods admit fifty-five pairwise contrasts, and fifty-five uncorrected 95\%
+intervals will contain false findings whatever the data say. Two questions carry the argument --- whether a
 method beats the all-positive baseline, and whether anything beats the
 best-scoring method --- so each method is compared against those two references
 and against nothing else. One caveat attaches to the second reference: it is

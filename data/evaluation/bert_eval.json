@@ -1,47 +1,47 @@
 {
   "detection": {
-    "gt_positive_pairs": 85,
-    "gt_negative_pairs": 22,
-    "predicted_positive_in_gt": 105,
-    "true_positives": 85,
-    "false_positives": 20,
+    "gt_positive_pairs": 100,
+    "gt_negative_pairs": 100,
+    "predicted_positive_in_gt": 199,
+    "true_positives": 100,
+    "false_positives": 99,
     "false_negatives": 0,
-    "precision": 0.8095,
+    "precision": 0.5025,
     "recall": 1.0,
-    "f1": 0.8947
+    "f1": 0.6689
   },
   "classification": {
-    "overall_accuracy": 0.4112,
-    "macro_precision": 0.3046,
-    "macro_recall": 0.2456,
-    "macro_f1": 0.1715,
+    "overall_accuracy": 0.135,
+    "macro_precision": 0.2391,
+    "macro_recall": 0.1823,
+    "macro_f1": 0.0648,
     "per_class": {
       "COMPLEMENTARITY": {
-        "support": 22,
+        "support": 43,
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0
       },
       "EQUIVALENCE": {
         "support": 3,
-        "precision": 0.0625,
+        "precision": 0.0169,
         "recall": 0.3333,
-        "f1": 0.1053
+        "f1": 0.0323
       },
       "NO_RELATION": {
-        "support": 22,
+        "support": 100,
         "precision": 1.0,
-        "recall": 0.0909,
-        "f1": 0.1667
+        "recall": 0.01,
+        "f1": 0.0198
       },
       "OVERLAP": {
-        "support": 51,
-        "precision": 0.4607,
-        "recall": 0.8039,
-        "f1": 0.5857
+        "support": 44,
+        "precision": 0.1786,
+        "recall": 0.5682,
+        "f1": 0.2717
       },
       "SUBSUMPTION": {
-        "support": 9,
+        "support": 10,
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0

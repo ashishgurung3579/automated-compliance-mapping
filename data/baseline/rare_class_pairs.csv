@@ -1,0 +1,301 @@
+src_id,tgt_id,relationship,justification,confidence,batch,source
+5.6-9,5.2.1-2,OVERLAP,"Both mandate secure software development processes including version control; A adds compiler hardening for device software, B adds asset tracking and authentication for AI assets.",3,0,rare_search
+5.5-8,5.1.3-1.1,NO_RELATION,"Critical security parameter lifecycle management is a different objective from threat modelling triggered by configuration changes, and B's process text does not name key management.",2,0,rare_search
+5.3-11,5.1.3-2,OVERLAP,"Both require informing users about security risks so they can act; A covers update notices, B covers unresolved threats passed down the stakeholder chain.",2,0,rare_search
+5.8-3,5.3.1-2.2,NO_RELATION,"Sensor transparency and update notification are different objectives; only the phrase ""accessible way"" is shared.",3,0,rare_search
+5.3-11,5.2.3-4,OVERLAP,"Both require notifying users ahead of an update; A adds the mitigated risks, B adds prior notice of model changes specifically.",3,0,rare_search
+5.3-14,5.3.1-2.2,OVERLAP,"Both pursue user-facing transparency about update status; A covers devices that receive none, B covers those that do.",2,0,rare_search
+5.6-9,5.2.2-6,COMPLEMENTARITY,In-house development processes and contractual flow-down to cloud providers jointly serve securing the software supply chain.,2,0,rare_search
+5.4-4,5.2.4-1.2,OVERLAP,"Both enable authenticity verification of distributed software artefacts; A by unique per-device parameters, B by published cryptographic hashes.",2,0,rare_search
+5.8-1,5.1.2-5,OVERLAP,"Both protect sensitive data proportionately to its properties; A mandates transit encryption, B mandates usage and controls matched to data sensitivity.",2,0,rare_search
+5.0-1,5.2.3-2.1,COMPLEMENTARITY,Recording justifications for unmet recommendations and risk-assessing external components are distinct steps of one documented risk management process.,2,0,rare_search
+5.2-2,5.3.1-3,COMPLEMENTARITY,Timely vulnerability remediation and post-incident user support are distinct duties combining into coordinated vulnerability and incident handling.,2,0,rare_search
+5.5-8,5.1.2-4,NO_RELATION,"External component due diligence does not name key or parameter management, and the two obligations share no objective.",3,0,rare_search
+5.13-1B,5.1.2-6,COMPLEMENTARITY,Validating inbound data and restricting outbound permissions are different objectives that jointly secure a system's interfaces to other systems.,2,0,rare_search
+5.3-13,5.3.1-2.2,OVERLAP,"Both require accessible publication of security support information; A the support period, B the individual security updates.",2,0,rare_search
+5.4-4,5.1.2-6,NO_RELATION,Per-device key uniqueness and least-privilege permissions between systems pursue unrelated objectives.,3,0,rare_search
+5.6-8,5.2.2-2,NO_RELATION,Hardware memory access control and API rate limiting address different attack surfaces with no shared control.,3,0,rare_search
+5.4-4,5.2.1-2,OVERLAP,"Both serve authenticity of software assets; A through unique per-device parameters, B through processes and tools that authenticate assets.",2,0,rare_search
+5.6-9,5.2.4-1.1,COMPLEMENTARITY,Secure development practice and the security content of the accompanying documentation are distinct parts of one secure development lifecycle.,2,0,rare_search
+5.7-2,5.2.2-2,NO_RELATION,Detecting unauthorized software change on a device is unrelated to rate-limiting an external API.,3,0,rare_search
+5.8-3,5.2.2-4,NO_RELATION,Documenting sensors and publishing a disclosure policy are different obligations sharing only the act of publication.,3,0,rare_search
+5.3-9,5.1.4-4,NO_RELATION,Runtime verification of update artefacts differs from design-time verification that specified controls were implemented.,2,0,rare_search
+5.3-4B,5.4.1-1.1,OVERLAP,"Both require contingency for the case where an update cannot be applied; A through recovery to a known good state, B through documented mitigation plans.",3,0,rare_search
+5.5-2,5.1.2-4,OVERLAP,"Both demand assurance over externally sourced components before use; A by requiring reviewed implementations, B by requiring risk assessment and due diligence.",2,0,rare_search
+5.0-1,5.1.2-1,OVERLAP,"Both require documented, risk-based justification of design decisions; A for unmet recommendations, B for the decision to build the system at all.",2,0,rare_search
+5.4-4,5.1.2-2,NO_RELATION,General adversarial robustness of an AI system does not relate specifically to per-device uniqueness of update keys.,2,0,rare_search
+5.3-8,5.1.3-2,COMPLEMENTARITY,Patching promptly and communicating threats that cannot be patched are distinct duties within one vulnerability handling process.,2,0,rare_search
+5.2-3,5.1.2-5.1,OVERLAP,"Both pursue continuous identification of security weaknesses; A by supplier monitoring, B by encouraging internal reporting.",2,0,rare_search
+5.3-13,5.2.2-4,COMPLEMENTARITY,Publishing the support period and publishing the disclosure policy are distinct commitments that together make a supplier's security posture public.,2,0,rare_search
+5.5-8,5.2.3-1,NO_RELATION,"Supply chain process requirements do not name key or parameter management, which is the whole subject of A.",2,0,rare_search
+5.3-14,5.2.4-1,OVERLAP,"Both require maintenance and support plans to be documented and made available; A to users, B to downstream operators.",2,0,rare_search
+5.13-1A,5.1.4-4,NO_RELATION,User interface input validation and verification of implemented controls pursue different objectives.,3,0,rare_search
+5.3-11,5.1.1-2,NO_RELATION,A informs end users about a pending update; B trains staff on threat awareness. Different obligations on different parties.,3,0,rare_search
+5.0-1,5.1.3-1,OVERLAP,"Both centre on threat modelling to identify and mitigate risks; A demands justification records, B demands regular reviews and named AI attack classes.",2,0,rare_search
+5.2-3,5.4.1-1.1,COMPLEMENTARITY,Monitoring and rectifying vulnerabilities and planning for when they cannot be fixed are distinct halves of lifecycle vulnerability management.,2,0,rare_search
+5.8-3,5.2.3-4,NO_RELATION,Sensor documentation and advance notice of model updates share only the accessibility wording.,3,0,rare_search
+5.3-4B,5.3.1-3,NO_RELATION,Automatic update activation and recovery is a device mechanism; incident support to affected entities is an organizational duty with a different objective.,2,0,rare_search
+5.4-4,5.2.3-2.1,NO_RELATION,"A general risk assessment duty for external model components does not name key management, which is A's subject.",3,0,rare_search
+5.2-3,5.4.2-1,COMPLEMENTARITY,"B's logging duty explicitly names vulnerability remediation as the activity it supports, which is exactly the activity A mandates.",3,0,rare_search
+5.4-4,5.1.1-2.2,NO_RELATION,Secure coding training is a general process provision whose text does not name key management.,3,0,rare_search
+5.3-11,5.2.4-1.1,NO_RELATION,Notifying users of a required update is a different objective from specifying the security content of system documentation.,2,0,rare_search
+5.6-9,5.2.2-2,NO_RELATION,Secure development practice and API abuse controls address different attack surfaces.,3,1,rare_search
+5.3-13,5.3.1-3,NO_RELATION,Publishing a support period and supporting users through an incident share no objective beyond both being supplier duties.,2,1,rare_search
+5.2-3,5.1.3-1.1,OVERLAP,"Both pursue identification of security risks across the lifecycle; A by continuous monitoring of fielded products, B by assessment triggered on configuration change.",2,1,rare_search
+5.6-9,5.1.2-3,OVERLAP,"Both require development artefacts to be tracked and auditable; A through version control, B through a documented audit trail of models, datasets and prompts.",2,1,rare_search
+5.3-14,5.2.3-2,OVERLAP,"Both require a documented justification when a security expectation cannot be met; A for absent updates, B for poorly secured components.",2,1,rare_search
+5.3-4B,5.2.1-2,NO_RELATION,Automatic update activation and recovery is unrelated to asset tracking and version control processes.,2,1,rare_search
+5.6-9,5.4.2-3,NO_RELATION,Development-time practice and runtime monitoring of internal model states pursue different objectives.,3,1,rare_search
+5.3-8,5.4.1-2,COMPLEMENTARITY,Patching quickly and re-testing after a major update are distinct duties that together make update handling secure.,2,1,rare_search
+5.6-2,5.3.1-1,NO_RELATION,"A restricts disclosure of security information to unauthenticated parties; B mandates disclosure of data handling to users. Opposite directions, different objectives.",3,1,rare_search
+5.12-3,5.1.3-2,OVERLAP,"Both give users actionable security information; A guidance for checking secure state, B threat descriptions with recommended actions.",2,1,rare_search
+5.11-3,5.5.1-2,OVERLAP,"Both mandate secure deletion of data; A on user request, B at decommissioning, each specifying obligations the other omits.",3,1,rare_search
+5.3-1,5.2.4-1.2,COMPLEMENTARITY,Making components updateable and publishing hashes so updates can be authenticated are distinct halves of secure software distribution.,2,1,rare_search
+5.12-3,5.2.1-2,NO_RELATION,User guidance on secure setup is unrelated to internal asset tracking and version control processes.,3,1,rare_search
+5.2-3,5.4.1-1,OVERLAP,"Both address remediation of vulnerabilities in fielded products; A the monitoring and rectification, B the provision and delivery of the resulting patches.",3,1,rare_search
+5.6-2,5.1.3-2,NO_RELATION,Minimizing interface information disclosure and communicating threats to stakeholders pursue different objectives.,3,1,rare_search
+5.13-1A,5.2.1-4,NO_RELATION,Input validation prevents manipulation through the interface; protecting training data from unauthorized access is a different control.,3,1,rare_search
+5.5-8,5.2.4-1.1,NO_RELATION,Key lifecycle management and the security content of system documentation share no objective.,3,1,rare_search
+5.5-8,5.1.2-3,COMPLEMENTARITY,Securely managing sensitive parameters and maintaining an auditable lifecycle record of assets combine into one asset governance control.,2,1,rare_search
+5.3-6A,5.4.1-1,OVERLAP,"Both concern getting security updates to users; A the user's control over installation, B the supplier chain that delivers them.",2,1,rare_search
+5.5-1,5.2.1-2,NO_RELATION,Transport cryptography and asset version control processes pursue different objectives.,3,1,rare_search
+5.6-9,5.1.2-6,NO_RELATION,Secure development processes and least-privilege permissions between systems are unrelated controls.,3,1,rare_search
+5.3-10,5.3.1-2.2,COMPLEMENTARITY,Cryptographic verification of an update and notification of the user about it are distinct steps of one secure update process.,2,1,rare_search
+5.0-1,5.3.1-3,NO_RELATION,Recording justifications for unmet recommendations is unrelated to supporting users through an incident.,3,1,rare_search
+5.3-9,5.4.1-1,COMPLEMENTARITY,Providing updates and verifying them on receipt are distinct obligations on different parties within one secure update chain.,2,1,rare_search
+5.12-2,5.3.1-2.2,OVERLAP,"Both require accessible security guidance to users; A at setup, B when updates are released.",2,1,rare_search
+5.6-9,5.4.2-4,NO_RELATION,Development process requirements and runtime performance monitoring pursue different objectives.,3,1,rare_search
+5.11-3,5.3.1-2.2,NO_RELATION,Data erasure instructions and update notifications are different obligations sharing only the user-communication channel.,2,1,rare_search
+5.3-11,5.1.1-2.1,NO_RELATION,A addresses the end user; B addresses internal staff awareness. Different audiences and objectives.,3,1,rare_search
+5.8-3,5.3.1-2,OVERLAP,"Both require accessible documentation to users about the product; A the sensing capabilities, B the guidance for use and configuration.",2,1,rare_search
+5.5-1,5.1.3-2,NO_RELATION,Communications cryptography and threat communication to stakeholders share no objective.,3,1,rare_search
+5.6-9,5.2.3-2.1,COMPLEMENTARITY,Following secure development processes and risk-assessing externally sourced components are distinct parts of one development assurance control.,2,1,rare_search
+5.2-3,5.1.2-1,COMPLEMENTARITY,Pre-build risk assessment and post-release vulnerability monitoring are distinct stages of lifecycle risk management.,2,1,rare_search
+5.2-1,5.1.1-2,NO_RELATION,Publishing a disclosure policy for external reporters is unrelated to internal staff threat-awareness training.,3,1,rare_search
+5.3-13,5.2.3-2,NO_RELATION,Publishing a support period and justifying the use of an undocumented component pursue different objectives.,2,1,rare_search
+5.3-11,5.4.1-2,NO_RELATION,Notifying users of a required update differs from the developer's duty to re-test after a major version change.,2,1,rare_search
+5.3-8,5.2.5-1,COMPLEMENTARITY,Releasing fixes promptly and testing releases before shipping are distinct duties in one secure release process.,2,1,rare_search
+5.4-3,5.2.2-2,COMPLEMENTARITY,"Both defend against reverse engineering of an interface: A by keeping credentials out of the binary, B by limiting abuse of the exposed API.",2,1,rare_search
+5.3-4B,5.4.2-4,NO_RELATION,Update activation and recovery is unrelated to monitoring model behaviour drift.,3,1,rare_search
+5.3-5,5.1.4-4,NO_RELATION,Checking for available updates is unrelated to verifying that specified security controls were implemented.,3,1,rare_search
+5.2-3,5.2.2-6,NO_RELATION,Vulnerability monitoring by the supplier and contractual flow-down to cloud providers do not combine into a single nameable control.,2,1,rare_search
+5.3-8,5.4.2-4,NO_RELATION,Update timeliness and monitoring for model behaviour drift pursue different objectives.,3,2,rare_search
+5.4-4,5.2.1-4.1,NO_RELATION,Key uniqueness and input sanitisation are unrelated controls.,3,2,rare_search
+5.4-4,5.5.1-1,NO_RELATION,Generation of unique device keys is unrelated to secure disposal of assets on transfer of ownership.,3,2,rare_search
+5.1-3,5.1.2-5,NO_RELATION,Cryptographic strength of authentication mechanisms and matching system usage to data sensitivity are different objectives.,2,2,rare_search
+5.5-2,5.1.2-7,OVERLAP,"Both require assurance over externally sourced capability; A by using reviewed implementations, B by due diligence on the provider.",2,2,rare_search
+5.1-2,5.1.2-6,NO_RELATION,Password generation strength and least-privilege permissions between systems are unrelated controls.,3,2,rare_search
+5.2-3,5.1.1-2.2,COMPLEMENTARITY,"B's training duty explicitly names preventing and mitigating vulnerabilities, the same defect class A requires be monitored and rectified.",2,2,rare_search
+5.5-8,5.1.2-5,NO_RELATION,Key lifecycle management and matching system usage to data sensitivity share no objective.,3,2,rare_search
+5.6-9,5.2.5-2.1,COMPLEMENTARITY,Secure development practice and independent security testing are distinct assurance activities in one development lifecycle.,2,2,rare_search
+5.2-2,5.4.1-2,COMPLEMENTARITY,Acting on disclosed vulnerabilities and re-testing after a major version change are distinct duties within vulnerability handling.,2,2,rare_search
+5.6-9,5.2.4-1.2,COMPLEMENTARITY,Version control of artefacts and publication of hashes that let recipients verify them are two halves of artefact integrity.,2,2,rare_search
+5.3-4B,5.1.3-1.1,NO_RELATION,Automatic update activation is unrelated to threat modelling triggered by configuration changes.,3,2,rare_search
+5.12-2,5.1.3-1.1,COMPLEMENTARITY,"B names configuration changes as its risk domain, which is the same domain A addresses through user setup guidance.",2,2,rare_search
+5.6-1,5.2.2-2,OVERLAP,"Both reduce exposure through network-reachable interfaces; A by disabling unused ones, B by controlling abuse of the exposed API.",2,2,rare_search
+5.3-11,5.1.2-5.1,NO_RELATION,Informing end users of a required update is unrelated to internal employee risk reporting.,3,2,rare_search
+5.2-3,5.1.2-3,COMPLEMENTARITY,"B's audit trail explicitly supports security auditing and incident response, the activity A mandates be carried out continuously.",2,2,rare_search
+5.1-2,5.1.3-1.2,NO_RELATION,Password generation and superfluous model functionality are unrelated risks.,3,2,rare_search
+5.1-2,5.5.1-1,NO_RELATION,Password generation strength has no bearing on asset disposal at transfer of ownership.,3,2,rare_search
+5.7-2,5.1.2-6,OVERLAP,"Both limit what a system can reach; A restricts network connectivity once compromise is detected, B restricts permissions granted in advance.",2,2,rare_search
+5.5-2,5.1.2-1,NO_RELATION,Using evaluated cryptographic implementations is unrelated to the up-front business case and risk documentation.,2,2,rare_search
+5.3-13,5.2.1-4.1,NO_RELATION,Publishing a support period and sanitising training inputs share no objective.,3,2,rare_search
+5.5-1,5.1.2-4,NO_RELATION,Transport cryptography and due diligence on external components are unrelated controls.,3,2,rare_search
+5.2-2,5.1.2-4,NO_RELATION,Timely action on disclosed vulnerabilities differs from risk assessment performed when adopting an external component.,2,2,rare_search
+5.12-3,5.3.1-1,NO_RELATION,Guidance for checking secure configuration and transparency about data handling pursue different objectives.,2,2,rare_search
+5.12-3,5.1.2-1,NO_RELATION,User-facing setup guidance is unrelated to the developer's up-front risk assessment.,3,2,rare_search
+5.4-4,5.4.1-1,COMPLEMENTARITY,Providing updates and holding unique keys with which their authenticity can be checked are distinct parts of one secure update chain.,2,2,rare_search
+5.7-2,5.1.3-4,OVERLAP,"Both require detection of security-relevant change in a running system; A on the device through integrity alerts, B through continuous infrastructure monitoring.",2,2,rare_search
+5.5-1,5.1.3-1.2,NO_RELATION,Communications cryptography and superfluous model functionality are unrelated risks.,3,2,rare_search
+5.3-8,5.3.1-2.2,COMPLEMENTARITY,Releasing the fix promptly and telling users about it are distinct duties in one update process.,2,2,rare_search
+5.2-1,5.4.1-1,COMPLEMENTARITY,Receiving vulnerability reports and distributing the resulting patches are the intake and output ends of one vulnerability handling process.,2,2,rare_search
+5.7-2,5.1.3-2,NO_RELATION,Device-level alerting on unauthorized change differs from organizational communication of unresolved threats.,2,2,rare_search
+5.4-4,5.1.3-2,NO_RELATION,Key uniqueness and threat communication to stakeholders share no objective.,3,2,rare_search
+5.3-13,5.3.1-2,OVERLAP,"Both require accessible user-facing information about the product; A the support period, B guidance for use and configuration.",2,2,rare_search
+5.7-2,5.5.1-1,NO_RELATION,Unauthorized change detection is unrelated to asset disposal at transfer of ownership.,3,2,rare_search
+5.4-4,5.1.2-5,NO_RELATION,Key uniqueness and matching system usage to data sensitivity are unrelated controls.,3,2,rare_search
+5.11-1,5.5.1-1,OVERLAP,"Both mandate secure removal of data assets; A user data on the device at the user's request, B training data and models at transfer of ownership.",2,2,rare_search
+5.13-1B,5.4.2-2,COMPLEMENTARITY,B names data poisoning as what its log analysis detects; A prevents the same class of manipulation at the input. Prevention and detection of one threat.,2,2,rare_search
+5.2-3,5.1.3-3,COMPLEMENTARITY,Rectifying vulnerabilities oneself and obtaining assurance that responsible external parties will do so are distinct parts of one remediation duty.,2,2,rare_search
+5.3-5,5.2.5-1,NO_RELATION,Checking for available updates is unrelated to pre-release security testing.,3,2,rare_search
+5.4-4,5.2.2-1,OVERLAP,"Both govern the credentials and controls protecting access to system assets; A mandates per-device uniqueness, B mandates evaluation of the access control framework.",2,2,rare_search
+5.5-1,5.2.2-2,NO_RELATION,Transport cryptography and API abuse controls address different attack surfaces.,3,3,rare_search
+5.2-3,5.1.4-3,NO_RELATION,Vulnerability monitoring is unrelated to technical measures supporting human oversight.,3,3,rare_search
+5.4-4,5.2.3-2,NO_RELATION,Key uniqueness and documented justification for using undocumented components share no objective.,3,3,rare_search
+5.6-2,5.1.2-6,OVERLAP,"Both apply minimization at a system boundary; A to the security information disclosed, B to the permissions granted.",2,3,rare_search
+5.13-1B,5.5.1-1,NO_RELATION,Input validation and asset disposal at transfer of ownership are unrelated controls.,3,3,rare_search
+5.3-9,5.4.1-2,COMPLEMENTARITY,Verifying an update artefact on receipt and re-testing the system after a major change are distinct assurance steps around one update.,2,3,rare_search
+5.3-10,5.2.3-4,COMPLEMENTARITY,Cryptographic verification of the delivered update and advance notice to users are distinct duties in one update process.,2,3,rare_search
+5.6-9,5.2.5-3,NO_RELATION,Development practice and sharing test findings downstream pursue different objectives.,2,3,rare_search
+5.3-14,5.2.3-2.2,OVERLAP,"Both require the justification documentation to reach users in an accessible way; A specifies its content, B the act of sharing it.",2,3,rare_search
+5.13-1A,5.3.1-2.1,NO_RELATION,Input validation is a technical control; guidance on appropriate use is a documentation duty.,3,3,rare_search
+5.0-1,5.3.1-2.1,NO_RELATION,Recording justifications for unmet recommendations is unrelated to user guidance on model limitations.,3,3,rare_search
+5.5-2,5.2.3-2,OVERLAP,"Both govern the use of components lacking assurance; A prefers reviewed implementations, B requires the choice be justified in documentation.",2,3,rare_search
+5.6-9,5.1.3-4,NO_RELATION,Development-time practice and continuous infrastructure monitoring pursue different objectives.,3,3,rare_search
+5.13-1A,5.4.2-2,COMPLEMENTARITY,B names data poisoning as what its log analysis detects; A prevents the same manipulation at the input.,2,3,rare_search
+5.4-2,5.5.1-1,NO_RELATION,Tamper resistance of a device identity is unrelated to disposal of assets at transfer.,3,3,rare_search
+5.4-4,5.2.1-4,NO_RELATION,B scopes itself to training and test data; A concerns device key generation. Different assets and objectives.,2,3,rare_search
+5.5-2,5.3.1-2,NO_RELATION,Using evaluated cryptographic implementations is unrelated to providing user guidance.,3,3,rare_search
+5.5-1,5.3.1-3,NO_RELATION,Communications cryptography and post-incident user support share no objective.,3,3,rare_search
+5.12-3,5.1.2-3,NO_RELATION,User guidance on secure state is unrelated to internal audit trails of models and datasets.,3,3,rare_search
+5.3-1,5.4.1-1.1,OVERLAP,"Both keep a product securable over its life across the updateable/not-updateable split; A mandates updateability, B mandates contingency where it is impossible.",2,3,rare_search
+5.0-1,5.1.3-3,NO_RELATION,Recording justifications for unmet recommendations differs from obtaining assurance over externally owned risks.,2,3,rare_search
+5.5-2,5.2.2-1,OVERLAP,"Both require security mechanisms to be evaluated rather than assumed; A the implementations, B the access control framework.",2,3,rare_search
+5.3-4B,5.1.3-2,NO_RELATION,Update activation and recovery is unrelated to communicating unresolved threats.,3,3,rare_search
+5.4-4,5.1.3-3,NO_RELATION,Key uniqueness and assurance over external risk owners share no objective.,3,3,rare_search
+5.3-5,5.4.1-2,NO_RELATION,Checking for available updates is unrelated to re-testing after a major version change.,3,3,rare_search
+5.3-14,5.3.1-2,OVERLAP,Both require accessible user-facing documentation about the product's lifecycle and use.,2,3,rare_search
+5.6-2,5.1.3-1.2,OVERLAP,"Both apply the minimization principle to reduce attack surface; A to disclosed information, B to exposed model functionality.",2,3,rare_search
+5.3-1,5.2.5-1,NO_RELATION,Updateability of components is unrelated to pre-release security testing.,3,3,rare_search
+5.2-1,5.2.4-3,NO_RELATION,Publishing a disclosure policy and logging configuration changes pursue different objectives.,3,3,rare_search
+5.3-8,5.1.1-2,NO_RELATION,Update timeliness and staff awareness training are unrelated obligations.,3,3,rare_search
+5.4-4,5.1.4-3,NO_RELATION,Key uniqueness and human oversight measures share no objective.,3,3,rare_search
+5.6-9,5.2.1-4,NO_RELATION,Secure development processes and protection of training data from unauthorized access are different controls.,3,3,rare_search
+5.6-9,5.2.5-4,NO_RELATION,Development practice is unrelated to evaluating model outputs for information leakage.,3,3,rare_search
+5.6-4A,5.1.2-6,OVERLAP,"Both restrict access to capability beyond what operation requires; A by disabling or authenticating debug interfaces, B by granting only necessary permissions.",2,3,rare_search
+5.13-1B,5.3.1-2.1,NO_RELATION,Input validation is a technical control; documenting limitations and failure modes is a disclosure duty.,3,3,rare_search
+5.13-1A,5.5.1-1,NO_RELATION,Input validation and asset disposal at transfer are unrelated controls.,3,3,rare_search
+5.12-2,5.5.1-1,NO_RELATION,Setup guidance and disposal of assets at transfer of ownership share no objective.,3,3,rare_search
+5.8-1,5.5.1-1,COMPLEMENTARITY,Protecting data as it crosses a boundary in transit and disposing of it when ownership crosses a boundary are distinct halves of controlling data as it leaves a party's control.,2,3,rare_search
+5.3-11,5.1.2-4,NO_RELATION,Notifying users of a required update is unrelated to due diligence on external components.,3,3,rare_search
+5.1-2,5.2.1-4,NO_RELATION,B scopes itself to training and test data; A concerns device password generation. Different assets.,2,3,rare_search
+5.12-2,5.3.1-1,NO_RELATION,Secure setup guidance and transparency about data handling pursue different objectives.,3,4,rare_search
+5.6-8,5.5.1-1,NO_RELATION,Hardware memory protection and asset disposal at transfer of ownership are unrelated controls.,3,4,rare_search
+5.8-3,5.1.2-6,NO_RELATION,Documenting sensing capabilities and restricting inter-system permissions share no objective.,3,4,rare_search
+5.4-4,5.4.1-2,NO_RELATION,Key uniqueness is unrelated to re-testing after a major version change.,3,4,rare_search
+5.3-6A,5.4.1-1.1,NO_RELATION,User control over update installation differs from contingency planning for when updates cannot be supplied at all.,2,4,rare_search
+5.10-1,5.2.1-4,NO_RELATION,Examining telemetry for anomalies and protecting training data from access are different controls.,3,4,rare_search
+5.13-1A,5.2.5-1,NO_RELATION,A runtime input control and a pre-release testing duty do not combine into one nameable control.,2,4,rare_search
+5.8-2,5.2.2-1,OVERLAP,"Both protect data assets from unauthorized access; A through transport encryption, B through evaluation of the access control framework.",2,4,rare_search
+5.3-14,5.3.1-3,NO_RELATION,Publishing an end-of-support rationale is unrelated to incident support duties.,3,4,rare_search
+5.13-1B,5.2.5-1,NO_RELATION,Runtime input validation and pre-release security assessment pursue different objectives.,2,4,rare_search
+5.5-7,5.2.1-4,OVERLAP,"Both protect sensitive data from unauthorized access; A security parameters crossing a network interface, B training and test data at rest.",2,4,rare_search
+5.12-2,5.2.4-1.1,OVERLAP,"Both require security-relevant product documentation; A setup guidance for users, B scope, limitations and guardrails in the system document.",2,4,rare_search
+5.2-3,5.1.1-2,COMPLEMENTARITY,"B's awareness duty names latest vulnerabilities and mitigations, the same subject A requires be monitored and rectified.",2,4,rare_search
+5.3-10,5.2.5-1,NO_RELATION,Verifying a delivered update is unrelated to testing systems before release.,3,4,rare_search
+5.6-9,5.3.1-2,NO_RELATION,Development processes and user-facing guidance pursue different objectives.,3,4,rare_search
+5.3-4B,5.1.3-1,NO_RELATION,Automatic update activation is a device mechanism; threat modelling is an analysis process with a different objective.,3,4,rare_search
+5.3-2,5.4.1-1.1,OVERLAP,"B addresses exactly the case A carves out: A mandates a secure update mechanism unless constraints prevent it, B mandates contingency plans when updates cannot be provided.",3,4,rare_search
+5.3-10,5.1.3-3,NO_RELATION,Update verification and assurance over external risk owners share no objective.,3,4,rare_search
+5.5-1,5.1.1-2.2,NO_RELATION,Communications cryptography and secure coding training are unrelated obligations.,3,4,rare_search
+5.13-1B,5.2.5-2,NO_RELATION,Runtime input validation and pre-deployment testing pursue different objectives.,2,4,rare_search
+5.2-2,5.2.5-1,COMPLEMENTARITY,Testing before release and remediating what is found after it are distinct stages of one defect management process.,2,4,rare_search
+5.2-2,5.4.2-4,COMPLEMENTARITY,Detecting security-relevant change in operation and acting on it in a bounded time are the detection and response halves of one control.,2,4,rare_search
+5.3-6A,5.2.3-4,OVERLAP,"Both preserve user agency over updates being applied; A through enable, disable and postpone controls, B through advance notification.",2,4,rare_search
+5.5-8,5.1.2-6,NO_RELATION,Key lifecycle management and least-privilege permissions between systems are unrelated controls.,3,4,rare_search
+5.0-1,5.2.5-1,NO_RELATION,Recording justifications for unmet recommendations is unrelated to pre-release security testing.,3,4,rare_search
+5.2-2,5.1.3-1,COMPLEMENTARITY,Acting on reported vulnerabilities and proactively modelling threats are distinct inputs to one risk management process.,2,4,rare_search
+5.13-1B,5.2.2-2,OVERLAP,"Both protect an externally reachable interface from malicious input; A by validating it, B by rate-limiting and constraining its use.",2,4,rare_search
+5.7-2,5.4.1-1.1,OVERLAP,"Both keep a system secure when normal remediation is unavailable; A by recovering to a known good state, B by documented contingency plans.",2,4,rare_search
+5.3-14,5.2.2-4,COMPLEMENTARITY,Publishing the support position and publishing the disclosure policy are distinct commitments making a supplier's security posture public.,2,4,rare_search
+5.5-6,5.2.3-2.1,NO_RELATION,Encrypting security parameters in transit is unrelated to risk assessment of external model components.,3,4,rare_search
+5.3-2,5.1.3-1.1,NO_RELATION,Having a secure update mechanism is unrelated to threat modelling triggered by configuration changes.,3,4,rare_search
+5.13-1A,5.2.5-2,NO_RELATION,Runtime input validation and pre-deployment testing pursue different objectives.,2,4,rare_search
+5.6-1,5.1.3-1.2,OVERLAP,"Both apply minimization to unnecessary capability; A disables unused interfaces, B requires the risk of superfluous model functionality to be managed.",2,4,rare_search
+5.3-9,5.2.5-1,NO_RELATION,Verifying an update artefact is unrelated to pre-release testing of the system.,3,4,rare_search
+5.2-2,5.1.1-2,NO_RELATION,Timely remediation and staff threat awareness training are different obligations on different parties.,2,4,rare_search
+5.3-5,5.4.2-4,NO_RELATION,Checking for available updates is unrelated to monitoring model behaviour drift.,3,4,rare_search
+5.2-2,5.2.1-2,NO_RELATION,Vulnerability remediation timelines and asset tracking processes share no objective.,2,4,rare_search
+5.3-4B,5.2.1-4.1,NO_RELATION,Update activation and recovery is unrelated to sanitisation of training data and inputs.,3,4,rare_search
+5.4-4,5.2.4-1.1,NO_RELATION,Key uniqueness and documentation content requirements share no objective.,3,4,rare_search
+5.13-1A,5.2.4-1.1,NO_RELATION,Input validation is a technical control; documentation content is a disclosure duty.,3,4,rare_search
+5.3-4B,5.4.2-3,NO_RELATION,Update activation and recovery is unrelated to monitoring internal model states.,3,5,rare_search
+5.5-1,5.1.1-2,NO_RELATION,Communications cryptography and staff threat awareness are unrelated obligations.,3,5,rare_search
+5.3-16,5.2.3-4,NO_RELATION,"A concerns the device's model designation label; B concerns notice of AI model updates. The shared word ""model"" denotes different things.",3,5,rare_search
+5.12-3,5.2.4-1.1,OVERLAP,"Both require security-relevant information to be documented for those operating the product; A as user guidance, B as system documentation content.",2,5,rare_search
+5.3-10,5.4.1-1,COMPLEMENTARITY,Distributing updates and verifying them on receipt are distinct obligations on different parties in one update chain.,2,5,rare_search
+5.13-1A,5.2.5-4,NO_RELATION,Validating inbound input and preventing information leakage through outputs do not combine into a single nameable control.,2,5,rare_search
+5.12-3,5.5.1-1,NO_RELATION,Guidance on checking secure state is unrelated to asset disposal at transfer of ownership.,3,5,rare_search
+5.2-3,5.2.3-2.1,COMPLEMENTARITY,Monitoring one's own product for vulnerabilities and risk-assessing adopted external components are distinct parts of one risk management duty.,2,5,rare_search
+5.5-1,5.1.2-6,NO_RELATION,Transport cryptography and least-privilege permissions between systems are unrelated controls.,3,5,rare_search
+5.4-4,5.1.2-1,NO_RELATION,Key uniqueness is unrelated to the up-front business case and risk documentation.,3,5,rare_search
+5.13-1B,5.1.2-4,NO_RELATION,Input validation and due diligence on external components pursue different objectives.,3,5,rare_search
+5.13-1B,5.2.4-1.1,NO_RELATION,Input validation is a technical control; documentation content is a disclosure duty.,3,5,rare_search
+5.3-8,5.2.3-4,COMPLEMENTARITY,Shipping the fix promptly and giving users notice before it lands are distinct duties in one update process.,2,5,rare_search
+5.13-1A,5.2.1-2,NO_RELATION,Input validation and asset tracking processes share no objective.,3,5,rare_search
+5.2-3,5.1.3-1,OVERLAP,"Both pursue identification and management of security risks to one's own systems; A reactively through vulnerability monitoring, B proactively through threat modelling.",2,5,rare_search
+5.4-3,5.2.1-2,OVERLAP,"Both keep credentials and sensitive assets out of reach in the codebase; A by prohibiting hard-coded parameters, B by requiring processes and tools that secure assets.",2,5,rare_search
+5.8-3,5.1.2-7,NO_RELATION,Documenting sensing capabilities is unrelated to due diligence on an external provider.,3,5,rare_search
+5.3-16,5.2.3-2,NO_RELATION,Device model labelling and justification for using undocumented components share no objective.,3,5,rare_search
+5.0-1,5.1.3-4,COMPLEMENTARITY,Recording residual risk decisions and continuously reviewing against risk appetite are distinct steps of one risk management process.,2,5,rare_search
+5.5-8,5.1.3-1.2,NO_RELATION,Key lifecycle management and superfluous model functionality are unrelated risks.,3,5,rare_search
+5.5-8,5.5.1-2,OVERLAP,"Both govern sensitive material at end of life; A covers the entire lifecycle of security parameters, B the deletion of data and configuration at decommissioning.",2,5,rare_search
+5.2-3,5.4.1-2,COMPLEMENTARITY,Continuous vulnerability monitoring and re-testing after a major version change are distinct assurance activities over a product's life.,2,5,rare_search
+5.6-7,5.1.3-1.2,OVERLAP,"Both minimize unnecessary capability; A restricts software privileges to the least needed, B requires the risk of superfluous model functionality to be managed.",2,5,rare_search
+5.4-4,5.4.2-4,NO_RELATION,Key uniqueness is unrelated to monitoring model behaviour drift.,3,5,rare_search
+5.5-1,5.1.2-5,OVERLAP,"Both require controls proportionate to risk and sensitivity; A for the cryptography used, B for the system's usage relative to its training data.",2,5,rare_search
+5.3-13,5.3.1-2.1,OVERLAP,"Both require accessible user-facing information about the product; A the support period, B its limitations and failure modes.",2,5,rare_search
+5.6-4A,5.1.3-2,NO_RELATION,Debug interface protection is unrelated to communicating unresolved threats.,3,5,rare_search
+5.7-2,5.1.3-1.1,NO_RELATION,A detects unauthorized change; B assesses risk arising from authorized configuration change. Different objectives.,2,5,rare_search
+5.5-2,5.5.1-1,NO_RELATION,Using evaluated implementations is unrelated to asset disposal at transfer.,3,5,rare_search
+5.4-4,5.3.1-3,NO_RELATION,Key uniqueness and post-incident user support share no objective.,3,5,rare_search
+5.3-4B,5.2.4-3,NO_RELATION,Update activation and recovery is unrelated to logging configuration and prompt changes.,3,5,rare_search
+5.4-4,5.1.4-4,NO_RELATION,Key uniqueness is unrelated to verifying that specified controls were implemented.,3,5,rare_search
+5.2-2,5.1.2-3,COMPLEMENTARITY,"B's audit trail names incident response as what it supports, which is the process A requires be documented and completed in bounded time.",2,5,rare_search
+5.13-1A,5.2.5-4.1,OVERLAP,"Both prevent a user from gaining unintended influence over system behaviour through the interface; A by validating input, B by evaluating output.",2,5,rare_search
+5.3-6B,5.2.3-4,OVERLAP,"Both concern notifying users about updates; A the user's control over receiving notifications, B the duty to notify before updating.",2,5,rare_search
+5.2-1,5.3.1-1,NO_RELATION,Publishing a disclosure policy and conveying data handling practices are different disclosures with different objectives.,2,5,rare_search
+5.5-2,5.2.4-1.2,NO_RELATION,Using evaluated cryptographic implementations differs from publishing hashes for downstream verification.,2,5,rare_search
+5.6-5,5.1.4-5,COMPLEMENTARITY,Restricting the product technically to its intended use and telling users which uses are prohibited are the technical and informational halves of scope enforcement.,2,5,rare_search
+5.4-2,5.1.2-6,NO_RELATION,Tamper resistance of a device identity is unrelated to permission scoping between systems.,3,5,rare_search
+5.3-13,5.4.1-3,NO_RELATION,Publishing a support period differs from providing operators preview access to evaluate model changes.,2,5,rare_search
+5.3-4B,5.2.4-1,NO_RELATION,Update activation and recovery is unrelated to maintaining a design and maintenance audit trail.,3,6,rare_search
+5.5-1,5.2.3-2.1,NO_RELATION,Communications cryptography is unrelated to risk assessment of adopted external components.,3,6,rare_search
+5.1-3,5.2.1-4,OVERLAP,"Both prevent unauthorized access to protected assets; A by requiring cryptographically sound authentication, B by requiring sensitive data be protected.",2,6,rare_search
+5.13-1A,5.2.2-2,OVERLAP,"Both protect an exposed interface against malicious use; A validates what arrives at the user interface, B constrains use of the API.",2,6,rare_search
+5.3-4B,5.1.2-3,NO_RELATION,Automatic update activation is unrelated to audit trails of models and datasets.,3,6,rare_search
+5.5-8,5.1.4-4,NO_RELATION,Key lifecycle management is unrelated to verifying that specified controls were implemented.,3,6,rare_search
+5.8-1,5.1.3-1.1,NO_RELATION,Transport encryption of personal data is unrelated to threat modelling on configuration change.,3,6,rare_search
+5.12-3,5.1.4-4,OVERLAP,"Both verify that a deployed system actually carries its intended security controls; A through user-facing checks, B through developer verification.",2,6,rare_search
+5.4-3,5.2.5-4,OVERLAP,"Both prevent reverse engineering from revealing non-public material; A credentials embedded in the binary, B model internals inferable from outputs.",2,6,rare_search
+5.13-1B,5.1.3-1.1,NO_RELATION,Input validation is unrelated to threat modelling triggered by configuration change.,3,6,rare_search
+5.13-1B,5.2.5-4,NO_RELATION,Validating inbound network input and evaluating outputs for leakage pursue different objectives.,2,6,rare_search
+5.0-1,5.2.2-2,NO_RELATION,Recording justifications for unmet recommendations is unrelated to API abuse controls.,3,6,rare_search
+5.6-2,5.2.1-4,OVERLAP,"Both prevent unauthorized parties from obtaining sensitive information; A limits what an interface discloses, B protects the data itself.",2,6,rare_search
+5.5-8,5.4.2-1,NO_RELATION,Key lifecycle management and action logging pursue different objectives.,3,6,rare_search
+5.6-8,5.2.1-4.1,COMPLEMENTARITY,Preventing hostile input from being acted on and preventing it from executing in memory are distinct layers of one defence against injected content.,2,6,rare_search
+5.12-3,5.2.1-4.1,NO_RELATION,User guidance on secure state is unrelated to sanitisation of training data and inputs.,3,6,rare_search
+5.8-1,5.2.1-2,NO_RELATION,Transport encryption and asset tracking processes share no objective.,2,6,rare_search
+5.4-2,5.1.2-4,NO_RELATION,Tamper resistance of a device identity is unrelated to external component due diligence.,3,6,rare_search
+5.6-8,5.1.2-6,OVERLAP,"Both restrict capability to what operation requires; A limits what memory contents may execute, B limits permissions granted on other systems.",2,6,rare_search
+5.3-8,5.2.4-1.1,NO_RELATION,Update timeliness and documentation content requirements share no objective.,3,6,rare_search
+5.3-5,5.4.1-1.1,NO_RELATION,Checking whether updates exist differs from planning for the case where none can be supplied.,2,6,rare_search
+5.1-2,5.1.2-4,NO_RELATION,Password generation strength is unrelated to external component due diligence.,3,6,rare_search
+5.3-11,5.1.3-3,NO_RELATION,Informing users of a required update is unrelated to assurance over external risk owners.,3,6,rare_search
+5.12-3,5.2.2-6,NO_RELATION,User guidance on secure state is unrelated to contractual flow-down to cloud providers.,3,6,rare_search
+5.2-3,5.2.4-1.1,NO_RELATION,Vulnerability monitoring and the required content of system documentation pursue different objectives.,2,6,rare_search
+5.6-4A,5.2.1-2,NO_RELATION,Debug interface protection and asset tracking processes are unrelated controls.,3,6,rare_search
+5.5-8,5.2.2-6,NO_RELATION,Key lifecycle management is unrelated to contractual arrangements with cloud providers.,3,6,rare_search
+5.3-2,5.2.3-2.1,COMPLEMENTARITY,"Both handle the case where a preferred control cannot be applied: A carves out the constrained device, B requires compensating controls and risk assessment.",2,6,rare_search
+5.3-10,5.5.1-1,NO_RELATION,Update verification is unrelated to asset disposal at transfer of ownership.,3,6,rare_search
+5.2-2,5.2.4-1,COMPLEMENTARITY,"B's audit trail names post-deployment maintenance, the record against which A's documented remediation process operates.",2,6,rare_search
+5.12-3,5.4.1-2,NO_RELATION,User guidance on secure state is unrelated to re-testing after a major version change.,3,6,rare_search
+5.5-1,5.2.1-4,OVERLAP,"Both protect data from unauthorized access; A in transit through cryptography, B wherever sensitive data is held.",2,6,rare_search
+5.3-6B,5.4.1-1.1,NO_RELATION,User control over update notifications is unrelated to contingency planning where updates cannot be provided.,3,6,rare_search
+5.6-2,5.1.2-4,NO_RELATION,Limiting interface disclosure is unrelated to external component due diligence.,3,6,rare_search
+5.3-8,5.1.3-4,COMPLEMENTARITY,Continuous review against risk appetite and bounded-time remediation are the detection and response halves of one risk process.,2,6,rare_search
+5.12-2,5.1.2-3,NO_RELATION,User setup guidance is unrelated to internal audit trails of models and datasets.,3,6,rare_search
+5.6-4A,5.3.1-1,NO_RELATION,Debug interface protection and transparency about data handling share no objective.,3,6,rare_search
+5.13-1A,5.5.1-2,NO_RELATION,Input validation is unrelated to secure deletion at decommissioning.,3,6,rare_search
+5.1-5,5.2.3-2,NO_RELATION,Brute-force resistance and justification for using undocumented components are unrelated.,3,6,rare_search
+5.13-1A,5.1.2-4,NO_RELATION,Input validation is unrelated to external component due diligence.,3,6,rare_search
+5.5-2,5.1.3-1.2,NO_RELATION,Using evaluated cryptographic implementations is unrelated to the risk of superfluous model functionality.,3,7,rare_search
+5.10-1,5.2.4-1.1,NO_RELATION,Examining telemetry for anomalies and documentation content requirements share no objective.,3,7,rare_search
+5.13-1A,5.1.3-1.1,NO_RELATION,Input validation is unrelated to threat modelling triggered by configuration change.,3,7,rare_search
+5.3-10,5.1.2-6,NO_RELATION,Update verification and permission scoping between systems are unrelated controls.,3,7,rare_search
+5.4-2,5.2.1-4,NO_RELATION,Tamper resistance of a device identity and protection of training data from access concern different assets.,2,7,rare_search
+5.3-2,5.2.2-2,NO_RELATION,Having a secure update mechanism is unrelated to API abuse controls.,3,7,rare_search
+5.7-2,5.1.2-4,NO_RELATION,Detecting unauthorized change is unrelated to due diligence on external components.,3,7,rare_search
+5.4-2,5.1.2-5,NO_RELATION,Tamper resistance of a device identity is unrelated to matching system usage to data sensitivity.,3,7,rare_search
+5.3-14,5.3.1-2.1,OVERLAP,"Both tell users where the product's limits lie; A the absence of updates and replacement terms, B the model's limitations and failure modes.",2,7,rare_search
+5.6-3,5.3.1-1,NO_RELATION,Limiting exposed physical interfaces is unrelated to transparency about data handling.,3,7,rare_search
+5.6-4A,5.2.4-3,NO_RELATION,Debug interface protection and audit logging of prompt changes pursue different objectives.,3,7,rare_search
+5.3-7,5.2.4-1.2,OVERLAP,"Both use cryptography to establish that a distributed component is authentic; A within the device's update mechanism, B by publishing hashes for stakeholders to check.",3,7,rare_search
+5.2-1,5.2.4-2.1,NO_RELATION,Publishing a disclosure policy and recording training data provenance pursue different objectives.,3,7,rare_search
+5.3-11,5.2.2-4,NO_RELATION,Notifying a user of a pending update differs from publishing a policy for receiving vulnerability reports.,2,7,rare_search
+5.1-4,5.2.3-4,NO_RELATION,Changing an authentication value is unrelated to advance notice of model updates.,3,7,rare_search
+5.3-1,5.2.3-1,COMPLEMENTARITY,Making components updateable and securing the supply chain that produces them are distinct parts of one software integrity control.,2,7,rare_search
+5.3-13,5.1.2-3,NO_RELATION,Publishing a support period is unrelated to internal audit trails of models and datasets.,3,7,rare_search
+5.1-3,5.2.4-1.2,NO_RELATION,Authenticating users and authenticating distributed artefacts are different objectives despite both using cryptography.,2,7,rare_search
+5.0-1,5.4.1-1.1,OVERLAP,"Both govern what must happen when a requirement cannot be met; A requires the justification be recorded, B requires mitigating mechanisms and contingency plans.",2,7,rare_search
+5.8-2,5.5.1-1,COMPLEMENTARITY,Protecting data as it crosses a boundary in transit and disposing of it when ownership crosses a boundary are distinct halves of controlling data leaving a party's control.,2,7,rare_search

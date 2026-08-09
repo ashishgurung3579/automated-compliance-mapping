@@ -1,11 +1,15 @@
 """
-Draw a stratified probability sample of provision pairs for annotation.
+Draw a screened, score-banded set of provision pairs for annotation.
 
-The pilot reference set in gt.csv was assembled purposively, so its pairs carry no
-inclusion probability and its 79% positive rate cannot be reweighted to the corpus.
-This module fixes that: every pair in the 69x72 space gets a known, strictly positive
-chance of selection, which is what makes corpus-level precision and specificity
-estimable from the sample.
+The pilot reference set in gt.csv was assembled purposively, so it concentrates on
+pairs that already looked related. This module widens the annotation pool: pairs are
+ranked by mean similarity across every method and drawn from three bands of that
+ranking, so the material judged spans the likely-related and the plainly-unrelated
+regions of the space instead of only the top of it.
+
+The band sizes below carry no weighting role in the current evaluation -- they only
+control how many pairs each region contributes. Provenance for the labels this
+produced, retained so the reference set can be traced back.
 
 Writes data/baseline/reference_pool.csv.
 """

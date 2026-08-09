@@ -1,7 +1,7 @@
 """
 Guard against the thesis drifting from the data: parses the result tables in
 thesis/chapters/05_results.tex and compares every number against
-data/evaluation/evaluation_summary.json, analysis.json and weighted_metrics.json.
+data/evaluation/evaluation_summary.json and analysis.json.
 
 Exits non-zero if any value disagrees. Run before every submission build.
 """
@@ -50,7 +50,6 @@ if __name__ == "__main__":
     tex = RESULTS_TEX.read_text()
     summary = json.loads((EVAL / "evaluation_summary.json").read_text())
     analysis = json.loads((EVAL / "analysis.json").read_text())
-    weighted = json.loads((EVAL / "weighted_metrics.json").read_text())
     errors: list[str] = []
     checked = 0
 
@@ -91,33 +90,21 @@ if __name__ == "__main__":
                           f"data says {expected_ci!r}")
         checked += 3
 
-    wt = parse_rows(tex, "tab:weighted")
-    for label, key in evaluated.items():
-        p = weighted["methods"][key]["point"]
-        cells = wt.get(label)
-        if cells is None:
-            errors.append(f"weighted table: row {label!r} missing")
-            continue
-        for i, field in enumerate(["precision", "recall", "specificity", "f1"]):
-            check(f"weighted/{label}/{field}", cells[i], p[field], ".3f", errors)
-            checked += 1
-
     cal = parse_rows(tex, "tab:calibrated")
     for label, key in evaluated.items():
-        c = weighted["methods"][key].get("corpus_calibrated")
-        if c is None:
+        cv = analysis.get(key, {}).get("cv_threshold")
+        if cv is None:
             continue
         cells = cal.get(label)
         if cells is None:
             errors.append(f"calibrated table: row {label!r} missing")
             continue
-        check(f"calibrated/{label}/threshold", cells[0], c["threshold"], ".3f", errors)
-        for i, field in enumerate(["precision", "recall", "f1"], start=1):
-            check(f"calibrated/{label}/{field}", cells[i], c["point"][field],
+        check(f"calibrated/{label}/threshold", cells[0], cv["threshold"], ".3f", errors)
+        for i, field in enumerate(["precision", "recall", "specificity", "f1"], start=1):
+            check(f"calibrated/{label}/{field}", cells[i], cv["calibrated"][field],
                   ".3f", errors)
-        check(f"calibrated/{label}/held_out", cells[4],
-              c["cv_weighted_f1_mean"], ".3f", errors)
-        checked += 5
+        check(f"calibrated/{label}/held_out", cells[5], cv["cv_f1_mean"], ".3f", errors)
+        checked += 6
 
     if errors:
         print("Thesis numbers do not match the data:")

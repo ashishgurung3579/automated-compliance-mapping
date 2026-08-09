@@ -12,18 +12,26 @@ provisions in two ETSI standards:
 - **ETSI EN 304 223** — Securing Artificial Intelligence, Baseline Cyber Security (72 extracted provisions)
 
 Eleven automated mapping methods, spanning five families — lexical, sentence-embedding,
-contextual-embedding, cross-encoder, and hosted API — are compared against two reference sets:
+contextual-embedding, cross-encoder, and hosted API — are compared against a single
+**200-pair reference set**, drawn from 1,027 pairs judged across three annotation rounds:
 
 - a **pilot** of 107 purposively selected pairs, reviewed by the authors;
-- a **stratified probability sample** of 650 pairs drawn over all 4,968 candidate pairs with
-  known inclusion probabilities, which is what supports any statement about the corpus as a
-  whole.
+- a **screened round** of 650 pairs drawn from three bands of a method-agnostic similarity ranking;
+- a **targeted round** of the 300 top-ranked unjudged pairs, searched for the rare classes.
 
-Both were produced through LLM-assisted annotation (Claude Opus 5) against the written codebook
-in `docs/annotation_codebook.md`. The pilot was reviewed pair by pair; the probability sample was
-not, and its reliability rests instead on a blind comparison against the pilot (see
-`src/validation/`). The two sets differ sharply in base rate — 79 % of pilot pairs are related
-against 12.4 % of the corpus — and that gap drives most of the results.
+All were produced through LLM-assisted annotation (Claude Opus 5) against the written codebook
+in `docs/annotation_codebook.md`. Only the pilot was reviewed pair by pair; the reliability of
+the rest rests on a blind comparison against it (see `src/validation/`).
+
+The reference set is built under one rule: **negatives are half the set; positives are balanced
+across the five positive classes as far as the material allows.** Half negatives fixes the score
+of the trivial "everything is related" classifier at F1 0.667, which every detection table
+carries as its final row. Because the set is balanced by design while the full candidate space is
+sparse, every reported figure is an **upper bound** on corpus-scale performance.
+
+The targeted round returned no equivalence or subsumption pairs at all. Across all 1,027 judged
+pairs those two classes total 13, so for this pair of standards the typed taxonomy is effectively
+a three-class problem — a finding, not a sampling shortfall.
 
 ## Setup
 
@@ -47,7 +55,7 @@ Run the stages in order from the repository root:
 | Stage | Command | Output |
 |---|---|---|
 | 1. Extract provisions | `python3 -m src.extraction.provision_extractor` | `data/extracted/*.json` |
-| 2. Build ground truth | `python3 -m src.baseline.create_baseline` | `data/baseline/gt.csv` |
+| 2. Build reference set | `python3 -m src.baseline.build_reference` | `data/baseline/reference_set.csv` |
 | 3a. Rule-based (TF-IDF, Jaccard) | `python3 -m src.mapping.rule_based` | `data/mappings/rule_based_*.csv` |
 | 3b. Embedding models (SBERT, MPNet, BGE, BERT, SecureBERT, CySecBERT) | `python3 -m src.mapping.run_embedding --all` | `data/mappings/<key>_output.csv` |
 | 3c. NLI cross-encoder | `python3 -m src.mapping.nli_mapping` | `data/mappings/nli_output.csv` |
@@ -55,25 +63,23 @@ Run the stages in order from the repository root:
 | 3e. Gemini LLM classification (API) | `python3 -m src.mapping.gemini_mapping` | `data/mappings/gemini_output.csv` |
 | 4. Evaluate | `python3 -m src.evaluation.evaluate` | `data/evaluation/*_eval.json`, summary |
 | 5. Extended analysis | `python3 -m src.evaluation.analysis` | `data/evaluation/analysis.json` |
-| 6. Corpus estimates | `python3 -m src.evaluation.weighted_metrics` | `data/evaluation/weighted_metrics.json` |
-| 7. Ranking metrics | `python3 -m src.evaluation.ranking` | `data/evaluation/ranking.json` |
-| 8. Coverage and gaps | `python3 -m src.evaluation.coverage` | `data/evaluation/coverage.json`, `thesis/tables/*.tex` |
-| 9. Report | `python3 -m src.report.generate_report` | `data/evaluation/report.md` |
-| 10. Figures | `python3 -m src.report.figures` | `thesis/figures/*.pdf` |
+| 6. Ranking metrics | `python3 -m src.evaluation.ranking` | `data/evaluation/ranking.json` |
+| 7. Coverage and gaps | `python3 -m src.evaluation.coverage` | `data/evaluation/coverage.json`, `thesis/tables/*.tex` |
+| 8. Report | `python3 -m src.report.generate_report` | `data/evaluation/report.md` |
+| 9. Figures | `python3 -m src.report.figures` | `thesis/figures/*.pdf` |
 
 Stages 3d/3e call the Gemini API (cost + `GEMINI_API_KEY` required); all other stages run
 locally. First runs of 3b–3c download about 2 GB of models from Hugging Face.
 
 Every method — its model, family, threshold, and output filenames — is defined once in
-`src/methods.py`. Adding a method means adding one entry there; the evaluation, the corpus
-estimates, the figures, and the guard that checks the thesis tables all read from it.
+`src/methods.py`. Adding a method means adding one entry there; the evaluation, the calibration
+analysis, the figures, and the guard that checks the thesis tables all read from it.
 
-Stage 8's outputs are *predictions*, not verified mappings: they come from the best-scoring
-method at its calibrated threshold, whose precision is well below 1. The generated tables and
-figure carry that precision and its confidence interval.
+Stage 7's outputs are *predictions*, not verified mappings: they come from the best-scoring
+method at its calibrated threshold, whose precision is well below 1 — and was measured on the
+balanced set, so at corpus scale it is an upper bound. The generated tables and figure say so.
 
-Stage 6 depends on the probability sample being annotated; see the section below. Stage 7's
-output is computed but not reported in the thesis — the judged fraction of each ranking is thin
+Stage 6's output is computed but not reported in the thesis — the judged fraction of each ranking is thin
 enough that precision among judged candidates is 1.000 for every method, so the numbers describe
 pooling coverage rather than ranking quality.
 
@@ -82,7 +88,7 @@ pooling coverage rather than ranking quality.
 ```
 data/raw/         original ETSI standard PDFs
 data/extracted/   provisions extracted from the PDFs (JSON)
-data/baseline/    pilot annotations (gt.csv), probability sample (gt_sample.csv)
+data/baseline/    reference_set.csv (evaluated), plus the three rounds it draws from
 data/annotation/  the 19 emitted annotation batches and their labels
 data/mappings/    predictions per method + similarity matrices (.npy)
 data/evaluation/  metrics, corpus estimates, error analyses, prediction-vs-GT comparisons
@@ -100,19 +106,20 @@ thesis/           LaTeX source of the thesis
 
 ## Ground truth
 
-`data/baseline/gt.csv` holds the 107-pair pilot (85 related, 22 `NO_RELATION`) with one of
-six labels: `EQUIVALENCE`, `OVERLAP`, `SUBSUMPTION_A_BROADER`, `SUBSUMPTION_B_BROADER`,
-`COMPLEMENTARITY`, `NO_RELATION`, plus a justification and a 1–3 confidence score per pair.
-For evaluation the two subsumption directions are merged into one `SUBSUMPTION` class.
+`data/baseline/reference_set.csv` holds the 200 evaluated pairs (100 related, 100
+`NO_RELATION`) with one of six labels: `EQUIVALENCE`, `OVERLAP`, `SUBSUMPTION_A_BROADER`,
+`SUBSUMPTION_B_BROADER`, `COMPLEMENTARITY`, `NO_RELATION`, plus a justification, a 1–3
+confidence score, the round each pair came from, and whether the authors reviewed it. For
+evaluation the two subsumption directions are merged into one `SUBSUMPTION` class.
 
-`data/baseline/gt_sample.csv` holds the probability sample in the same schema, with the
-sampling stratum, inclusion weight, and an `in_pilot` flag added. The confidence scale is
-defined 1–3 throughout, but only levels 2 and 3 occur in the sample, so the calibration result
-is a two-level contrast rather than a curve.
+The rounds it draws from are kept as provenance: `gt.csv` (pilot, 107), `gt_sample.csv`
+(screened round plus the pilot pairs re-judged blind, 727) and `rare_class_pairs.csv` (targeted
+round, 300). The confidence scale is defined 1–3 throughout, but only levels 2 and 3 occur, so
+the calibration result is a two-level contrast rather than a curve.
 
 ## Evaluation
 
-Pilot metrics are computed only within the annotated 107-pair scope; predictions outside it are
+Metrics are computed only within the annotated 200-pair scope; predictions outside it are
 ignored. Two views are reported per method:
 
 - **Pair detection** — precision / recall / F1 on whether a related pair is found at all.
@@ -123,11 +130,10 @@ Stage 5 adds per-method confusion matrices, bootstrap 95 % confidence intervals
 (2,000 resamples, seed 42), and threshold sensitivity sweeps computed from the stored
 similarity matrices. See `data/evaluation/report.md` for the current results table.
 
-Stage 6 estimates the same quantities over the full candidate space from the probability sample,
-using Horvitz-Thompson estimators with within-stratum bootstrap intervals. It reports each
-continuous method at two operating points — the threshold tuned on the pilot, and one re-selected
-by repeated stratified cross-validation on the sample — because the base-rate difference between
-the two sets moves the optimum substantially. Method orderings are claimed only where a paired
+Stage 5 also reports each continuous method at two operating points — the threshold fixed per
+family before evaluation, and one re-selected by repeated stratified cross-validation over
+quantiles of the method's own scores — because several methods ship at a point that places every
+pair on one side of the line. Method orderings are claimed only where a paired
 bootstrap on the difference excludes zero.
 
 ## Probability sample and reference-set reliability

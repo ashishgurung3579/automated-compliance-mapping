@@ -1,23 +1,23 @@
 {
   "detection": {
-    "gt_positive_pairs": 85,
-    "gt_negative_pairs": 22,
-    "predicted_positive_in_gt": 5,
-    "true_positives": 5,
-    "false_positives": 0,
-    "false_negatives": 80,
-    "precision": 1.0,
-    "recall": 0.0588,
-    "f1": 0.1111
+    "gt_positive_pairs": 100,
+    "gt_negative_pairs": 100,
+    "predicted_positive_in_gt": 8,
+    "true_positives": 7,
+    "false_positives": 1,
+    "false_negatives": 93,
+    "precision": 0.875,
+    "recall": 0.07,
+    "f1": 0.1296
   },
   "classification": {
-    "overall_accuracy": 0.215,
-    "macro_precision": 0.0931,
-    "macro_recall": 0.2222,
-    "macro_f1": 0.1017,
+    "overall_accuracy": 0.5,
+    "macro_precision": 0.1365,
+    "macro_recall": 0.218,
+    "macro_f1": 0.1606,
     "per_class": {
       "COMPLEMENTARITY": {
-        "support": 22,
+        "support": 43,
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0
@@ -29,22 +29,22 @@
         "f1": 0.0
       },
       "NO_RELATION": {
-        "support": 22,
-        "precision": 0.2157,
-        "recall": 1.0,
-        "f1": 0.3548
+        "support": 100,
+        "precision": 0.5156,
+        "recall": 0.99,
+        "f1": 0.6781
       },
       "OVERLAP": {
-        "support": 51,
+        "support": 44,
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0
       },
       "SUBSUMPTION": {
-        "support": 9,
-        "precision": 0.25,
-        "recall": 0.1111,
-        "f1": 0.1538
+        "support": 10,
+        "precision": 0.1667,
+        "recall": 0.1,
+        "f1": 0.125
       }
     }
   }

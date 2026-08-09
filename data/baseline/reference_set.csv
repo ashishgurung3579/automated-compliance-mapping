@@ -1,0 +1,201 @@
+src_id,tgt_id,relationship,justification,confidence,round,author_reviewed
+5.0-1,5.2.3-2,COMPLEMENTARITY,Recording rationale for non-applicable provisions (303645) and documenting use of poorly-secured external models (304223) both require justification documentation.,2,pilot,True
+5.0-1,5.2.3-2.1,COMPLEMENTARITY,Recording justifications for unmet recommendations and risk-assessing external components are distinct steps of one documented risk management process.,2,rare_search,False
+5.0-1,5.2.4-1,OVERLAP,Recording justifications for non-applied provisions (303645) overlaps with maintaining clear audit trail of system design (304223).,2,pilot,True
+5.0-1,5.2.4-2.1,COMPLEMENTARITY,"Both mandate structured records kept for later scrutiny, but for different purposes: unmet provisions for assurance assessors, data provenance for tracing poisoning.",2,screened,False
+5.0-1,5.3.1-3,NO_RELATION,Recording justifications for unmet recommendations is unrelated to supporting users through an incident.,3,rare_search,False
+5.1-1,5.2.1-4,COMPLEMENTARITY,Credential uniqueness and protection of sensitive data are distinct objectives that jointly prevent unauthorized access to what the system holds.,2,screened,False
+5.1-2A,5.2.2-1,COMPLEMENTARITY,M2M auth-via-PSK guidance (303645) complements AI access control framework securing APIs/models (304223).,1,pilot,True
+5.1-3,5.1.3-1.2,NO_RELATION,Cryptographic strength of authentication versus the risk of models carrying unused functionality.,3,screened,False
+5.1-3,5.2.3-2,NO_RELATION,Authentication cryptography versus component justification.,3,screened,False
+5.1-4,5.1.1-2.1,NO_RELATION,Changing an authentication value versus internal channels for disseminating threat updates to staff.,3,screened,False
+5.1-4,5.3.1-2,COMPLEMENTARITY,303645 requires simple credential change UI; 304223 requires accessible end-user guidance. Together they ensure users can manage AI/IoT auth.,2,pilot,True
+5.1-5,5.1.3-4,NO_RELATION,Brute-force resistance versus continuous infrastructure risk review.,3,screened,False
+5.1-5,5.2.2-2,OVERLAP,"Both mandate brute-force/abuse mitigation: 303645 on device auth, 304223 via API rate limiting against reverse engineering and poisoning.",3,pilot,True
+5.10-1,5.4.2-2,EQUIVALENCE,Both call for analysis of collected telemetry/logs for security anomalies. Same security objective.,3,pilot,True
+5.11-1,5.3.1-1,COMPLEMENTARITY,Erasure capability and disclosure of how data is used are different obligations that together form user control over personal data.,2,screened,False
+5.11-1,5.5.1-1,OVERLAP,"Both mandate secure removal of data assets; A user data on the device at the user's request, B training data and models at transfer of ownership.",2,rare_search,False
+5.11-2,5.1.3-1.2,NO_RELATION,Deletion of personal data from services versus risk from superfluous model capability.,3,screened,False
+5.11-2,5.2.3-4,NO_RELATION,Deletion of personal data from services versus advance notice of model updates.,3,screened,False
+5.11-2,5.5.1-2,OVERLAP,Personal data deletion from associated services (303645) maps to secure data disposal at end-of-life (304223).,2,pilot,True
+5.11-3,5.5.1-2,OVERLAP,"Both mandate secure deletion of data; A on user request, B at decommissioning, each specifying obligations the other omits.",3,rare_search,False
+5.12-1,5.1.4-1,NO_RELATION,303645 addresses secure installation and maintenance usability; 304223 addresses human oversight of AI systems. The human-factor theme is too general to count as a compliance relationship.,2,pilot,True
+5.12-1,5.3.1-2.2,COMPLEMENTARITY,Minimizing security decisions asked of the user and explaining security updates clearly are different obligations serving usable security.,2,screened,False
+5.12-2,5.1.3-3,NO_RELATION,User setup guidance versus assurance over external risk owners.,3,screened,False
+5.12-2,5.2.1-4,NO_RELATION,Setup guidance for consumers versus access protection for training and test data.,3,screened,False
+5.12-2,5.2.2-4,NO_RELATION,Setup guidance versus vulnerability disclosure policy.,3,screened,False
+5.12-2,5.2.3-1,NO_RELATION,User setup guidance versus supply chain process.,3,screened,False
+5.12-2,5.3.1-1,NO_RELATION,Secure setup guidance and transparency about data handling pursue different objectives.,3,rare_search,False
+5.12-3,5.1.3-2,OVERLAP,"Both give users actionable security information; A guidance for checking secure state, B threat descriptions with recommended actions.",2,rare_search,False
+5.12-3,5.1.3-4,COMPLEMENTARITY,User-side checking and operator-side continuous monitoring are different obligations that together keep a deployed system in a secure state.,2,screened,False
+5.12-3,5.1.4-4,OVERLAP,"Both verify that a deployed system actually carries its intended security controls; A through user-facing checks, B through developer verification.",2,rare_search,False
+5.12-3,5.2.2-6,NO_RELATION,User guidance on secure state is unrelated to contractual flow-down to cloud providers.,3,rare_search,False
+5.12-3,5.2.4-1.1,OVERLAP,"Both require security-relevant information to be documented for those operating the product; A as user guidance, B as system documentation content.",2,rare_search,False
+5.12-3,5.5.1-1,NO_RELATION,Guidance on checking secure state is unrelated to asset disposal at transfer of ownership.,3,rare_search,False
+5.13-1A,5.1.3-1.1,NO_RELATION,Input validation is unrelated to threat modelling triggered by configuration change.,3,rare_search,False
+5.13-1A,5.2.1-4.1,OVERLAP,UI-level input validation (303645) overlaps with input checks/sanitization for AI models (304223).,3,pilot,True
+5.13-1B,5.1.2-4,NO_RELATION,Input validation and due diligence on external components pursue different objectives.,3,rare_search,False
+5.13-1B,5.2.1-3,NO_RELATION,Input validation versus disaster recovery planning.,3,screened,False
+5.13-1B,5.2.1-4.1,OVERLAP,Network-interface input validation (303645) overlaps with sanitization checks on data/inputs (304223).,3,pilot,True
+5.13-1B,5.5.1-1,NO_RELATION,Input validation and asset disposal at transfer of ownership are unrelated controls.,3,rare_search,False
+5.2-1,5.1.3-2,COMPLEMENTARITY,An inbound disclosure route and outbound communication of unresolved threats are the two directions of one external security communication capability.,2,screened,False
+5.2-1,5.2.2-4,EQUIVALENCE,"Both mandate publication of a clear, accessible vulnerability disclosure policy. Identical security objective.",3,pilot,True
+5.2-1,5.2.2-5,SUBSUMPTION_B_BROADER,"303645 requires publishing a vulnerability disclosure policy (one specific process for receiving and acknowledging external vulnerability reports); 304223 requires a full AI incident management plan covering disclosure, detection, response, containment, recovery, and communication. The AI provision subsumes VDP as one component of a comprehensive incident management regime.",2,pilot,True
+5.2-1,5.2.4-1,COMPLEMENTARITY,"Both make security documentation available to others, but the disclosure policy and the design audit trail serve different assurance purposes.",2,screened,False
+5.2-1,5.2.4-2.1,NO_RELATION,Publishing a disclosure policy and recording training data provenance pursue different objectives.,3,rare_search,False
+5.2-1,5.4.1-3,NO_RELATION,Vulnerability disclosure policy versus preview access that lets operators evaluate model changes.,3,screened,False
+5.2-2,5.1.1-2,NO_RELATION,Timely remediation and staff threat awareness training are different obligations on different parties.,2,rare_search,False
+5.2-2,5.2.4-1,COMPLEMENTARITY,"B's audit trail names post-deployment maintenance, the record against which A's documented remediation process operates.",2,rare_search,False
+5.2-2,5.2.4-3,NO_RELATION,Timely remediation of disclosed vulnerabilities versus audit logging of prompt and configuration changes.,3,screened,False
+5.2-2,5.4.1-1.1,COMPLEMENTARITY,Acting on disclosed vulnerabilities and planning for the unpatchable case cover the two outcomes of a vulnerability report.,2,screened,False
+5.2-3,5.1.3-4,SUBSUMPTION_B_BROADER,"303645 requires manufacturers to continually monitor, identify and rectify security vulnerabilities within product components; 304223 requires continuously monitoring the entire system infrastructure AND supply chain AND third-party components for security issues. The AI provision subsumes and extends the IoT requirement — both cover component vulnerability monitoring, but AI also covers supply chain, infrastructure, and third-party dependencies.",3,pilot,True
+5.2-3,5.1.4-3,NO_RELATION,Vulnerability monitoring is unrelated to technical measures supporting human oversight.,3,rare_search,False
+5.2-3,5.2.1-2,COMPLEMENTARITY,"Vulnerability rectification depends on knowing which assets and versions are deployed, which is what B mandates.",2,screened,False
+5.2-3,5.2.2-5,COMPLEMENTARITY,Vulnerability monitoring and incident/recovery planning are separate processes that jointly make up post-market security response.,2,screened,False
+5.2-3,5.3.1-3,COMPLEMENTARITY,Finding and fixing vulnerabilities and supporting affected users through an incident are separate parts of one response capability.,2,screened,False
+5.2-3,5.4.1-1,OVERLAP,"Both address remediation of vulnerabilities in fielded products; A the monitoring and rectification, B the provision and delivery of the resulting patches.",3,rare_search,False
+5.2-3,5.4.1-1.1,COMPLEMENTARITY,Monitoring and rectifying vulnerabilities and planning for when they cannot be fixed are distinct halves of lifecycle vulnerability management.,2,rare_search,False
+5.2-3,5.4.1-2,COMPLEMENTARITY,Continuous vulnerability monitoring and re-testing after a major version change are distinct assurance activities over a product's life.,2,rare_search,False
+5.3-1,5.2.1-3,NO_RELATION,Updateability of software components versus disaster recovery planning.,3,screened,False
+5.3-1,5.4.1-1.1,OVERLAP,"Both keep a product securable over its life across the updateable/not-updateable split; A mandates updateability, B mandates contingency where it is impossible.",2,rare_search,False
+5.3-1,5.4.1-2,OVERLAP,"Both govern how software change is handled safely, A by requiring components to be securely updateable, B by re-testing after a major change.",2,screened,False
+5.3-10,5.1.2-2,COMPLEMENTARITY,Update-integrity verification and general resilience to adversarial input are separate objectives that together harden the system against tampering.,2,screened,False
+5.3-10,5.1.3-1,COMPLEMENTARITY,"A is a specific update-integrity control, B the threat-modelling process that would identify the need for such controls; distinct objectives, jointly effective.",2,screened,False
+5.3-10,5.2.3-4,COMPLEMENTARITY,Cryptographic verification of the delivered update and advance notice to users are distinct duties in one update process.,2,rare_search,False
+5.3-10,5.4.1-1,COMPLEMENTARITY,Distributing updates and verifying them on receipt are distinct obligations on different parties in one update chain.,2,rare_search,False
+5.3-11,5.1.4-3,NO_RELATION,Informing the user that an update is needed versus technical measures supporting human oversight of a model.,2,screened,False
+5.3-11,5.2.2-4,NO_RELATION,Notifying a user of a pending update differs from publishing a policy for receiving vulnerability reports.,2,rare_search,False
+5.3-11,5.2.5-3,NO_RELATION,Informing end users of a required update versus passing test findings to operators.,2,screened,False
+5.3-11,5.3.1-2.2,EQUIVALENCE,Both require informing users of security updates with risk/explanation in an accessible/recognizable way.,3,pilot,True
+5.3-11,5.3.1-3,NO_RELATION,Notifying users of a required update versus supporting them through an incident.,2,screened,False
+5.3-11,5.4.1-1,SUBSUMPTION_B_BROADER,"A requires informing the user that an update is needed; B covers producing the update, notifying operators, and delivering it to end-users, which includes A's notification duty.",2,screened,False
+5.3-12,5.2.4-3,NO_RELATION,Disruption notification versus configuration audit logging.,3,screened,False
+5.3-12,5.2.5-2.1,NO_RELATION,User notification of disruptive updates versus use of independent security testers.,3,screened,False
+5.3-13,5.1.2-7,NO_RELATION,Support period publication versus supplier due diligence.,3,screened,False
+5.3-13,5.4.1-3,NO_RELATION,Publishing a support period differs from providing operators preview access to evaluate model changes.,2,rare_search,False
+5.3-14,5.1.1-2.2,NO_RELATION,Publishing replacement support versus secure coding training for developers.,3,screened,False
+5.3-14,5.2.3-2.2,OVERLAP,"Both require the justification documentation to reach users in an accessible way; A specifies its content, B the act of sharing it.",2,rare_search,False
+5.3-14,5.3.1-2,OVERLAP,Both require accessible user-facing documentation about the product's lifecycle and use.,2,rare_search,False
+5.3-14,5.3.1-2.2,OVERLAP,"Both pursue user-facing transparency about update status; A covers devices that receive none, B covers those that do.",2,rare_search,False
+5.3-14,5.4.1-1.1,OVERLAP,"Both address what to do when updates cannot be provided — 303645 publishes rationale, 304223 mandates contingency plans.",3,pilot,True
+5.3-15A,5.1.4-1,NO_RELATION,Isolability of non-updatable devices versus human oversight of AI systems.,3,screened,False
+5.3-15A,5.2.4-2.1,NO_RELATION,Isolability of a non-updatable device versus documentation of training data sources.,3,screened,False
+5.3-16,5.2.1-1,COMPLEMENTARITY,Recognizable device designation and a maintained asset inventory are the outward and inward halves of asset identification.,2,screened,False
+5.3-2,5.1.1-2.2,NO_RELATION,Presence of a secure update mechanism versus secure coding training.,3,screened,False
+5.3-2,5.2.3-2.1,COMPLEMENTARITY,"Both handle the case where a preferred control cannot be applied: A carves out the constrained device, B requires compensating controls and risk assessment.",2,rare_search,False
+5.3-2,5.4.1-2,SUBSUMPTION_A_BROADER,"303645 mandates a secure update mechanism for ALL software components (mandatory, universal); 304223 only addresses how major updates should be treated (as a new model version). The IoT universal update-mechanism requirement subsumes the AI major-update handling procedure — the AI provision covers a specific subset of update scenarios that IoT already governs broadly.",3,pilot,True
+5.3-4B,5.1.3-3,NO_RELATION,Automatic update activation versus assurance over external risk owners.,3,screened,False
+5.3-4B,5.2.4-3,NO_RELATION,Update activation and recovery is unrelated to logging configuration and prompt changes.,3,rare_search,False
+5.3-4B,5.3.1-2.1,NO_RELATION,Automatic update activation versus guidance on model limitations.,3,screened,False
+5.3-4B,5.4.1-1,OVERLAP,Auto-secure-update at init is a specific delivery mechanism for the regular updates 304223 mandates.,2,pilot,True
+5.3-4B,5.4.1-1.1,OVERLAP,"Both require contingency for the case where an update cannot be applied; A through recovery to a known good state, B through documented mitigation plans.",3,rare_search,False
+5.3-5,5.1.4-4,NO_RELATION,Checking for available updates is unrelated to verifying that specified security controls were implemented.,3,rare_search,False
+5.3-6A,5.1.4-5,NO_RELATION,User control over automatic updates versus awareness of prohibited use cases.,3,screened,False
+5.3-6A,5.2.5-3,NO_RELATION,User control over automatic updates versus sharing test findings with operators.,3,screened,False
+5.3-6A,5.3.1-2,COMPLEMENTARITY,User control over auto-updates (303645) complements end-user configuration guidance (304223).,1,pilot,True
+5.3-6B,5.1.1-2.1,COMPLEMENTARITY,"Both concern dissemination of security update information, but to different audiences: end-user notification control versus internal staff awareness channels.",2,screened,False
+5.3-6B,5.1.3-1.1,NO_RELATION,Update notification preferences versus threat modelling on configuration change.,3,screened,False
+5.3-6B,5.2.1-4,NO_RELATION,User control over update notifications versus protection of sensitive training data.,3,screened,False
+5.3-6B,5.2.3-4,OVERLAP,"Both concern notifying users about updates; A the user's control over receiving notifications, B the duty to notify before updating.",2,rare_search,False
+5.3-6B,5.4.1-1.1,NO_RELATION,User control over update notifications is unrelated to contingency planning where updates cannot be provided.,3,rare_search,False
+5.3-7,5.1.2-5,NO_RELATION,Update cryptography versus matching usage to data sensitivity.,3,screened,False
+5.3-8,5.1.1-2,NO_RELATION,Update timeliness and staff awareness training are unrelated obligations.,3,rare_search,False
+5.3-8,5.1.2-4,NO_RELATION,Timeliness of security updates versus due diligence on external components.,3,screened,False
+5.3-8,5.1.3-1.1,NO_RELATION,Timeliness of security updates versus threat modelling on configuration change.,3,screened,False
+5.3-8,5.1.3-2,COMPLEMENTARITY,Patching promptly and communicating threats that cannot be patched are distinct duties within one vulnerability handling process.,2,rare_search,False
+5.3-8,5.2.5-1,COMPLEMENTARITY,Releasing fixes promptly and testing releases before shipping are distinct duties in one secure release process.,2,rare_search,False
+5.3-8,5.3.1-3,COMPLEMENTARITY,Prompt patching and support to affected users during an incident are different obligations under one response capability.,2,screened,False
+5.3-9,5.2.4-1.2,OVERLAP,303645: device verifies update authenticity/integrity; 304223: developer releases cryptographic hashes for verification. Same crypto-integrity goal.,3,pilot,True
+5.3-9,5.4.1-2,COMPLEMENTARITY,Verifying an update artefact on receipt and re-testing the system after a major change are distinct assurance steps around one update.,2,rare_search,False
+5.4-1,5.2.1-4.2,OVERLAP,"Both require protection of sensitive credentials/weights at rest; 303645 generic CSPs, 304223 model weights/training data.",3,pilot,True
+5.4-1,5.2.5-4,COMPLEMENTARITY,Both limit exposure of sensitive internals but by different means: protected storage versus evaluating outputs for leakage.,2,screened,False
+5.4-1,5.2.5-4.1,NO_RELATION,Secure storage of parameters versus evaluating outputs for unintended influence.,3,screened,False
+5.4-1,5.3.1-2.1,NO_RELATION,Secure storage of security parameters versus guidance on model limitations.,3,screened,False
+5.4-2,5.1.2-4,NO_RELATION,Tamper resistance of a device identity is unrelated to external component due diligence.,3,rare_search,False
+5.4-2,5.1.2-6,NO_RELATION,Tamper resistance of a device identity is unrelated to permission scoping between systems.,3,rare_search,False
+5.4-3,5.2.2-2,COMPLEMENTARITY,"Both defend against reverse engineering of an interface: A by keeping credentials out of the binary, B by limiting abuse of the exposed API.",2,rare_search,False
+5.4-3,5.2.4-3,NO_RELATION,Prohibiting hard-coded security parameters versus an audit log of configuration changes.,3,screened,False
+5.4-4,5.1.3-1,NO_RELATION,"Uniqueness of security parameters versus a threat modelling process naming data poisoning, model inversion and membership inference.",3,screened,False
+5.4-4,5.2.2-1,OVERLAP,"Both govern the credentials and controls protecting access to system assets; A mandates per-device uniqueness, B mandates evaluation of the access control framework.",2,rare_search,False
+5.4-4,5.2.4-1.2,OVERLAP,"Both enable authenticity verification of distributed software artefacts; A by unique per-device parameters, B by published cryptographic hashes.",2,rare_search,False
+5.4-4,5.3.1-3,NO_RELATION,Key uniqueness and post-incident user support share no objective.,3,rare_search,False
+5.4-4,5.4.1-1,COMPLEMENTARITY,Providing updates and holding unique keys with which their authenticity can be checked are distinct parts of one secure update chain.,2,rare_search,False
+5.5-1,5.2.2-1,OVERLAP,Best-practice cryptography for secure comms (303645) is a key control under AI infrastructure access framework (304223).,3,pilot,True
+5.5-1,5.2.3-1,NO_RELATION,Cryptography for secure communication versus secure software supply chain processes.,3,screened,False
+5.5-1,5.2.5-1,NO_RELATION,Cryptography for secure communication versus security testing before release.,3,screened,False
+5.5-2,5.1.1-1.1,NO_RELATION,Vetted implementations versus role-tailored security training.,3,screened,False
+5.5-2,5.1.2-4,OVERLAP,"Both demand assurance over externally sourced components before use; A by requiring reviewed implementations, B by requiring risk assessment and due diligence.",2,rare_search,False
+5.5-2,5.1.4-4,OVERLAP,"Both require verification that security functionality is correctly implemented, A through reviewed implementations and B through checking specified controls were built in.",2,screened,False
+5.5-2,5.2.1-4.1,NO_RELATION,Vetted cryptographic implementations versus data and input sanitisation.,2,screened,False
+5.5-2,5.2.5-1,OVERLAP,"Both require assurance before release, A that implementations have been reviewed or evaluated, B that the system was security tested.",2,screened,False
+5.5-2,5.4.1-1,NO_RELATION,Reviewed cryptographic implementations versus security update delivery.,3,screened,False
+5.5-2,5.4.2-3,NO_RELATION,Vetted cryptographic implementations versus monitoring internal model states.,3,screened,False
+5.5-3,5.2.5-3,NO_RELATION,Replaceability of cryptographic primitives versus sharing test findings with operators.,3,screened,False
+5.5-4,5.1.2-3,NO_RELATION,Authentication before network access versus maintaining an audit trail over models and datasets.,3,screened,False
+5.5-4,5.2.2-1,OVERLAP,Authentication on network interfaces (303645) overlaps with API/model access control (304223).,3,pilot,True
+5.5-4,5.2.2-2,SUBSUMPTION_A_BROADER,"303645 requires authentication for ALL network interface access in the initialized state; 304223 requires controls on external API access specifically to prevent exploitation of ML limitations. IoT's blanket network authentication requirement is broader — every scenario governed by the AI external-API control is a specific instance of the IoT network-authentication mandate, but IoT covers far more network access types.",3,pilot,True
+5.5-5,5.1.2-6,OVERLAP,"Both restrict privileged access to system interfaces; A gates configuration behind authentication, B limits inter-system permissions to what functionality requires.",2,screened,False
+5.5-5,5.2.1-4,NO_RELATION,Authentication on a configuration interface versus confidentiality of training and test data; different assets.,2,screened,False
+5.5-5,5.4.2-4,NO_RELATION,Authenticated configuration change versus performance monitoring.,3,screened,False
+5.5-6,5.2.1-4,SUBSUMPTION_B_BROADER,"303645 requires critical security parameters to be encrypted in transit with appropriate technology; 304223 requires ALL parties to protect ALL sensitive data including training data, test sets, personal data, and model weights. The AI sensitive-data protection mandate is broader — it covers all data classes at rest and in transit, whereas IoT's requirement is limited to CSPs in transit specifically.",3,pilot,True
+5.5-8,5.1.3-1.1,NO_RELATION,"Critical security parameter lifecycle management is a different objective from threat modelling triggered by configuration changes, and B's process text does not name key management.",2,rare_search,False
+5.5-8,5.2.2-1,OVERLAP,"Both protect security-critical assets; A over the lifecycle of critical security parameters, B through access-control measures on APIs, models and data.",2,screened,False
+5.5-8,5.2.3-1,NO_RELATION,"Supply chain process requirements do not name key or parameter management, which is the whole subject of A.",2,rare_search,False
+5.5-8,5.2.4-1,COMPLEMENTARITY,Lifecycle CSP management (303645) and audit trail of system design/maintenance (304223) both support secure lifecycle governance.,2,pilot,True
+5.5-8,5.5.1-1,OVERLAP,"Both govern secure handling of sensitive assets across their lifecycle, including disposal; A for critical security parameters, B for training data and models on transfer.",2,screened,False
+5.6-1,5.1.3-1.2,OVERLAP,"Both apply minimization to unnecessary capability; A disables unused interfaces, B requires the risk of superfluous model functionality to be managed.",2,rare_search,False
+5.6-1,5.2.2-1,COMPLEMENTARITY,Disabling unused interfaces (303645) and access control framework (304223) jointly reduce attack surface.,2,pilot,True
+5.6-2,5.1.2-4,NO_RELATION,Limiting interface disclosure is unrelated to external component due diligence.,3,rare_search,False
+5.6-2,5.1.2-6,OVERLAP,"Both apply minimization at a system boundary; A to the security information disclosed, B to the permissions granted.",2,rare_search,False
+5.6-2,5.2.4-2,NO_RELATION,Limiting unauthenticated disclosure over network interfaces versus documenting training data provenance.,3,screened,False
+5.6-2,5.2.5-4,SUBSUMPTION_A_BROADER,"303645 requires minimizing unauthorized disclosure of ALL security-relevant information on network interfaces; 304223 requires evaluating model outputs to prevent reverse-engineering of training data and model weights. Every case of AI model-output information leakage is a specific instance of the IoT security-information-minimization requirement, but IoT covers a broader category of security-relevant disclosures.",2,pilot,True
+5.6-2,5.4.2-3,NO_RELATION,Minimising unauthenticated disclosure versus monitoring internal model states.,3,screened,False
+5.6-3,5.1.3-1.2,OVERLAP,"Both reduce risk by removing capability that is not needed, A for exposed physical interfaces and B for superfluous model functionality.",2,screened,False
+5.6-3,5.1.3-1.3,NO_RELATION,Physical attack surface versus cost-based prioritisation of controls.,2,screened,False
+5.6-3,5.1.3-2,NO_RELATION,Physical interface exposure versus communication of unresolvable threats downstream.,3,screened,False
+5.6-3,5.2.2-2,OVERLAP,"Both limit how much of the system an outsider can reach and abuse, A through physical interfaces and B through API access controls.",2,screened,False
+5.6-3,5.2.3-2.1,NO_RELATION,Physical interface exposure versus mitigating controls around poorly secured third-party components.,3,screened,False
+5.6-3,5.2.4-2,NO_RELATION,Physical interface exposure versus provenance documentation for public training data.,3,screened,False
+5.6-3,5.4.2-1,NO_RELATION,Physical attack surface versus action logging.,3,screened,False
+5.6-4A,5.2.2-3,COMPLEMENTARITY,Disabled debug interfaces (303645) and dedicated dev environments with separation (304223) both isolate development from production.,2,pilot,True
+5.6-4B,5.3.1-2,NO_RELATION,Debug port protection versus user guidance.,3,screened,False
+5.6-5,5.1.3-1,NO_RELATION,Disabling unnecessary services versus a threat modelling process naming AI-specific attacks.,3,screened,False
+5.6-5,5.1.4-5,COMPLEMENTARITY,Restricting the product technically to its intended use and telling users which uses are prohibited are the technical and informational halves of scope enforcement.,2,rare_search,False
+5.6-5,5.2.3-2,NO_RELATION,Enabling only required services versus component justification.,3,screened,False
+5.6-5,5.3.1-2.1,NO_RELATION,Disabling unnecessary services versus guidance on appropriate use and failure modes.,3,screened,False
+5.6-6,5.1.3-3,NO_RELATION,Code minimization versus assurance that an external risk owner can address its risks.,3,screened,False
+5.6-7,5.1.2-6,OVERLAP,Least-privilege software (303645) and least-privilege permissions for AI system to other systems (304223) — same principle.,3,pilot,True
+5.6-7,5.1.3-1.3,NO_RELATION,Least privilege versus cost-based prioritisation of identified risks.,2,screened,False
+5.6-8,5.1.1-2.2,COMPLEMENTARITY,Hardware mitigation of memory exploits and training that stops such flaws being written are distinct measures against one exploitation route.,2,screened,False
+5.6-8,5.1.2-3,NO_RELATION,Hardware memory access control versus maintaining an audit trail.,3,screened,False
+5.6-8,5.2.2-5,NO_RELATION,Memory access control versus incident management and recovery planning.,3,screened,False
+5.6-9,5.1.2-4,COMPLEMENTARITY,Securing one's own development process and assessing externally sourced components are distinct duties that together determine the security of the delivered software.,2,screened,False
+5.6-9,5.1.3-1.2,COMPLEMENTARITY,A secure development process and the specific obligation to strip superfluous model capability both fall under secure development of the artefact.,2,screened,False
+5.6-9,5.1.4-3,NO_RELATION,Secure development processes versus technical measures supporting human oversight.,3,screened,False
+5.6-9,5.1.4-4,OVERLAP,"Both aim at security being correctly built into the delivered software, A through development process and B through verification of specified controls.",2,screened,False
+5.6-9,5.2.1-2,OVERLAP,"Both mandate secure software development processes including version control; A adds compiler hardening for device software, B adds asset tracking and authentication for AI assets.",3,rare_search,False
+5.6-9,5.2.3-3,NO_RELATION,Secure development of one's own software versus re-evaluating third-party released models.,2,screened,False
+5.6-9,5.2.4-1.2,COMPLEMENTARITY,Version control of artefacts and publication of hashes that let recipients verify them are two halves of artefact integrity.,2,rare_search,False
+5.6-9,5.2.4-3,OVERLAP,"Both require changes to a system to be tracked, A through version control in development and B through an audit log of configuration and prompt changes.",2,screened,False
+5.6-9,5.2.5-2,COMPLEMENTARITY,Secure development practice and pre-deployment testing are different objectives that jointly govern a secure release.,2,screened,False
+5.7-1,5.2.3-1,SUBSUMPTION_B_BROADER,"303645 requires software integrity verification using secure boot and hardware root of trust (a specific integrity control at boot time); 304223 requires following secure software supply chain processes covering model development, procurement, third-party components, and ongoing integrity across the full lifecycle. The AI supply chain security requirement subsumes the IoT boot-integrity check as one element of a broader, end-to-end software integrity mandate.",3,pilot,True
+5.7-1,5.2.5-4.1,NO_RELATION,Secure boot verification versus evaluating outputs for unintended influence over the system.,3,screened,False
+5.7-2,5.1.3-1.2,NO_RELATION,Alerting on software tampering versus the risk of unused model capability.,3,screened,False
+5.7-2,5.1.4-5,NO_RELATION,Alerting on detected software tampering versus awareness of prohibited use cases.,3,screened,False
+5.7-2,5.2.2-6,NO_RELATION,Tamper alerting on the device versus contractual arrangements with cloud operators.,3,screened,False
+5.7-2,5.4.2-1,SUBSUMPTION_B_BROADER,"303645 requires alerting on detected unauthorized changes to device software; 304223 requires logging ALL system and user actions to support compliance, incident investigations, and vulnerability tracking. The AI logging mandate is broader — it captures all actions proactively for multiple purposes (compliance, forensics, incident response), whereas IoT logs only in reaction to detected unauthorized changes.",2,pilot,True
+5.7-2,5.5.1-1,NO_RELATION,Unauthorized change detection is unrelated to asset disposal at transfer of ownership.,3,rare_search,False
+5.8-1,5.1.2-6,NO_RELATION,Cryptographic confidentiality in transit versus least-privilege permissions between systems.,2,screened,False
+5.8-1,5.2.1-2,NO_RELATION,Transport encryption and asset tracking processes share no objective.,2,rare_search,False
+5.8-1,5.2.1-4,OVERLAP,Confidentiality of personal data in transit (303645) and protection of sensitive data including training/test (304223) — same goal across data types.,3,pilot,True
+5.8-1,5.2.4-1.1,NO_RELATION,Encryption of personal data in transit versus the security content of model documentation.,3,screened,False
+5.8-2,5.2.1-4,OVERLAP,Sensitive personal data crypto protection (303645) maps to AI sensitive-data protection (304223).,3,pilot,True
+5.8-2,5.2.1-4.2,SUBSUMPTION_A_BROADER,303645 mandates (SHALL) cryptographic protection for ALL sensitive personal data communicated between device and services; 304223 requires proportionate protection (conditional: 'where...could be confidential') for training data and model weights. IoT's requirement is mandatory and covers all sensitive personal data in transit; AI's is conditional and scoped to model-specific confidential assets.,2,pilot,True
+5.8-2,5.2.2-1,OVERLAP,"Both protect data assets from unauthorized access; A through transport encryption, B through evaluation of the access control framework.",2,rare_search,False
+5.8-2,5.3.1-2,NO_RELATION,Encryption of sensitive personal data in transit versus accessible user guidance on system configuration.,3,screened,False
+5.8-2,5.4.1-1,NO_RELATION,Encryption of sensitive personal data in transit versus the delivery chain for security patches.,3,screened,False
+5.8-3,5.1.2-3,NO_RELATION,"303645 discloses external sensing capabilities to end-users for privacy transparency; 304223 requires developers to maintain an internal audit trail of ML data preparation. Different audience (consumer vs. developer), subject (device sensors vs. ML data lineage), and purpose.",3,pilot,True
+5.8-3,5.3.1-1,OVERLAP,Documenting external sensing capabilities (303645) overlaps with conveying data usage/access/storage to end-users (304223).,2,pilot,True
+5.9-1,5.4.2-3,NO_RELATION,Resilience to network and power outage versus monitoring internal model states.,3,screened,False
+5.9-3,5.2.1-3,COMPLEMENTARITY,Stable network connection state (303645) complements broader AI disaster recovery planning (304223).,1,pilot,True
+5.9-3,5.4.2-4,NO_RELATION,Orderly network reconnection versus monitoring model behaviour for security-relevant drift.,3,screened,False

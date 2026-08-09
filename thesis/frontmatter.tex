@@ -78,34 +78,36 @@ masked language models (BERT, SecureBERT, CySecBERT); an NLI cross-encoder that
 reads each pair in both directions and is the only method able to express
 subsumption; Gemini text embeddings; and a Gemini LLM prompted to classify each
 of the 4{,}968 possible pairs into one of six relationship types. Predictions were evaluated
-against two reference sets, both built by LLM-assisted annotation: a purposive
-pilot of 107 pairs reviewed by the authors, and a stratified probability sample
-of 650 pairs drawn from the full candidate space with known inclusion
-probabilities.
+against a 200-pair reference set built by LLM-assisted annotation, drawn from
+1{,}027 pairs judged across three rounds and composed so that related and
+unrelated pairs are equally represented --- which fixes the score of the trivial
+``everything is related'' classifier at F1 0.667 and makes it the bar every
+method must clear.
 
-Results depend sharply on how the reference set is built. Measured on the
-purposively assembled pilot set, where 79\% of pairs are related, BERT reaches a
-pair-detection F1 of 0.89 --- which is also what labelling every pair as related
-achieves, because general-purpose embedding spaces score nearly all provisions as
-highly similar. The probability sample puts the true rate of related pairs at
-12.4\%, and at that rate four of the eleven methods are statistically
-indistinguishable from the all-positive baseline, rejecting almost no unrelated
-pair. Most of that collapse is calibration rather than capability: re-selecting
-each threshold by cross-validation on the sample lifts Gemini embeddings to F1
-0.50, BGE to 0.44, MPNet to 0.43 and Sentence-BERT to 0.42 against a baseline of
-0.22, differences a paired bootstrap separates from zero --- but not from each
-other, so the best freely available local model matches the hosted commercial
-one within the resolution of this sample. Domain-adapted cybersecurity models
-fare worst: SecureBERT clears the baseline at no threshold at all, and CySecBERT,
-adapted independently by another group, finishes below the general-purpose BERT
-both were built from.
-Assigning the correct relationship type is harder still: the best method reaches
-0.48 accuracy, matching but not exceeding the majority-class baseline. A separate
-finding concerns the LLM classifier, whose labels agree with themselves at
-$\kappa = 0.02$ across two runs on identical input, so its reported scores are
-not stable properties of the method. The results support automated mapping as a
-candidate-ranking aid for human reviewers, not as a replacement for expert
-judgement.
+Four of the eleven methods do not clear it. At the thresholds they ship with,
+SecureBERT, CySecBERT, Gemini embeddings and, to within one pair, BERT mark every
+annotated pair as related and reproduce the trivial score exactly, because
+general-purpose embedding spaces score nearly all provisions as highly similar.
+Re-selecting each threshold by cross-validation lifts Gemini embeddings to F1
+0.78 at precision 0.77, a margin over the baseline that a paired bootstrap
+separates from zero, with MPNet the only freely available local model that cannot
+be told apart from it. Calibration is therefore worth having, though at this base
+rate it buys most methods less than the initial collapse suggests. Domain-adapted
+cybersecurity models fare worst: SecureBERT lands exactly on the baseline even
+recalibrated, and CySecBERT, adapted independently by another group, finishes
+below the general-purpose BERT both were built from.
+Assigning the correct relationship type is not solved: the best method reaches
+0.51 accuracy, matching but not exceeding the majority-class baseline. Two further
+findings concern the data rather than the models. Equivalence and subsumption are
+close to absent between these standards --- 13 pairs among 1{,}027 judged, and
+none among 300 top-ranked pairs annotated specifically to find more --- so the
+typed taxonomy is effectively a three-class problem here. And the LLM classifier's
+labels agree with themselves at $\kappa = 0.02$ across two runs on identical
+input, so its reported scores are not stable properties of the method. Because the
+reference set is balanced by design while the candidate space is sparse, the
+figures reported are upper bounds on corpus-scale performance. The results support
+automated mapping as a candidate-ranking aid for human reviewers, not as a
+replacement for expert judgement.
 \clearpage
 
 % ---------------------------------------------------------------- affirmation

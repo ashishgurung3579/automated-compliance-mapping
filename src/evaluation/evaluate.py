@@ -16,7 +16,7 @@ from src.methods import METHODS
 
 BASE = Path(__file__).parents[2]
 DATA = BASE / "data"
-GT_PATH = DATA / "baseline" / "gt.csv"
+GT_PATH = DATA / "baseline" / "reference_set.csv"
 OUT_DIR = DATA / "evaluation"
 
 # Treat the two directional subsumption labels as one class for metrics.
@@ -138,6 +138,31 @@ def classification_metrics(gt: pd.DataFrame, pred: pd.DataFrame) -> dict:
     }
 
 
+def all_positive_baseline(gt: pd.DataFrame) -> dict:
+    """What a classifier that calls every pair related would score.
+
+    Reported alongside every method because precision and F1 both move with the
+    positive rate of the set, and a detection score is only meaningful next to what
+    the trivial answer achieves on the same pairs.
+    """
+    positives = int((gt["relationship"] != "NO_RELATION").sum())
+    negatives = len(gt) - positives
+    precision = positives / len(gt)
+    f1 = 2 * precision / (1 + precision)
+
+    return {
+        "gt_positive_pairs": positives,
+        "gt_negative_pairs": negatives,
+        "predicted_positive_in_gt": len(gt),
+        "true_positives": positives,
+        "false_positives": negatives,
+        "false_negatives": 0,
+        "precision": round(precision, 4),
+        "recall": 1.0,
+        "f1": round(f1, 4),
+    }
+
+
 def error_analysis(gt: pd.DataFrame, pred: pd.DataFrame, merged: pd.DataFrame) -> pd.DataFrame:
     gt_pairs = set(zip(gt["src_id"], gt["tgt_id"]))
 
@@ -222,6 +247,11 @@ if __name__ == "__main__":
         )
         errors_df.to_csv(OUT_DIR / f"{name}_errors.csv", index=False)
         merged_df.to_csv(OUT_DIR / f"{name}_predictions_vs_gt.csv", index=False)
+
+    baseline = all_positive_baseline(gt)
+    summary["baseline_all_positive"] = {"detection": baseline}
+    print(f"=== all-positive baseline ===\n  P={baseline['precision']:.3f}  "
+          f"R={baseline['recall']:.3f}  F1={baseline['f1']:.3f}\n")
 
     (OUT_DIR / "evaluation_summary.json").write_text(
         json.dumps(summary, indent=2, default=str)

@@ -1,8 +1,8 @@
 """
 The set of mapping methods under evaluation, in one place.
 
-Every stage of the pipeline -- the mapping runners, the evaluation, the weighted
-corpus estimates, the figures, and the guard that checks the thesis tables --
+Every stage of the pipeline -- the mapping runners, the evaluation, the
+calibration analysis, the figures, and the guard that checks the thesis tables --
 used to carry its own copy of this list, which is how a method ends up in a
 figure but not in a table. They all import from here instead.
 

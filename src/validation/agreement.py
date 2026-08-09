@@ -3,10 +3,11 @@ Reliability of the annotated reference set.
 
 Three measurements, none of which requires claiming an expert study that was not run:
 
-  1. Sample versus the pilot set. The pilot's 107 pairs were reviewed by both authors,
-     so agreement against them is the closest thing to an external human check the
-     project has. Pilot pairs are mixed unmarked into the annotation stream, so the
-     comparison is blind.
+  1. The second annotation round versus the pilot set. The pilot's 107 pairs were
+     reviewed by both authors, so agreement against them is the closest thing to an
+     external human check the project has. Pilot pairs are mixed unmarked into the
+     later annotation stream, so the comparison is blind: it measures whether an
+     independent pass over the same pairs reproduces the reviewed labels.
   2. Confidence calibration. Recorded confidence should predict where the two sources
      disagree; if it does not, the field carries no information and is reported so.
   3. Machine-annotator self-agreement, as context. Two runs of the evaluated LLM on
@@ -103,7 +104,7 @@ if __name__ == "__main__":
         results["llm_run_to_run"] = llm
 
     p = pilot_cmp
-    print(f"Sample vs human-reviewed pilot (n={p['n']}):")
+    print(f"Second round vs author-reviewed pilot (n={p['n']}):")
     for scheme in ("six_label", "merged_five_label", "binary_detection"):
         s = p[scheme]
         extra = f"  [{s['band']}]" if "band" in s else ""
@@ -122,7 +123,7 @@ if __name__ == "__main__":
 
     (VAL / "agreement.json").write_text(json.dumps(results, indent=2))
 
-    rows = [("Reference sample vs.\\ author-reviewed pilot", pilot_cmp)]
+    rows = [("Second round vs.\\ reviewed pilot", pilot_cmp)]
     if llm:
         rows.append(("Evaluated LLM vs.\\ itself, identical input", llm))
     lines = [
