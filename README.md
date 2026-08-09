@@ -19,13 +19,16 @@ contextual-embedding, cross-encoder, and hosted API), are compared against a sin
 - a **screened round** of 650 pairs drawn from three bands of a method-agnostic similarity ranking;
 - a **targeted round** of the 300 top-ranked unjudged pairs, searched for the rare classes.
 
-All were produced by a three-stage procedure against the written codebook in
-`docs/annotation_codebook.md`: labels drafted by **Fable 5** (Anthropic), independently
-verified by **GPT-5.6 Sol** (OpenAI) working from the same texts and codebook but not the drafter's
-justification, then reviewed by the authors, who adjudicated every pair the two models
-disagreed on. Neither annotation model shares a family with the evaluated Gemini methods.
-Only the pilot was reviewed by an author pair by pair; the reliability of the rest rests on
-the two-model agreement plus a blind comparison against the pilot (see `src/validation/`).
+All were labelled against the written codebook in `docs/annotation_codebook.md`, with
+drafts produced by **Fable 5** (Anthropic). The screened and targeted rounds add a second
+stage: every draft label independently verified by **GPT-5.6 Sol** (OpenAI) working from
+the same texts and codebook but not the drafter's justification, then reviewed by the
+authors, who adjudicated every pair the two models disagreed on. The pilot predates that
+stage and has no cross-model verification; instead both authors read all 107 pairs
+individually, which no later round received. Of the 200 evaluated pairs, 37 come from the
+pilot and 163 from the verified rounds, whose reliability rests on the two-model agreement
+plus a blind comparison against the pilot (see `src/validation/`). Neither annotation model
+shares a family with the evaluated Gemini methods.
 
 The reference set is built under one rule: **negatives are half the set; positives are balanced
 across the five positive classes as far as the material allows.** Half negatives fixes the score

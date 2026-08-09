@@ -16,8 +16,8 @@ is answered by evaluating all eleven methods under identical conditions. RQ3
 (automated vs.\ expert mapping) is answered by treating the reference annotation
 as the standard of comparison and additionally measuring how consistently the
 task is performed on repetition. The expert role in that comparison is filled by
-annotation drafted by one frontier LLM, verified by a second from an unrelated
-developer, and reviewed by the authors against a written codebook, not
+annotation drafted by one frontier LLM, verified in two of the three rounds by a
+second from an unrelated developer, and reviewed by the authors against a written codebook, not
 by external domain experts; a protocol for the external study is given in
 Appendix~\ref{app:survey} but was not carried out, and Section~\ref{sec:threats}
 states what this costs the RQ3 answer.
@@ -115,8 +115,9 @@ confusions are less interesting than detecting subsumption at all and the per
 
 Evaluating the automated methods requires a reference mapping. Annotating all
 4{,}968 pairs manually was outside the scope of a 15-credit project, so the
-ground truth was produced through a three-stage procedure --- LLM drafting,
-independent cross-model verification, and author review --- a set-up
+ground truth was produced through a staged procedure --- LLM drafting,
+independent cross-model verification for all but the pilot round, and author
+review --- a set-up
 increasingly common in annotation work and disclosed here for transparency.
 LLM annotation of text has been reported at or above crowd-worker quality on
 classification tasks~\cite{gilardi2023chatgpt}, but the same literature is
@@ -129,19 +130,28 @@ judgement has itself been characterised~\cite{zheng2023judge}.
 In the first stage, candidate pairs and draft relationship labels were
 generated with Fable~5 (Anthropic), prompted with the full provision texts and
 the taxonomy definitions of Section~\ref{sec:taxonomy}. In the second, every
-drafted label was re-examined by GPT-5.6 Sol (OpenAI), a frontier model from an
-unrelated developer, given the same provision texts and codebook but not the
-first model's justification, and asked to confirm or contest the label. In the
-third, the authors reviewed the drafts and the verifier's verdicts, adjudicated
-every pair the two models disagreed on, corrected labels and justifications,
-and removed pairs whose connection did not hold up against the original
-standard texts. Each retained pair carries a short written justification and a
-reviewer confidence score from 1 (uncertain) to 3 (certain).
+drafted label in the screened and targeted rounds was re-examined by GPT-5.6 Sol
+(OpenAI), a frontier model from an unrelated developer, given the same provision
+texts and codebook but not the first model's justification, and asked to confirm
+or contest the label. In the
+third, the authors reviewed the drafts and, where there was one, the verifier's
+verdict, adjudicated every pair the two models disagreed on, corrected labels
+and justifications, and removed pairs whose connection did not hold up against
+the original standard texts. Each retained pair carries a short written
+justification and a reviewer confidence score from 1 (uncertain) to 3 (certain).
+
+The pilot round preceded the second stage and carries no cross-model
+verification: its 107 labels were drafted and then read pair by pair by both
+authors. The two warrants are complementary rather than nested. The pilot rests
+on human review of every pair, the later rounds on agreement between models from
+different developers with author adjudication wherever they diverged, and
+Section~\ref{sec:gtvalidation} measures the one against the other. Of the 200
+evaluated pairs, 37 come from the pilot and 163 from the verified rounds.
 
 Two independent frontier models and a human adjudication step is a stronger
-warrant than single-pass drafting: a label survives only if two models trained
-by different organisations on different data agree on it, or if an author
-settled it. Known failure modes of LLM judges --- self-preference for their own
+warrant than single-pass drafting: in those rounds a label survives only if two
+models trained by different organisations on different data agree on it, or if
+an author settled it. Known failure modes of LLM judges --- self-preference for their own
 outputs and position effects~\cite{zheng2023judge} --- are constrained here
 because the judge is from a different developer than the drafter and never sees
 the drafter's justification. What the procedure does not supply is a domain

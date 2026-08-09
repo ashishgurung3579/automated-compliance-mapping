@@ -44,11 +44,12 @@ For evaluation the two subsumption directions merge into one class, leaving five
 Three annotation rounds produced **1,027 judged pairs**: a 107-pair pilot chosen
 purposively and reviewed by the authors, a 650-pair screened round drawn from three bands
 of a method-agnostic similarity ranking, and a 300-pair targeted round aimed at the rare
-classes. All were annotated in three stages against the written codebook in
-`annotation_codebook.md`: drafted by Fable 5 (Anthropic), verified independently by GPT-5.6 Sol
-(OpenAI), then author-reviewed with every model disagreement adjudicated by hand. Both
-annotation models are deliberately from different families than every evaluated method.
-This is disclosed in the thesis rather than hidden.
+classes. All were labelled against the written codebook in `annotation_codebook.md`, drafted by
+Fable 5 (Anthropic). The screened and targeted rounds were then verified independently by
+GPT-5.6 Sol (OpenAI) and author-reviewed with every model disagreement adjudicated by hand.
+The pilot predates that verification stage; in its place both authors read all 107 pairs
+individually. Both annotation models are deliberately from different families than every
+evaluated method. This is disclosed in the thesis rather than hidden.
 
 The **200-pair evaluated set** (`data/baseline/reference_set.csv`) is drawn from that pool
 under one rule: negatives are half the set, and positives are balanced across the five
@@ -169,8 +170,9 @@ counterpart. These are predictions, not verified mappings.
   positive, and the gap to the sparse reality of 4,968 pairs is unquantified.
 - The expert survey in `expert_survey.md` was designed and **not run**. No number anywhere
   in this repository comes from it.
-- Only 37 of the 200 evaluated pairs were reviewed by the authors pair by pair; the rest
-  rest on the blind comparison against the pilot.
+- Only 37 of the 200 evaluated pairs were reviewed by the authors pair by pair. Those 37
+  are the pilot, which in turn had no cross-model verification. The other 163 carry the
+  two-model agreement plus the blind comparison against the pilot.
 - Ranking metrics are computed but not reported: the judged fraction of each ranking is thin
   enough that precision among judged candidates is 1.000 for every method.
 
@@ -373,10 +375,11 @@ Current baseline count:
 - 85 positive relation pairs.
 - 22 `NO_RELATION` negative pairs.
 
-Important: the annotations were drafted by Fable 5 (Anthropic) against the written
-codebook in `docs/annotation_codebook.md`, verified independently by GPT-5.6 Sol (OpenAI),
-and the 107 pilot pairs were then reviewed pair by pair by the authors. This is disclosed in the
-thesis. Two further annotation rounds widen the pool (section 15), and the
+Important: these pilot annotations were drafted by Fable 5 (Anthropic) against the written
+codebook in `docs/annotation_codebook.md` and then reviewed pair by pair by both authors.
+This round predates the cross-model verification stage, so unlike the later rounds it
+carries no second-model check; the author review is what stands in its place. This is
+disclosed in the thesis. Two further annotation rounds widen the pool (section 15), and the
 200-pair set actually evaluated is assembled from all three by
 `build_reference.py`. Reliability of the unreviewed rounds is measured in
 section 16.
