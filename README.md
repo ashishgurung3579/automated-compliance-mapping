@@ -72,8 +72,10 @@ Run the stages in order from the repository root:
 | 5. Extended analysis | `python3 -m src.evaluation.analysis` | `data/evaluation/analysis.json` |
 | 6. Ranking metrics | `python3 -m src.evaluation.ranking` | `data/evaluation/ranking.json` |
 | 7. Coverage and gaps | `python3 -m src.evaluation.coverage` | `data/evaluation/coverage.json`, `thesis/tables/*.tex` |
-| 8. Report | `python3 -m src.report.generate_report` | `data/evaluation/report.md` |
-| 9. Figures | `python3 -m src.report.figures` | `thesis/figures/*.pdf` |
+| 8. Supervised control | `python3 -m src.evaluation.supervised` | `data/evaluation/supervised.json` |
+| 9. Trailer ablation | `python3 -m src.analysis.ablation_trailers` | `data/ablation/ablation.json`, `data/ablation/*.npy` |
+| 10. Report | `python3 -m src.report.generate_report` | `data/evaluation/report.md` |
+| 11. Figures | `python3 -m src.report.figures` | `thesis/figures/*.pdf` |
 
 Stages 3d/3e call the Gemini API (cost + `GEMINI_API_KEY` required); all other stages run
 locally. First runs of 3b–3c download about 2 GB of models from Hugging Face.
@@ -90,6 +92,14 @@ Stage 6's output is computed but not reported in the thesis. The judged fraction
 thin enough that precision among judged candidates is 1.000 for every method, so the numbers
 describe pooling coverage rather than ranking quality.
 
+Stages 8 and 9 are controls rather than methods. Stage 8 trains a classifier on the 827 judged pairs
+held out of the reference set, using nothing but the similarity scores the eleven methods already
+produced, to separate a hard task from a bad framing. Stage 9 re-scores the local methods on
+normative sentences alone, dropping the explanatory trailers that make up 53% of EN 303 645's
+extracted words, to test whether the observed score compression comes from the input or from the
+embedding spaces. Neither writes into `data/mappings/` or `data/evaluation/`, so neither can move a
+number already reported.
+
 ## Repository layout
 
 ```
@@ -99,12 +109,14 @@ data/baseline/    reference_set.csv (evaluated), plus the three rounds it draws 
 data/annotation/  annotation batches and their labels (19 screened, 8 targeted)
 data/mappings/    predictions per method + similarity matrices (.npy)
 data/evaluation/  metrics, calibration analysis, error analyses, prediction-vs-GT comparisons
+data/ablation/    normative-text-only similarity matrices and their recalibrated scores
 data/validation/  inter-annotator agreement results
 src/extraction/   PDF → provision JSON
 src/baseline/     ground-truth construction, sampling, annotation harness
 src/mapping/      the eleven mapping methods (registry in src/methods.py)
 src/validation/   inter-rater agreement
-src/evaluation/   metrics against ground truth, corpus estimation, ranking
+src/evaluation/   metrics against ground truth, corpus estimation, ranking, supervised control
+src/analysis/     trailer ablation (normative text only)
 src/report/       report generation, figures, table-value guard
 docs/             annotation codebook, pipeline notes (PIPELINE.md), expert-survey
                   protocol, degree project plan

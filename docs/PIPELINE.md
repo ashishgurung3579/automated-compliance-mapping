@@ -5,7 +5,7 @@ needs the whole picture in fifteen minutes. **Part II** is the operational recor
 stage, every command, every file it touches.
 
 - Part I — [What this is](#part-i--what-this-is)
-- Part II — [How to run it](#part-ii--how-to-run-it) (numbered sections 1–26)
+- Part II — [How to run it](#part-ii--how-to-run-it) (numbered sections 1–28)
 
 ---
 
@@ -194,6 +194,7 @@ automated-compliance-mapping/
 |   +-- mapping/
 |   +-- validation/
 |   +-- evaluation/
+|   +-- analysis/
 |   +-- report/
 +-- data/
     +-- raw/
@@ -202,6 +203,7 @@ automated-compliance-mapping/
     +-- annotation/
     +-- mappings/
     +-- evaluation/
+    +-- ablation/
     +-- validation/
 ```
 
@@ -213,13 +215,15 @@ What each folder means:
 - `data/annotation/`: the annotation batches and their labels (19 screened, 8 targeted).
 - `data/mappings/`: prediction files created by the different mapping methods.
 - `data/evaluation/`: evaluation metrics, calibration analysis, error files, comparison files, and the final report.
+- `data/ablation/`: normative-text-only similarity matrices and their recalibrated scores.
 - `data/validation/`: inter-annotator agreement results.
 - `src/methods.py`: the registry where every method is defined once.
 - `src/extraction/`: code that reads PDFs and extracts provisions.
 - `src/baseline/`: code that runs the three annotation rounds and assembles the reference set from them.
 - `src/mapping/`: code for all automatic mapping methods.
 - `src/validation/`: code for inter-rater agreement.
-- `src/evaluation/`: code that compares predictions against the reference set.
+- `src/evaluation/`: code that compares predictions against the reference set, plus the supervised control.
+- `src/analysis/`: the trailer ablation, which re-scores the local methods on normative text alone.
 - `src/report/`: code that creates the Markdown report, the thesis figures, and the table-value guard.
 - `thesis/`: LaTeX source of the thesis, with generated figures and tables.
 
@@ -926,7 +930,80 @@ that precision and its confidence interval in their captions.
 
 ---
 
-## 19. Step 9 - Generate Final Report
+## 19. Step 9 - Supervised Control
+
+Script:
+
+```text
+src/evaluation/supervised.py
+```
+
+Run command:
+
+```bash
+python3 -m src.evaluation.supervised
+```
+
+A control, not a twelfth method. The eleven evaluated methods are all zero-shot:
+they turn a similarity score into a label through fixed bands. The project judged
+1,027 pairs and scores on 200 of them, so 827 labelled pairs are free to serve as
+training data. This step trains a classifier on those 827, using nothing but the
+similarity scores the eleven methods already produced, and scores it on the same
+reference set the methods are scored on. If it still cannot type a relationship,
+the difficulty is the task; if it can, the difficulty was the framing.
+
+Nothing is downloaded, fine-tuned, or called over the network. The 827 training
+pairs hold NO_RELATION, OVERLAP and COMPLEMENTARITY only, because every
+EQUIVALENCE and SUBSUMPTION pair in the corpus sits in the evaluation set, so the
+trained classifier cannot reach those two classes by construction.
+
+Created files:
+
+```text
+data/evaluation/supervised.json
+```
+
+---
+
+## 20. Step 10 - Trailer Ablation
+
+Script:
+
+```text
+src/analysis/ablation_trailers.py
+```
+
+Run command:
+
+```bash
+python3 -m src.analysis.ablation_trailers            # local embedding methods
+python3 -m src.analysis.ablation_trailers --with-nli # adds the cross-encoder, ~2 min
+```
+
+EN 303 645 prints an unlabelled explanatory paragraph beneath many of its
+provisions, and the extraction keeps them: they are 53% of that standard's
+extracted words. That leaves the score compression reported for the
+contextual-embedding models open to a second reading, in which the shared
+explanatory prose is what makes everything look similar rather than the geometry
+of the embedding spaces. This step settles it by re-scoring the same pairs on text
+stripped to its normative sentences and recalibrating each method the same way the
+main analysis does.
+
+The two hosted methods are archived as stored outputs and cannot be re-scored, so
+they are absent here by necessity. Nothing is written to `data/extracted/` or
+`data/mappings/`: every number already reported comes from those, and this
+experiment must not be able to move them.
+
+Created files:
+
+```text
+data/ablation/ablation.json
+data/ablation/*.npy
+```
+
+---
+
+## 21. Step 11 - Generate Final Report
 
 Script:
 
@@ -964,7 +1041,7 @@ This is the final Markdown evaluation report.
 
 ---
 
-## 20. Step 10 - Thesis Figures
+## 22. Step 12 - Thesis Figures
 
 Script:
 
@@ -993,7 +1070,7 @@ thesis/figures/calibration_gap.pdf
 
 ---
 
-## 21. Checking the Thesis Numbers
+## 23. Checking the Thesis Numbers
 
 Script:
 
@@ -1013,7 +1090,7 @@ checks 199 values and should be run before every submission build.
 
 ---
 
-## 22. Measured Runtimes
+## 24. Measured Runtimes
 
 File:
 
@@ -1028,7 +1105,7 @@ claims made in the thesis and in Part I.
 
 ---
 
-## 23. Full End-to-End Order
+## 25. Full End-to-End Order
 
 The pipeline is meant to be run one stage at a time. That makes it easier to
 check outputs before moving on, especially before using API-based Gemini steps.
@@ -1046,6 +1123,8 @@ python3 -m src.evaluation.evaluate
 python3 -m src.evaluation.analysis
 python3 -m src.evaluation.ranking
 python3 -m src.evaluation.coverage
+python3 -m src.evaluation.supervised
+python3 -m src.analysis.ablation_trailers
 python3 -m src.report.generate_report
 python3 -m src.report.figures
 python3 -m src.report.check_thesis_numbers
@@ -1067,7 +1146,7 @@ and `python3 -m src.validation.agreement` afterwards.
 
 ---
 
-## 24. Complete File Flow
+## 26. Complete File Flow
 
 ```text
 Raw PDFs
@@ -1092,6 +1171,10 @@ Evaluation JSON, error CSV, prediction-vs-ground-truth CSV
   v
 Calibrated thresholds, ranking metrics, coverage tables and heatmap
   |
+  | src/evaluation/supervised.py, src/analysis/ablation_trailers.py
+  v
+Two controls: supervised ceiling, normative-text-only re-scoring
+  |
   | src/report/generate_report.py, figures.py
   v
 Final Markdown report and thesis figures
@@ -1099,7 +1182,7 @@ Final Markdown report and thesis figures
 
 ---
 
-## 25. Current Evaluation Summary
+## 27. Current Evaluation Summary
 
 Current results from:
 
@@ -1140,7 +1223,7 @@ Two caveats matter when reading this table:
 
 ---
 
-## 26. Where to Read Next
+## 28. Where to Read Next
 
 - **Part I** of this document summarises what the project is and what it found.
 - `data/evaluation/report.md` is the generated results report.
