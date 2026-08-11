@@ -83,7 +83,12 @@ computes detection and classification metrics
 (Section~\ref{sec:evaluation}), bootstrap confidence intervals, per-method
 confusion matrices, and threshold sweeps, and writes per-method error files
 listing every missed pair and every wrong label with its provision
-identifiers.
+identifiers. Two further modules run the controls of
+Sections~\ref{sec:ablation} and~\ref{sec:supervised}: one re-scores the local
+methods on provision text stripped to its normative sentences, the other trains a
+classifier on the judged pairs held out of the reference set using the stored
+similarity scores as its only features. Both write to separate directories and
+neither can alter a reported figure.
 
 \paragraph{Reporting.} Renders the summary tables and the figures used in
 Chapter~\ref{ch:results} (matplotlib), in print-ready PDF form.

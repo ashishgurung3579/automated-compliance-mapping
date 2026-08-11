@@ -17,12 +17,12 @@ life~\cite{etsi304223}.
 
 A company that ships an AI-enabled IoT product falls under both documents.
 Demonstrating compliance then means working out how the two sets of
-requirements relate: which provisions say essentially the same thing, which
-overlap partially, which cover different aspects of a shared objective, and
-which have no counterpart at all. Both standards express their requirements in
+requirements relate. Some provisions say essentially the same thing; others
+overlap only partially, or cover different aspects of one shared objective, and
+many have no counterpart at all. Both standards express their requirements in
 natural language, at different levels of abstraction and with
 domain-specific vocabulary, so this mapping work is done manually today. It is
-slow, error-prone, and requires expertise in both IoT and AI
+slow work, it is error-prone, and it requires expertise in both IoT and AI
 security~\cite{kosenkov2025systematic,djebbar2023comparative}. The burden grows
 with every additional regulation, as the EU Cyber Resilience Act and the AI Act
 add their own requirement catalogues on top of the sector
@@ -47,9 +47,9 @@ posture~\cite{rodriguez2024llm,cejas2023gdpr,barhaim2023cloud}, but the
 specific task of mapping one security standard onto another has received little
 systematic evaluation. By implementing a spectrum of methods, from keyword
 matching to LLM classification, and scoring them against a common annotated
-reference on a real standard pair, this project produces evidence about where
-automation helps, where it fails, and where human expertise remains
-indispensable. The results are relevant both to researchers working on NLP for
+reference on a real standard pair, this project produces evidence about what
+automation does well on this task, what it does badly, and what still needs a
+human. The results are relevant both to researchers working on NLP for
 requirements engineering and to practitioners who need to decide whether
 AI-assisted compliance tools can be trusted in their processes.
 
@@ -81,8 +81,12 @@ framework.
   models (BERT, SecureBERT, CySecBERT), a cross-encoder trained for natural
   language inference, and hosted API methods (Gemini embeddings and Gemini
   prompt classification)?
-  \item How does automated mapping compare to expert judgement in terms of
-  accuracy, coverage, efficiency, and interpretability?
+  \item How does automated mapping compare to human judgement in terms of
+  accuracy, coverage, and efficiency? The comparison is made against the
+  annotated reference set of this project, which was LLM-drafted, cross-verified
+  and author-reviewed rather than built by external domain experts; what that
+  substitution costs the answer is set out in Sections~\ref{sec:gt}
+  and~\ref{sec:threats}.
 \end{enumerate}
 
 \section{Contributions}\label{sec:contributions}
@@ -102,7 +106,10 @@ The main contributions of this degree project are:
   classification) behind a common evaluation harness.
   \item An empirical comparison of these methods on pair detection and
   relationship classification, including confidence intervals, threshold
-  sensitivity analysis, and qualitative error analysis.
+  sensitivity analysis, and qualitative error analysis, together with two
+  controls that separate the methods from their setup: an ablation that
+  re-scores every local method on normative text alone, and a classifier trained
+  on the judged pairs held out of the evaluation.
   \item Evidence-based observations on why general-purpose embedding models
   overestimate similarity between security requirements, why cybersecurity-specific
   pretraining did not help in either independent attempt tested, and on the

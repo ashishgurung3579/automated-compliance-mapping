@@ -6,9 +6,10 @@ techniques. A five-stage pipeline was built that extracts 141 normative
 provisions from the two standards, maps them with eleven methods spanning
 lexical, sentence-embedding, contextual-embedding, cross-encoder and hosted API
 approaches, and evaluates all of them against a 200-pair reference set assembled
-from three rounds of LLM-assisted annotation totalling 1{,}027 judged pairs, each
+from three rounds of LLM-assisted annotation totalling 1{,}027 judged pairs: every
 label drafted by one frontier model, those of the later two rounds verified by a
-second from an unrelated developer, and all of them reviewed by the authors.
+second from an unrelated developer, with the pilot round read pair by pair by both
+authors and the later rounds adjudicated by them wherever the two models diverged.
 
 The answer the evidence supports is a split one. Finding \emph{that} two
 provisions relate is partly feasible; determining \emph{how} they relate is not.
@@ -22,16 +23,26 @@ SecureBERT, CySecBERT, Gemini embeddings and, to within one pair, BERT mark
 Re-selecting each threshold by cross-validation changes that picture, though less
 than the collapse might suggest. Gemini embeddings reach F1 0.782 at precision
 0.774, a margin of $+0.116$ [0.050, 0.188] over the baseline; BGE and CySecBERT
-clear it by smaller margins whose intervals also exclude zero; and the remaining
-methods gain something whose interval does not. Calibration is therefore worth
+clear it by smaller margins whose intervals also exclude zero, though at a
+reference set measuring $\kappa = 0.51$ on that decision those two margins are
+smaller than the label noise and are not read as method differences; and the
+remaining methods gain something whose interval does not. Calibration is therefore worth
 having. The practical lesson is stronger than a warning about optimistic
 benchmarks: a threshold fixed without knowing where a model's scores fall can
 turn a working model into a constant function. It does not, however, turn a
 modest margin into a large one.
 
-Determining how two provisions relate is not solved. The best typed accuracy,
-0.505, is what predicting the majority class for every pair achieves, and no
-method exceeds it. No similarity-based method can represent directional
+Determining how two provisions relate is not solved by any of the eleven. The best
+typed accuracy, 0.505, is what predicting the majority class for every pair
+achieves, and no evaluated method exceeds it. The reason is the framing rather
+than the representations: a control trained on the 827 judged pairs held out of
+the reference set, using only the scores those same eleven methods produce,
+reaches 0.580 accuracy and macro-F1 0.321 against a trivial 0.500 and 0.133. The
+typed signal is in the scores and the fixed similarity bands do not extract it.
+What that control does not do is resolve the overlap/complementarity boundary,
+where it errs as the annotators do, so typed mapping remains well short of what
+compliance documentation requires. No similarity-based method can represent
+directional
 subsumption even in principle, and the cross-encoder added here to test that limit
 confirms both halves of it: reading each pair in both directions does recover
 subsumption, producing 123 such labels where the other ten methods produce none,
@@ -118,13 +129,15 @@ Second, execute the expert validation survey designed in
 Appendix~\ref{app:survey} to put the ground truth on a multi-rater footing and to
 calibrate the human agreement ceiling.
 
-Third, pursue the cross-encoder result. Entailment scoring is the only approach
-here that recovers subsumption direction, and it does so untrained; a
-cross-encoder fine-tuned on requirement pairs, rather than borrowed from general
-natural language inference, is the obvious next step, and the annotated reference
-material is the training data for it. The scarcity finding tempers this: with
-thirteen rare-class pairs in the whole corpus, the training signal would have to
-come from other standard pairs.
+Third, train the typed task properly. The control in
+Section~\ref{sec:supervised} shows that supervision over the stored scores alone
+lifts typed accuracy above every zero-shot method, which makes end-to-end training
+the obvious extension rather than a speculative one: a cross-encoder fine-tuned on
+requirement pairs, rather than borrowed from general natural language inference,
+would train the representation and the decision together, and entailment scoring
+is in any case the only approach here that recovers subsumption direction. The
+scarcity finding tempers this: with thirteen rare-class pairs in the whole corpus,
+the signal for those two classes would have to come from other standard pairs.
 
 Fourth, revisit the prompt given to the LLM classifier. Its overuse of
 complementarity tracks the wording of the label definition rather than the

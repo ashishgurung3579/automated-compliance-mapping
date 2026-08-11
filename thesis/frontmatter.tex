@@ -38,8 +38,7 @@ August 2026\par}
 \vfill
 \noindent\fbox{\begin{minipage}{0.92\textwidth}\small
 \begin{tabular}{@{}p{0.28\textwidth}p{0.62\textwidth}@{}}
-\textbf{Author(s):} & Ashish Gurung\\
-                    & Bivishan Dhungana\\
+\textbf{Author(s):} & Ashish Gurung, Bivishan Dhungana\\
 \textbf{Supervisor:} & Fatiha Djebbar\\
 \textbf{Examiner:} & Eleftherios Vlahakis\\
 \textbf{Program:} & Master Programme in Cybersecurity\\
@@ -77,9 +76,10 @@ BGE); three contextual-embedding models pooled from masked language models (BERT
 SecureBERT, CySecBERT); an NLI cross-encoder that reads each pair in both
 directions; Gemini text embeddings; and a Gemini LLM prompted to classify each of
 the 4{,}968 possible pairs into one of six relationship types. Predictions were
-evaluated against a 200-pair reference set built by LLM-assisted annotation ---
-drafted by one frontier model, verified in the later two rounds by a second from
-an unrelated developer, and reviewed by the authors --- drawn from 1{,}027 pairs judged across three rounds. Related and unrelated pairs are
+evaluated against a 200-pair reference set built by LLM-assisted annotation:
+every label drafted by one frontier model, verified in the later two rounds by a
+second model from an unrelated developer, and reviewed by the authors, drawn from
+1{,}027 pairs judged across three rounds. Related and unrelated pairs are
 equally represented in it, which fixes the score of the trivial ``everything is
 related'' classifier at F1 0.667 and makes that the bar every method must clear.
 
@@ -94,9 +94,17 @@ be told apart from it. Calibration is worth having, though at this base rate it
 buys most methods less than the initial collapse suggests. The domain-adapted
 cybersecurity models fare worst. SecureBERT lands exactly on the baseline even
 recalibrated, and CySecBERT, adapted independently by another group, finishes
-below the general-purpose BERT both were built from.
-Assigning the correct relationship type is not solved. The best method reaches
-0.51 accuracy, matching but not exceeding the majority-class baseline. Two further
+below the general-purpose BERT both were built from. Re-scoring every local method
+on normative sentences alone, which removes 55\% of one standard's words, moves no
+method's F1 by as much as 0.03, so that collapse is a property of the embedding
+spaces and not of the explanatory prose they were given.
+Assigning the correct relationship type is not solved by any of the eleven. The
+best reaches 0.51 accuracy, matching but not exceeding the majority-class
+baseline. A control trained on the 827 judged pairs held out of the evaluation,
+using nothing but the scores those same methods produce, reaches 0.58, so the
+typed signal is present in the representations and the fixed similarity bands fail
+to extract it; the overlap/complementarity boundary defeats the trained model as
+well. Two further
 findings concern the data rather than the models. Equivalence and subsumption are
 close to absent between these standards: 13 pairs among the 1{,}027 judged, and
 none among 300 top-ranked pairs annotated specifically to find more, so the typed

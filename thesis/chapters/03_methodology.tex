@@ -13,7 +13,7 @@ The design addresses the research questions directly. RQ1 (feasibility and
 limits of automated relationship identification) is answered by the absolute
 performance levels and the error analysis. RQ2 (comparison of method families)
 is answered by evaluating all eleven methods under identical conditions. RQ3
-(automated vs.\ expert mapping) is answered by treating the reference annotation
+(automated vs.\ human mapping) is answered by treating the reference annotation
 as the standard of comparison and additionally measuring how consistently the
 task is performed on repetition. The expert role in that comparison is filled by
 annotation drafted by one frontier LLM, verified in two of the three rounds by a
@@ -173,14 +173,14 @@ onward.
 Annotation proceeded in three rounds, each addressing a limitation of the one
 before, and the reference set is assembled from their combined output.
 
-The \textbf{pilot round} produced 107 pairs by examining candidates that looked
+The pilot round produced 107 pairs by examining candidates that looked
 promising and reviewing every draft label. Both authors reviewed these pairs, so
 they are the closest thing to a human-verified anchor the project has. Their
 weakness is the same as their construction: pairs chosen because they looked
 related are 79\% related, which tells us about the selection rather than about
 the standards.
 
-The \textbf{screened round} widened the pool. Pairs were ordered by a screening
+A second, screened round widened the pool. Pairs were ordered by a screening
 score, the mean percentile rank of each pair across every similarity matrix, and
 650 were drawn from three bands of that ordering: 250 from the top tenth, 200
 from the next three tenths and 200 from the bottom six tenths. Averaging over the
@@ -191,7 +191,7 @@ pairs were mixed into the stream unmarked, so re-labelling them was blind and
 their agreement with the earlier reviewed labels can be read as a check on the
 new annotation (Section~\ref{sec:agreementresults}).
 
-The \textbf{targeted round} went looking for the two classes the first two had
+Last, a targeted round went looking for the two classes the first two had
 barely reached. Across the 727 pairs judged by then, \textsc{Equivalence}
 appeared three times and \textsc{Subsumption} ten. Because those counts cannot
 support a per-class result, the 300 highest-ranked pairs that no round had yet
@@ -379,7 +379,7 @@ model, and whether it was ever trained to make its geometry mean something.
 Every method above reduces a pair to one symmetric number, and a symmetric
 number cannot say which of two provisions is the broader one. Subsumption is
 therefore unreachable for all of them by construction. The
-\textbf{NLI cross-encoder} (\texttt{nli-deberta-v3-base}, a DeBERTa-v3
+NLI cross-encoder (\texttt{nli-deberta-v3-base}, a DeBERTa-v3
 model~\cite{he2023debertav3} fine-tuned on natural language inference
 data~\cite{williams2018mnli}) reads both provisions together and returns
 whether the first entails the second, which is a directional question.

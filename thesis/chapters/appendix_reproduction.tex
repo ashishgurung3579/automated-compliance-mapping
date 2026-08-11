@@ -28,6 +28,7 @@ python3 -m src.evaluation.evaluate              # ~1 s
 python3 -m src.evaluation.analysis              # ~1 min
 python3 -m src.evaluation.ranking               # ~2 s
 python3 -m src.evaluation.coverage              # ~2 s
+python3 -m src.evaluation.supervised            # ~5 s
 python3 -m src.report.generate_report           # ~1 s
 python3 -m src.report.figures                   # ~15 s
 \end{verbatim}
@@ -62,6 +63,22 @@ byte-identical prompts, written to a separate file:
 \begin{verbatim}
 GEMINI_OUTPUT_SUFFIX=rep2 python3 -m src.mapping.gemini_mapping
 \end{verbatim}
+
+\section*{Trailer ablation}
+
+The requirement-only condition of Section~\ref{sec:simstructure} re-scores the
+local methods on provision text stripped to its normative sentences:
+
+\begin{verbatim}
+python3 -m src.analysis.ablation_trailers --with-nli
+\end{verbatim}
+
+\noindent Without \texttt{-{}-with-nli} the cross-encoder is skipped and the run
+takes about two minutes. Results are written to \texttt{data/ablation/} and
+nothing under \texttt{data/extracted/} or \texttt{data/mappings/} is modified, so
+the ablation cannot disturb the figures reported for the full-text condition. The
+two hosted methods are archived as stored outputs and are absent from this
+comparison for that reason.
 
 \section*{Reference set and reliability}
 
