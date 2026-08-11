@@ -4,6 +4,7 @@ Report generator for automated compliance mapping evaluation.
 Reads data/evaluation/evaluation_summary.json and writes
 data/evaluation/report.md.
 """
+import csv
 import json
 from datetime import date
 from pathlib import Path
@@ -11,6 +12,7 @@ from pathlib import Path
 BASE = Path(__file__).parents[2]
 DATA = BASE / "data"
 SUMMARY_PATH = DATA / "evaluation" / "evaluation_summary.json"
+REFERENCE_PATH = DATA / "baseline" / "reference_set.csv"
 REPORT_PATH = DATA / "evaluation" / "report.md"
 
 from src.methods import METHODS
@@ -34,16 +36,27 @@ def best_method(summary: dict) -> str:
     )
 
 
+def reference_counts() -> tuple[int, int, int]:
+    """Total, positive and negative pair counts read from the reference set itself,
+    so the header cannot drift when the set is rebuilt."""
+    with REFERENCE_PATH.open(newline="", encoding="utf-8") as fh:
+        labels = [row["relationship"] for row in csv.DictReader(fh)]
+    negative = sum(1 for label in labels if label == "NO_RELATION")
+    return len(labels), len(labels) - negative, negative
+
+
 def render_report(summary: dict) -> str:
     lines = []
     today = date.today().isoformat()
+    total, positive, negative = reference_counts()
 
     lines += [
         "# Automated Compliance Mapping - Evaluation Report",
         "",
         f"**Generated**: {today}  ",
         "**Standards**: ETSI EN 303 645 (IoT security) x ETSI EN 304 223 (AI security)  ",
-        "**Ground truth**: 107 annotated pairs (85 positive, 22 negative)  ",
+        f"**Ground truth**: {total} annotated pairs "
+        f"({positive} positive, {negative} negative)  ",
         "",
         "---",
         "",
@@ -131,12 +144,14 @@ def render_report(summary: dict) -> str:
         "",
         "## Limitations and Notes",
         "",
-        "- All metrics computed against the 107 annotated GT pairs only; "
+        f"- All metrics computed against the {total} annotated GT pairs only; "
         "predictions outside GT scope are excluded from evaluation.",
+        "- The reference set is balanced at half negatives by design, so every figure "
+        "here is an upper bound on corpus-scale performance.",
         "- SUBSUMPTION variants (A_BROADER / B_BROADER) are merged into a single "
         "SUBSUMPTION class for classification metrics.",
-        "- Threshold values for each method were set heuristically; systematic "
-        "threshold search may improve precision/recall balance.",
+        "- Methods run at their shipped thresholds here; the cross-validated "
+        "recalibration is in data/evaluation/analysis.json.",
         "- Gemini Embedding API results may vary across API versions or rate-limit conditions.",
         "",
     ]

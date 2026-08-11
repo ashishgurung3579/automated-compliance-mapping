@@ -33,7 +33,7 @@ def encode(method, texts: list[str]) -> np.ndarray:
 def run(key: str) -> float:
     method = METHODS[key]
     src, tgt = load_provisions()
-    print(f"=== {method.long_label}")
+    print(method.long_label)
     print(f"Mapping {len(src)} EN 303 645 provisions to {len(tgt)} EN 304 223 "
           f"provisions ({len(src) * len(tgt)} pairs)")
 

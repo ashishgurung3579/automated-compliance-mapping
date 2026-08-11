@@ -1,8 +1,8 @@
 # Automated Compliance Mapping - Evaluation Report
 
-**Generated**: 2026-08-09  
+**Generated**: 2026-08-11  
 **Standards**: ETSI EN 303 645 (IoT security) x ETSI EN 304 223 (AI security)  
-**Ground truth**: 107 annotated pairs (85 positive, 22 negative)  
+**Ground truth**: 200 annotated pairs (100 positive, 100 negative)  
 
 ---
 
@@ -343,7 +343,8 @@
 
 ## Limitations and Notes
 
-- All metrics computed against the 107 annotated GT pairs only; predictions outside GT scope are excluded from evaluation.
+- All metrics computed against the 200 annotated GT pairs only; predictions outside GT scope are excluded from evaluation.
+- The reference set is balanced at half negatives by design, so every figure here is an upper bound on corpus-scale performance.
 - SUBSUMPTION variants (A_BROADER / B_BROADER) are merged into a single SUBSUMPTION class for classification metrics.
-- Threshold values for each method were set heuristically; systematic threshold search may improve precision/recall balance.
+- Methods run at their shipped thresholds here; the cross-validated recalibration is in data/evaluation/analysis.json.
 - Gemini Embedding API results may vary across API versions or rate-limit conditions.

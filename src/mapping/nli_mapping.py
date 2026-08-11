@@ -94,7 +94,7 @@ def label(p_forward: float, p_backward: float) -> str:
 
 if __name__ == "__main__":
     src, tgt = load_provisions()
-    print(f"=== {METHOD.long_label}")
+    print(METHOD.long_label)
     print(f"Scoring {len(src) * len(tgt)} pairs in both directions")
 
     tokenizer = AutoTokenizer.from_pretrained(METHOD.model_id)
