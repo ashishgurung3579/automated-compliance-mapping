@@ -39,6 +39,25 @@ SAMPLING_ROWS = {
     "Equivalence": "EQUIVALENCE",
 }
 
+# tab:ablation row -> method key in data/ablation/ablation.json. The delta columns
+# are differences of the four checked ones, so checking those four covers the row.
+ABLATION_ROWS = {
+    "TF--IDF": "rule_based_tfidf",
+    "Sentence-BERT": "sbert",
+    "MPNet": "mpnet",
+    "BGE": "bge",
+    "BERT": "bert",
+    "SecureBERT": "securebert",
+    "CySecBERT": "cysecbert",
+    "NLI cross-encoder": "nli",
+}
+
+# tab:supervised row -> model key in data/evaluation/supervised.json
+SUPERVISED_ROWS = {
+    "Logistic regression": "logistic_regression",
+    "Gradient boosting": "gradient_boosting",
+}
+
 # tab:runtime row -> key in data/evaluation/runtimes.json
 RUNTIME_ROWS = {
     "Provision extraction (both PDFs)": "extraction",
@@ -170,6 +189,49 @@ if __name__ == "__main__":
                   ".3f", errors)
         check(f"calibrated/{label}/held_out", cells[5], cv["cv_f1_mean"], ".3f", errors)
         checked += 6
+
+    # Trailer ablation: a separate run, so it may legitimately be absent.
+    ablation_path = DATA / "ablation" / "ablation.json"
+    if ablation_path.exists():
+        ablation = json.loads(ablation_path.read_text())["methods"]
+        abl = parse_rows(tex, "tab:ablation", ABLATION_ROWS)
+        for label, key in ABLATION_ROWS.items():
+            cells = abl.get(label)
+            if cells is None:
+                errors.append(f"ablation table: row {label!r} missing")
+                continue
+            entry = ablation[key]
+            for i, (condition, field) in enumerate([
+                ("full_text", "range_width"), ("requirement_only", "range_width"),
+            ]):
+                check(f"ablation/{label}/{condition}.{field}", cells[i],
+                      entry[condition][field], ".3f", errors)
+            for i, condition in [(3, "full_text"), (4, "requirement_only")]:
+                check(f"ablation/{label}/{condition}.f1", cells[i],
+                      entry[condition]["calibrated_f1"], ".3f", errors)
+            checked += 4
+
+    # Supervised control: a separate run, so it may legitimately be absent.
+    supervised_path = EVAL / "supervised.json"
+    if supervised_path.exists():
+        supervised = json.loads(supervised_path.read_text())
+        sup = parse_rows(tex, "tab:supervised", SUPERVISED_ROWS)
+        for label, key in SUPERVISED_ROWS.items():
+            cells = sup.get(label)
+            if cells is None:
+                errors.append(f"supervised table: row {label!r} missing")
+                continue
+            det = supervised["detection"][key]
+            typed = supervised["typed"][key]
+            check(f"supervised/{label}/precision", cells[0], det["precision"], ".3f", errors)
+            check(f"supervised/{label}/f1", cells[1], det["f1"], ".3f", errors)
+            check(f"supervised/{label}/accuracy", cells[2],
+                  typed["all_200"]["accuracy"], ".3f", errors)
+            check(f"supervised/{label}/macro_f1", cells[3],
+                  typed["all_200"]["macro_f1_5class"], ".3f", errors)
+            check(f"supervised/{label}/macro_f1_187", cells[4],
+                  typed["three_class_only"]["macro_f1"], ".3f", errors)
+            checked += 5
 
     # Agreement table: the kappas are computed elsewhere and were transcribed by hand.
     agreement = json.loads((DATA / "validation" / "agreement.json").read_text())

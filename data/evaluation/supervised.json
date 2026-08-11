@@ -1,0 +1,296 @@
+{
+  "split": {
+    "judged_pool": 1027,
+    "training_pairs": 827,
+    "evaluation_pairs": 200,
+    "training_labels": {
+      "NO_RELATION": 601,
+      "OVERLAP": 130,
+      "COMPLEMENTARITY": 96
+    },
+    "training_positive_rate": 0.2733,
+    "evaluation_positive_rate": 0.5
+  },
+  "features": [
+    "rule_based_tfidf",
+    "sbert",
+    "mpnet",
+    "bge",
+    "bert",
+    "securebert",
+    "cysecbert",
+    "nli",
+    "gemini_embedding",
+    "nli_forward",
+    "nli_backward",
+    "jaccard",
+    "gemini_llm_equivalence",
+    "gemini_llm_overlap",
+    "gemini_llm_subsumption",
+    "gemini_llm_complementarity",
+    "gemini_llm_no_relation"
+  ],
+  "detection": {
+    "all_positive_baseline": {
+      "predicted_positive": 200,
+      "true_positives": 100,
+      "false_positives": 100,
+      "false_negatives": 0,
+      "precision": 0.5,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "f1": 0.6667
+    },
+    "logistic_regression": {
+      "predicted_positive": 90,
+      "true_positives": 70,
+      "false_positives": 20,
+      "false_negatives": 30,
+      "precision": 0.7778,
+      "recall": 0.7,
+      "specificity": 0.8,
+      "f1": 0.7368,
+      "f1_ci": {
+        "point": 0.7368,
+        "ci_low": 0.6633,
+        "ci_high": 0.8
+      }
+    },
+    "gradient_boosting": {
+      "predicted_positive": 59,
+      "true_positives": 50,
+      "false_positives": 9,
+      "false_negatives": 50,
+      "precision": 0.8475,
+      "recall": 0.5,
+      "specificity": 0.91,
+      "f1": 0.6289,
+      "f1_ci": {
+        "point": 0.6289,
+        "ci_low": 0.5324,
+        "ci_high": 0.7059
+      }
+    },
+    "logistic_regression_coefficients": {
+      "gemini_embedding": 0.7359,
+      "sbert": 0.5239,
+      "bert": -0.3275,
+      "bge": 0.251,
+      "nli": 0.236,
+      "mpnet": 0.2255,
+      "securebert": 0.2205,
+      "rule_based_tfidf": 0.1637,
+      "nli_forward": -0.1293,
+      "cysecbert": 0.1193,
+      "gemini_llm_equivalence": 0.1124,
+      "gemini_llm_subsumption": 0.0438,
+      "nli_backward": 0.0425,
+      "jaccard": 0.0296,
+      "gemini_llm_no_relation": -0.0266,
+      "gemini_llm_overlap": 0.0045,
+      "gemini_llm_complementarity": 0.0014
+    }
+  },
+  "typed": {
+    "logistic_regression": {
+      "all_200": {
+        "n": 200,
+        "accuracy": 0.58,
+        "macro_f1_5class": 0.3211,
+        "macro_f1_ci": {
+          "point": 0.3211,
+          "ci_low": 0.2791,
+          "ci_high": 0.3615
+        }
+      },
+      "three_class_only": {
+        "n": 187,
+        "accuracy": 0.6203,
+        "macro_f1": 0.5546,
+        "macro_f1_ci": {
+          "point": 0.5546,
+          "ci_low": 0.4772,
+          "ci_high": 0.6241
+        }
+      },
+      "confusion_matrix": {
+        "EQUIVALENCE": {
+          "EQUIVALENCE": 0,
+          "OVERLAP": 1,
+          "SUBSUMPTION": 0,
+          "COMPLEMENTARITY": 2,
+          "NO_RELATION": 0
+        },
+        "OVERLAP": {
+          "EQUIVALENCE": 0,
+          "OVERLAP": 28,
+          "SUBSUMPTION": 0,
+          "COMPLEMENTARITY": 10,
+          "NO_RELATION": 6
+        },
+        "SUBSUMPTION": {
+          "EQUIVALENCE": 0,
+          "OVERLAP": 4,
+          "SUBSUMPTION": 0,
+          "COMPLEMENTARITY": 2,
+          "NO_RELATION": 4
+        },
+        "COMPLEMENTARITY": {
+          "EQUIVALENCE": 0,
+          "OVERLAP": 17,
+          "SUBSUMPTION": 0,
+          "COMPLEMENTARITY": 13,
+          "NO_RELATION": 13
+        },
+        "NO_RELATION": {
+          "EQUIVALENCE": 0,
+          "OVERLAP": 8,
+          "SUBSUMPTION": 0,
+          "COMPLEMENTARITY": 17,
+          "NO_RELATION": 75
+        }
+      }
+    },
+    "gradient_boosting": {
+      "all_200": {
+        "n": 200,
+        "accuracy": 0.55,
+        "macro_f1_5class": 0.2504,
+        "macro_f1_ci": {
+          "point": 0.2504,
+          "ci_low": 0.207,
+          "ci_high": 0.2944
+        }
+      },
+      "three_class_only": {
+        "n": 187,
+        "accuracy": 0.5882,
+        "macro_f1": 0.4334,
+        "macro_f1_ci": {
+          "point": 0.4334,
+          "ci_low": 0.3571,
+          "ci_high": 0.5108
+        }
+      },
+      "confusion_matrix": {
+        "EQUIVALENCE": {
+          "EQUIVALENCE": 0,
+          "OVERLAP": 2,
+          "SUBSUMPTION": 0,
+          "COMPLEMENTARITY": 0,
+          "NO_RELATION": 1
+        },
+        "OVERLAP": {
+          "EQUIVALENCE": 0,
+          "OVERLAP": 12,
+          "SUBSUMPTION": 0,
+          "COMPLEMENTARITY": 6,
+          "NO_RELATION": 26
+        },
+        "SUBSUMPTION": {
+          "EQUIVALENCE": 0,
+          "OVERLAP": 3,
+          "SUBSUMPTION": 0,
+          "COMPLEMENTARITY": 2,
+          "NO_RELATION": 5
+        },
+        "COMPLEMENTARITY": {
+          "EQUIVALENCE": 0,
+          "OVERLAP": 7,
+          "SUBSUMPTION": 0,
+          "COMPLEMENTARITY": 6,
+          "NO_RELATION": 30
+        },
+        "NO_RELATION": {
+          "EQUIVALENCE": 0,
+          "OVERLAP": 6,
+          "SUBSUMPTION": 0,
+          "COMPLEMENTARITY": 2,
+          "NO_RELATION": 92
+        }
+      }
+    },
+    "majority_class_baseline": {
+      "accuracy": 0.5,
+      "macro_f1_5class": 0.1333,
+      "macro_f1_three_class": 0.2323
+    }
+  },
+  "contrasts": {
+    "rule": "each supervised model vs. the all-positive baseline and vs. the best zero-shot method at its calibrated threshold",
+    "results": {
+      "logistic_regression__vs__all_positive": {
+        "f1": {
+          "difference": 0.0702,
+          "ci": [
+            -0.0071,
+            0.1462
+          ],
+          "excludes_zero": false
+        },
+        "specificity": {
+          "difference": 0.8,
+          "ci": [
+            0.7187,
+            0.8785
+          ],
+          "excludes_zero": true
+        }
+      },
+      "gradient_boosting__vs__all_positive": {
+        "f1": {
+          "difference": -0.0377,
+          "ci": [
+            -0.1404,
+            0.0582
+          ],
+          "excludes_zero": false
+        },
+        "specificity": {
+          "difference": 0.91,
+          "ci": [
+            0.8494,
+            0.9615
+          ],
+          "excludes_zero": true
+        }
+      },
+      "logistic_regression__vs__gemini_embedding": {
+        "f1": {
+          "difference": -0.0453,
+          "ci": [
+            -0.1093,
+            0.0178
+          ],
+          "excludes_zero": false
+        },
+        "specificity": {
+          "difference": 0.03,
+          "ci": [
+            -0.0516,
+            0.1122
+          ],
+          "excludes_zero": false
+        }
+      },
+      "gradient_boosting__vs__gemini_embedding": {
+        "f1": {
+          "difference": -0.1532,
+          "ci": [
+            -0.2441,
+            -0.0755
+          ],
+          "excludes_zero": true
+        },
+        "specificity": {
+          "difference": 0.14,
+          "ci": [
+            0.0612,
+            0.2233
+          ],
+          "excludes_zero": true
+        }
+      }
+    }
+  }
+}
