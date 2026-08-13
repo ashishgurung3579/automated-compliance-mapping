@@ -9,32 +9,30 @@ recent recurring problems now~\cite{alotaibi2023iiot,meziane2023survey}. Standar
 bodies have responded with security baselines for these technologies. Two of
 them are central to this thesis. \standardA{} defines baseline cybersecurity
 provisions for consumer IoT devices, covering areas such as password policy,
-secure communication, software updates, and protection of personal
+secure communication, software updates, and security of personal
 data~\cite{etsi303645}. \standardB{}, published by the ETSI committee on
 Securing Artificial Intelligence, defines baseline security requirements for AI
 models and systems across their life cycle, from secure design to secure end of
 life~\cite{etsi304223}.
 
-A company that ships an AI-enabled IoT product falls under both documents.
-Demonstrating compliance then means working out how the two sets of
-requirements relate. Some provisions say essentially the same thing; others
+A company that relys on an AI-enabled IoT product falls under both documents.
+Demonstrating compliance means working out how the two sets of
+requirements related to each other. Some provisions say essentially the same thing, others
 overlap only partially, or cover different aspects of one shared objective, and
 many have no counterpart at all. Both standards express their requirements in
 natural language, at different levels of abstraction and with
-domain-specific vocabulary, so this mapping work is done manually today. It is
-slow work, it is error-prone, and it requires expertise in both IoT and AI
+domain-specific vocabulary, this is the reason why mapping work is done manually today. It is
+slow work, it is prone to error, and it requires highly skilled human in both IoT and AI
 security~\cite{kosenkov2025systematic,djebbar2023comparative}. The burden grows
-with every additional regulation, as the EU Cyber Resilience Act and the AI Act
-add their own requirement catalogues on top of the sector
-standards~\cite{canavese2026uncovering}.
+with every updates on regulation, as the EU Cyber Resilience Act and the AI Act
+add their own requirement standards~\cite{canavese2026uncovering}.
 
-Recent progress in natural language processing offers a way to reduce this
-effort. Embedding models built on transformers can measure semantic similarity
-between sentences even when the wording differs~\cite{devlin2019bert,
-reimers2019sbert}, and large language models can be prompted to judge the
-relationship between two requirements directly~\cite{rodriguez2024llm}. Whether
-these techniques are accurate enough for security standards, where precision and
-traceability matter, is still an open question. This thesis investigates it.
+Recent progress in natural language processing offers an idea to minimise this
+effort. Embedding models built on transformers can successfully measure semantic similarity
+between sentences even though the wording differs~\cite{devlin2019bert,
+reimers2019sbert}, and popular large language models can be prompted to judge the
+relationship between two requirements directly~\cite{rodriguez2024llm}. The thesis investigate on Whether these techniques are accurate enough for security standards, where precision and
+traceability matter,which is still an open question. 
 
 \section{Motivation}\label{sec:motivation}
 
