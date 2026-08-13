@@ -94,30 +94,31 @@ framework.
 The main contributions of this degree project are:
 
 \begin{itemize}
-  \item A structured dataset of 141 normative provisions extracted from
+  \item The project provides an in-depth analysis of NLP approaches on automated compliance on ETSI EN 303 645 and EN 304 223 standards. A structured dataset of 141 normative provisions extracted from
   \standardA{} and \standardB{}, and a reference mapping of 200 pairs annotated
   with six relationship types, justifications, and confidence scores, drawn from
   1{,}027 pairs judged across three annotation rounds and balanced so that the
   trivial ``everything is related'' classifier does not score near the top of
   the scale.
-  \item An open, reproducible pipeline implementing eleven mapping methods
+  \item The project uses an open, reproducible pipeline implementing eleven mapping methods
   (TF--IDF, security-keyword Jaccard matching, Sentence-BERT, MPNet, BGE, BERT,
   SecureBERT, CySecBERT, an NLI cross-encoder, Gemini embeddings, and Gemini LLM
   classification) behind a common evaluation harness.
-  \item An empirical comparison of these methods on pair detection and
+  \item The project presents a empirical comparison of these methods on pair detection and
   relationship classification, including confidence intervals, threshold
   sensitivity analysis, and qualitative error analysis, together with two
   controls that separate the methods from their setup: an ablation that
   re-scores every local method on normative text alone, and a classifier trained
   on the judged pairs held out of the evaluation.
-  \item Evidence-based observations on why general-purpose embedding models
+  \item The project highlights the Evidence-based observations on why general-purpose embedding models
   overestimate similarity between security requirements, why cybersecurity-specific
   pretraining did not help in either independent attempt tested, and on the
   practical role automated mapping can play in compliance work today.
-  \item The finding that equivalence and subsumption are close to absent between
+  \item The project helps the finding that equivalence and subsumption are close to absent between
   these two standards: 13 pairs among the 1{,}027 judged, and none among 300
   top-ranked pairs searched specifically to find more. This bounds what any typed
   mapping between a device-level and a lifecycle-level standard can report.
+  \item The project helps to contribute the research community by supporting further research in automated compliance, cybersecurity, and AI governance.
 \end{itemize}
 
 \section{Outline}
