@@ -2,9 +2,12 @@
 
 \section{Research design}\label{sec:design}
 
-The project follows an experimental, comparative design. Rather than proposing
-a new algorithm, it measures how well existing NLP and LLM techniques perform
-on one concrete task: identifying and typing semantic relationships between
+The project follows an experimental, comparative design to evaluate the effectiveness
+of existing Natural Language Processing (NLP) and Large Language Model (LLM) techniques
+in identifying semantic similarity between regulatory security requirements
+on ETSI standard between ETSI EN 303 645 (IoT) and ETSI EN 304 223 (AI).
+Rather than proposing a new algorithm, it measures how well existing NLP and 
+LLM techniques performon one concrete task: identifying and typing semantic relationships between
 the provisions of \standardA{} and \standardB{}. All methods are run on the
 same extracted dataset and scored against the same ground truth, so
 differences in the results can be attributed to the methods themselves.
@@ -15,11 +18,11 @@ performance levels and the error analysis. RQ2 (comparison of method families)
 is answered by evaluating all eleven methods under identical conditions. RQ3
 (automated vs.\ human mapping) is answered by treating the reference annotation
 as the standard of comparison and additionally measuring how consistently the
-task is performed on repetition. The expert role in that comparison is filled by
-annotation drafted by one frontier LLM, verified in two of the three rounds by a
-second from an unrelated developer, and reviewed by the authors against a written codebook, not
-by external domain experts; a protocol for the external study is given in
-Appendix~\ref{app:survey} but was not carried out, and Section~\ref{sec:threats}
+task is performed on repetition. In this thesis project the expert role in that 
+comparison is filled by annotation drafted by one frontier LLM, verified in two 
+of the three rounds by a second from an unrelated developer, and reviewed by the authors
+against a written codebook, not by external domain experts; a protocol for the external study is given in
+Appendix~\ref{app:survey} but it was not carried out, and Section~\ref{sec:threats}
 states what this costs the RQ3 answer.
 
 The workflow has five stages: extraction, ground-truth construction,
@@ -30,7 +33,7 @@ of this chapter and implemented in the pipeline of Chapter~\ref{ch:prototype}.
 
 \subsection{Source documents}
 
-Both standards are publicly available from ETSI. \standardA{} v3.1.3 defines
+This project focuses on two cybersecurity standards published from ETSI. \standardA{} v3.1.3 defines
 baseline security provisions for consumer IoT devices; \standardB{} v2.1.1
 defines baseline security requirements for AI models and systems. The two
 documents differ in structure and terminology but share a numbered-provision
