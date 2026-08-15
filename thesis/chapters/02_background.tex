@@ -108,7 +108,7 @@ similarity~\cite{ethayarajh2019contextual}. This property matters for the
 results in Chapter~\ref{ch:results}.
 
 \paragraph{Large language models.}
-LLMs can be prompted to compare two requirements directly and output a
+LLMs can be prompted to evaluate two requirements directly and output a
 relationship judgement, capturing nuances that similarity scores flatten.
 Reported drawbacks include computational cost, limited reproducibility, and
 sensitivity to prompt design~\cite{jamshidi2025llmiot,rodriguez2024llm}.
@@ -129,10 +129,10 @@ absent alignment as well as strong matches.
 The closest published work to this thesis is manual. Djebbar and
 Nordstr\"{o}m~\cite{djebbar2023comparative} compare ISO/IEC 27001:2022,
 ISA/IEC 62443-3-3:2019 and \standardA{}, and their method is explicitly
-interpretive: controls are matched by \emph{teleological interpretation}, that
-is, by the goal a control is intended to realise rather than by the words it
-uses, and the authors state a deliberate preference for under-mapping over
-over-mapping when a match is uncertain. Their taxonomy is binary: two
+interpretive, controls are matched by \emph{teleological interpretation}, that
+is the goal a control is intended to realise rather than by the words it
+uses. The authors state a deliberate preference for under mapping, over
+over-mapping when a match is uncertain. Their taxonomy is binary which shows two
 controls are \emph{Equivalent} when wording and purpose coincide, and
 \emph{Related} when the wording differs but the security objective is the same.
 
@@ -146,7 +146,7 @@ individually rather than reporting only a coverage figure. The complete
 mappings are given as appendix tables, one row per aligned control pair.
 
 Two features of that study shape this one. The first is the sparsity: a
-standards pair drawn from different domains produces far more non-matches than
+standards pair drawn from different domains produces far more non matches than
 matches, and a mapping method that does not reproduce that asymmetry is not
 reproducing the task. The second is the form of the output: a typed
 relation, a coverage statement, and an explicit list of what was left unmapped.
