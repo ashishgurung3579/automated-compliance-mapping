@@ -1,22 +1,20 @@
 \chapter{Background and Related Work}\label{ch:background}
 
-This chapter gives the technical and regulatory context for the project. It
-opens with the two standards and the security problems they respond to. Compliance
-mapping as an activity comes next, then the NLP and LLM techniques the project
+This chapter provides the technical and regulatory context for the project. It
+opens with the two standards and the security problems they respond to each other. Compliance
+mapping as an activity takes place, then the NLP and LLM techniques the project
 builds on, and the chapter closes on prior studies of automated compliance
-analysis.
+results and analysis.
 
 \section{Background}
 
 \subsection{IoT security and \standardA{}}
 
-Consumer IoT devices are network-connected by design, often built on
-constrained hardware, and frequently shipped with weak defaults. Recurring
+Consumer IoT devices are network connected by design, often built on
+limited hardware, and frequently shipped with weak defaults. Recurring
 weaknesses include poor authentication mechanisms, unprotected software
-updates, unencrypted communication, unnecessarily exposed interfaces, and
-insufficient protection of personal
-data~\cite{sicari2015security,vardakis2024smarthome}. Because such devices sit
-in homes and workplaces, even small security failures translate into concrete
+updates, unencrypted communication, unnecessarily exposure of interfaces, and
+inadequate protection of personal data~\cite{sicari2015security,vardakis2024smarthome}. Because such devices are used in homes and workplaces, even minor security failures can lead into concrete
 privacy and safety risks~\cite{mocrii2018smarthomes}.
 
 \standardA{} (\textit{Cyber Security for Consumer Internet of Things: Baseline
@@ -24,9 +22,9 @@ Requirements}) addresses these weaknesses with thirteen groups of provisions,
 including no universal default passwords, vulnerability disclosure, keeping
 software updated, secure communication, minimising attack surfaces, and
 ensuring the protection of personal data~\cite{etsi303645}. The standard is
-outcome-focused: it states what a device must achieve rather than prescribing
-implementations, and it distinguishes mandatory provisions (``shall'') from
-recommendations (``should''). Its provisions are organised in numbered clauses
+outcome-focused. It states what a device must achieve rather than prescribing
+implementations, and it segregate mandatory provisions (``shall'') from
+recommendations (``should''). Its provisions are managed in numbered clauses
 (e.g., provision~5.3-3 on update mechanisms), which makes it a practical anchor
 for systematic mapping.
 
@@ -49,18 +47,18 @@ and prompts, supply-chain security, security testing, behavioural monitoring,
 and secure disposal of data and models. The provision-based, life-cycle
 structure parallels the clause organisation of \standardA{}, which is what
 makes a pairwise mapping between the two documents feasible in the first
-place.
+position.
 
 \subsection{Compliance mapping}
 
 Compliance mapping is the activity of relating the requirements of one
 framework to those of another, so that evidence collected for one can be
-reused for the other and gaps become visible. Studies of security standards
+used again for the other and gaps become visible. Studies of security standards
 report that overlapping controls, inconsistent terminology, and fragmented
 requirements are common across frameworks, and that mapping them requires
 interpretation of purpose and security objective, not just wording
 ~\cite{djebbar2023comparative,mussmann2020mappings}. Similar observations come
-from the GDPR domain, where manual compliance checking is described as
+from the GDPR domain, where manual level compliance checking is described as
 time-consuming and dependent on scarce legal-technical
 expertise~\cite{cejas2023gdpr,negri2024gdpr}. Castellanos Ardila et
 al.~\cite{castellanos2022compliance} likewise find that manual compliance
