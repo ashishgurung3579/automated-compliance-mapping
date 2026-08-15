@@ -57,14 +57,14 @@ used again for the other and gaps become visible. Studies of security standards
 report that overlapping controls, inconsistent terminology, and fragmented
 requirements are common across frameworks, and that mapping them requires
 interpretation of purpose and security objective, not just wording
-~\cite{djebbar2023comparative,mussmann2020mappings}. Similar observations come
+~\cite{djebbar2023comparative,mussmann2020mappings}. Similar outcomes come
 from the GDPR domain, where manual level compliance checking is described as
-time-consuming and dependent on scarce legal technical
+time consuming and dependent on scarce legal technical
 expertise~\cite{cejas2023gdpr,negri2024gdpr}. Castellanos Ardila et
-al.~\cite{castellanos2022compliance} likewise find that manual compliance
+al.~\cite{castellanos2022compliance} finds that manual compliance
 checking of software processes is labour intensive and hard to scale.
 
-Automated approaches try to reduce this effort by extracting requirements from
+Automated approaches try to minimize this effort by withdrawing requirements from
 the documents and comparing them algorithmically, classifying pairs as
 identical, related, partially overlapping, or unrelated~\cite{sleimi2021legal}.
 Beyond saving effort, automation promises consistency: the same criteria are
@@ -74,8 +74,8 @@ is accuracy, and that is the subject of this thesis.
 \subsection{NLP and LLM techniques for requirement analysis}
 
 \paragraph{Semantic similarity.}
-Standards frequently express similar objectives with different terminology:
-device-focused language in \standardA{}, life-cycle and governance language in
+Standards frequently express similar objectives with different terminology"
+device-focused" language in \standardA{}, "life-cycle and governance" language in
 \standardB{}. Keyword matching fails on such vocabulary mismatch, a problem
 long recognised in requirements traceability
 research~\cite{mahmoud2015semantics,rajpathak2022linking}. Semantic approaches
@@ -84,9 +84,9 @@ have been shown to outperform lexical matching for requirement tracing
 ~\cite{mahmoud2015semantics}.
 
 \paragraph{NLP pipelines.}
-NLP has been applied across requirements engineering tasks: extracting domain
+NLP has been applied across requirements engineering tasks where extracting domain
 concepts, detecting language defects, and establishing traceability links
-~\cite{zhao2021nlp4re,sonbol2022representation}. A typical pipeline extracts
+~\cite{zhao2021nlp4re,sonbol2022representation} takes place. A typical pipeline extracts
 normative statements, normalises the text, and converts each requirement into
 a numerical representation suitable for comparison. Legal and regulatory text
 adds difficulties of its own: context-dependent terminology, implicit
