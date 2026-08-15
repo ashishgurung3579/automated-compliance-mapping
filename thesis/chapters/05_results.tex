@@ -1,7 +1,7 @@
 \chapter{Results and Discussion}\label{ch:results}
 
-This chapter reports the experimental results. Section~\ref{sec:setup} recalls
-the setup, Sections~\ref{sec:detectionresults}--\ref{sec:classresults} present
+This chapter describes the experimental results and discussion. The Section~\ref{sec:setup} recalls
+the experimental setup, Sections~\ref{sec:detectionresults}--\ref{sec:classresults} present
 pair detection, similarity structure, threshold calibration, and relationship
 classification, Section~\ref{sec:coverage} turns the best method's output into a
 coverage statement, Section~\ref{sec:agreementresults} covers the ground-truth
@@ -10,7 +10,7 @@ findings against the research questions and the threats to their validity.
 
 \section{Experimental setup}\label{sec:setup}
 
-All eleven methods were run on the full cross product of 69 \standardA{}
+During the experimental setup all eleven methods were run on the full cross product of 69 \standardA{}
 provisions and 72 \standardB{} provisions (4{,}968 pairs) and evaluated on the
 200-pair annotated reference set described in Section~\ref{sec:gt}: 100 related
 pairs and 100 annotated negatives (Figure~\ref{fig:gtdist}). Metrics outside the
@@ -24,8 +24,7 @@ carries that value as its final row. It also means the figures reported here
 describe a balanced set and bound from above what the same operating points
 achieve at corpus scale.
 
-The second is the scarcity of the rare classes. \textsc{Overlap} (44 pairs) and
-\textsc{Complementarity} (43) make up almost all the positives, while
+The second is the scarcity of the rare classes. As we can see from the (Figure~\ref{fig:gtdist})\textsc{Overlap} (44 pairs) and \textsc{Complementarity} (43) make up almost all the positives, while
 \textsc{Subsumption} contributes 10 pairs and \textsc{Equivalence} 3. As
 Section~\ref{sec:sampling} reports, this reflects the two standards rather than
 the draw: only 13 of the 1{,}027 judged pairs fall into those classes, and the
@@ -42,8 +41,8 @@ for completeness rather than as measurements.
 
 \section{Pair detection}\label{sec:detectionresults}
 
-Table~\ref{tab:detection} and Figure~\ref{fig:detectionbars} show detection at
-each method's shipped operating point; Figure~\ref{fig:cis} adds bootstrap
+This part shows the pair detection on the annotated scope at each method's shipped threshold Table~\ref{tab:detection} and Figure~\ref{fig:detectionbars} show detection at
+each method's shipped operating point and the Figure~\ref{fig:cis} adds bootstrap
 confidence intervals.
 
 \begin{table}[htbp]
@@ -93,7 +92,7 @@ pair-detection F1 and classification macro-F1.}
 The baseline row splits the methods into two regimes. The lexical baselines,
 both smaller sentence-embedding models at their default operating points, and the
 cross-encoder predict very few relations. What they do predict is largely correct,
-with Sentence-BERT reaching precision 0.882 and the cross-encoder 0.875, but
+with Sentence-BERT reaching precision 0.882 and the cross-encoder 0.875,(see at Figure~\ref{fig:detectionbars}) but
 recall between 0.01 and 0.15 makes none of them usable as a stand-alone detector.
 
 The remaining methods sit at the opposite extreme. SecureBERT, CySecBERT and
@@ -117,12 +116,12 @@ distributions within a panel, not where either sits.}
 \label{fig:simdist}
 \end{figure}
 
-Figure~\ref{fig:simdist} explains the degenerate behaviour, and with eleven
-methods the pattern is legible as a family property and not a quirk of one model.
+In this phase, Figure~\ref{fig:simdist} explains the degenerate behaviour, and with eleven
+methods the pattern is legible as a family property and does not shows a unusual habit of one model.
 All three contextual-embedding models compress: BERT places every pair,
 related or not, between 0.570 and 0.914; CySecBERT between 0.707 and 0.925;
 SecureBERT is the extreme case, packing the entire corpus into
-$[0.875, 0.971]$, a band 0.096 wide. With ranges that narrow, the fixed label
+$[0.875, 0.971]$, with a band 0.096 wide. With ranges that narrow, the fixed label
 thresholds of Section~\ref{sec:thresholds} land every pair in the same band:
 SecureBERT assigns \textsc{Equivalence} to all 4{,}968 possible pairs, and
 CySecBERT splits them between \textsc{Equivalence} and \textsc{Overlap} without
@@ -134,7 +133,7 @@ vocabulary does not repair the geometry: both domain-adapted models are more
 compressed than the general-purpose model they descend from.
 
 The sentence-embedding models spread out, as their training intends.
-Sentence-BERT and MPNet span roughly $[-0.05, 0.8]$ and visibly separate the two
+Sentence-BERT and MPNet span roughly $[0.05, 0.8]$ and visibly separate the two
 distributions, though even there the overlap is substantial, which confirms that
 the annotated negatives are genuinely hard. BGE sits in between. It is trained for
 similarity and separates the classes well, but its scores never fall below 0.345,
@@ -159,7 +158,7 @@ The two accounts are separable by re-running the local methods on provision text
 stripped to its normative sentences. The trailers carry no marker of their own,
 the extractor having already removed the blocks the standard labels
 \textsc{Note} or \textsc{Example}, so they are identified by the absence of a
-normative modal: sentences containing \emph{shall} or \emph{should} are kept and
+normative model: sentences containing \emph{shall} or \emph{should} are kept and
 the rest discarded. The operation removes 55\% of \standardA{}'s words across 27
 of its 69 provisions and only 7\% of \standardB{}'s across 9 of 72, which is the
 asymmetry Section~\ref{sec:data} describes and a check that the heuristic is
@@ -234,14 +233,19 @@ distinguished by colour, and the families are what the comparison is about.}
 \label{fig:sweep}
 \end{figure}
 
-The methods occupy incomparable score ranges: TF--IDF tops out at 0.190 while
-SecureBERT never drops below 0.875. Candidate thresholds are taken as
-quantiles of each method's own score distribution and not from a shared absolute
+
+
+The methods occupy incomparable score ranges:
+The lexical TF-IDF approach shows a relatively low F1 score, reaching approximate 0.190, indicating that lexical similarity provides limited discriminatory information for the pair-detection. SBERT, MPNet, and BGE shows substantially stronger performance with their F1 scores remain around 0.65–0.70 over a range of thresholds. As we can see that, BGE maintains a high F1 score compare to SBERT and MPNet, suggesting greater robustness to threshold selection. Likewise, BERT, SecureBERT, and CySecBERT also achieve relatively high F1 scores, approximately 0.65–0.70. However, their performance declines sharply at different threshold values, indicating that the optimal operating point varies between models. The NLI cross-encoce der shows the poorly performanacross almost the entire threshold range, with an F1 score remaining below approximately 0.15. While, the Gemini embedding approach achieves the highest observed F1 score, approximately 0.78, before performance declines substantially at higher thresholds. This determines that this contains strong information for pair detection, although its performance is also sensitive to the choice of threshold.
+
+Candidate thresholds are taken as quantiles of each method's own score distribution and not from a shared absolute
 grid, which would hand one method a hundred usable cut points and another three.
 Selecting a threshold on the same pairs the score is reported on inflates it, so
 selection is wrapped in 5-fold cross-validation repeated 20 times, stratified on
 the label: the threshold is chosen on four folds and scored on the fifth, and the
 reported threshold is the median of the 100 selections.
+
+
 
 \begin{table}[htbp]
 \centering
