@@ -2,9 +2,9 @@
 
 The methods of Chapter~\ref{ch:methodology} are implemented as a five-stage
 pipeline, released as an open repository so that every number in
-Chapter~\ref{ch:results} can be regenerated from the raw standard documents.
+Chapter~\ref{ch:results} that can be regenerated from the raw standard documents.
 This chapter describes the system's structure, what was built for the project
-and what was reused, and the artefacts each stage produces.
+and what was reused, and explains the artefacts that each stage produces.
 
 \section{Architecture}
 
@@ -38,13 +38,12 @@ stage runs.}
 \label{fig:pipeline}
 \end{figure}
 
-Figure~\ref{fig:pipeline} shows the five stages. The pipeline is a set of
+The Figure~\ref{fig:pipeline} shows the five stages. The pipeline is a set of
 Python modules run stage by stage from the command line; each stage reads the
 files of the previous one and writes its results to a versioned data
 directory. This staged design was a deliberate choice over a single
-end-to-end script: extraction errors are cheaper to catch before mapping runs,
-and the API-based methods (which cost money per call) are only invoked once
-their inputs are verified.
+end-to-end script. The extraction errors are cheaper to catch before mapping runs,
+and the API-based methods are only invoked once their inputs are verified.
 
 \section{Stage descriptions}
 
@@ -54,7 +53,7 @@ provision identifiers with pattern matching, and writes one JSON record per
 provision with identifier, section, title, text, and modality. Output: 69
 records for \standardA{}, 72 for \standardB{}.
 
-\paragraph{Ground truth.} Materialises the annotation of Section~\ref{sec:gt}
+\paragraph{Ground truth.} In this stage, It materialises the annotation of Section~\ref{sec:gt}
 as \texttt{reference\_set.csv}, holding for each pair the source and target
 identifiers, one of six relationship labels, a one-sentence justification, a
 confidence score, the round the pair came from, and whether the authors reviewed
@@ -64,7 +63,7 @@ classes), assemble the evaluated set from their combined output under the
 composition rule of Section~\ref{sec:refset}, and compute the agreement
 statistics of Section~\ref{sec:gtvalidation}.
 
-\paragraph{Mapping.} One module per method. The rule-based module computes
+\paragraph{Mapping.} In this stage we tried with One module per method. The rule-based module computes
 TF--IDF cosine similarity (scikit-learn) and security-keyword Jaccard scores.
 The six local transformer modules share a common embedding helper that
 loads the model (Hugging Face), embeds all provisions, normalises the
@@ -78,7 +77,7 @@ similarity-based module stores both its thresholded predictions (CSV) and its
 raw similarity matrix (NumPy), the latter enabling the threshold sweep of
 Section~\ref{sec:thresholdresults} without re-running any model.
 
-\paragraph{Evaluation.} Loads the ground truth and every prediction file,
+\paragraph{Evaluation.} In this stage, It works with the ground truth and every prediction file,
 computes detection and classification metrics
 (Section~\ref{sec:evaluation}), bootstrap confidence intervals, per-method
 confusion matrices, and threshold sweeps, and writes per-method error files
@@ -90,7 +89,7 @@ classifier on the judged pairs held out of the reference set using the stored
 similarity scores as its only features. Both write to separate directories and
 neither can alter a reported figure.
 
-\paragraph{Reporting.} Renders the summary tables and the figures used in
+\paragraph{Reporting.} This stage renders the summary tables and the figures used in
 Chapter~\ref{ch:results} (matplotlib), in print-ready PDF form.
 
 \section{Built versus reused}
