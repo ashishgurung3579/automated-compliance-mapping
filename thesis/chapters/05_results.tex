@@ -1,4 +1,4 @@
-\chapter{Results and Discussion}\label{ch:results}
+ \chapter{Results and Discussion}\label{ch:results}
 
 This chapter describes the experimental results and discussion. The Section~\ref{sec:setup} recalls
 the experimental setup, Sections~\ref{sec:detectionresults}--\ref{sec:classresults} present
@@ -357,9 +357,9 @@ the reviewer.
 
 \section{Relationship classification}\label{sec:classresults}
 
-Detecting that two provisions relate is only half the task; compliance work
+Detecting that two provisions relate is only half the task, compliance work
 needs to know \emph{how} they relate. Table~\ref{tab:classification}
-summarises classification performance.
+has summarises classification performance successfully. 
 
 \begin{table}[htbp]
 \centering
@@ -395,43 +395,41 @@ CMP = complementarity, NONE = no relation.}
 \label{fig:confusion}
 \end{figure}
 
-Every method fails at classification. The comparison that matters is against the
+in general, no any single method perform satisfactory at classification task. The comparison that matters is against the
 trivial classifier that assigns the majority label to everything: \textsc{No
-relation} accounts for 100 of the 200 pairs, so always predicting it yields 0.500
-accuracy. The best methods match that figure without exceeding it, Sentence-BERT
-and MPNet at 0.505 and the cross-encoder at 0.500. The same trivial classifier
-scores 0.133 macro-F1, which several methods do beat, keyword Jaccard highest at
-0.248 and Gemini embeddings next at 0.238, so the methods are not uniformly
-worthless at distributing predictions across classes. On the five-label task,
-however, none of the eleven methods learns the distinction the task is about.
+relation} accounts for 100 of the 200 pairs, so always predicting it gains 0.500
+accuracy. Sentence-BERT
+and MPNet at 0.505 and the cross-encoder at 0.500 are the best methods that match figure without exceeding it. The same categories classifier
+scores 0.133 macro-F1, which several methods has beats, keyword Jaccard has highest at
+0.248 and Gemini embeddings is at next position with 0.238, so the methods are not uniformly
+worthless at distributing predictions across classes. On the above five-label task,
+however, none of the eleven methods learns the distinction the task is about and performs not well in overall. 
 
 The confusion matrices in Figure~\ref{fig:confusion} show how each one fails, and
-the failures are not of one kind.
+the failures are not of one kind of patterns. 
 
 Sentence-BERT and MPNet reach the top of the accuracy column by predicting
 \textsc{No relation} for almost everything, which is the majority class on this
-set. Their accuracy is the majority-class strategy under another name, and their
-macro-F1 of 0.159 reflects it. Gemini embeddings do the opposite and funnel most
-predictions into \textsc{Overlap}, the majority class on the earlier pilot set but
-not on this one; accuracy drops to 0.270 while the macro-F1 is the second best of
-the eleven. That method also reaches \textsc{Equivalence} at precision 1.00 and
-recall 0.33, recovering one of the three equivalence pairs. BERT and the two
-cybersecurity models simply collapse: SecureBERT's uniform \textsc{Equivalence}
+set. Their accuracy is the majority class strategy under another name, and their
+macro-F1 of 0.159 reflects it. Gemini embeddings shows the opposite behaviour and shows most
+predictions into \textsc{Overlap}. It is the majority class on the earlier pilot set but
+not on this one with an accuracy drops to 0.270 while the macro-F1 remains the second best of
+the eleven methods. That method also reaches \textsc{Equivalence} at precision 1.00 and
+recall 0.33, recovering one of the three equivalence pairs. BERT and the two cybersecurity models performs really poor. SecureBERT's continous \textsc{Equivalence}
 output produces 0.015 accuracy, exactly the three equivalence pairs in the
 reference set, and CySecBERT reaches 0.045.
 
-The two methods that are not similarity thresholds behave differently again. The
-Gemini LLM predicts labels from provision content instead of a score band, and it
-does recognise complementarity, at recall 0.84. It also heavily overuses that
+The two methods that are not similarity thresholds produce different result. The
+Gemini LLM predicts labels from provision content instead of a similarity score, and it
+does recognise complementarity with a recall value of 0.84. It also heavily overuses that
 label, assigning a relation to 91 of the 100 annotated negatives and reaching
-\textsc{No relation} with recall 0.09. The NLI cross-encoder is the only method
-that predicts \textsc{Subsumption} at all, for the reason given in
+\textsc{No relation} with recall 0.09. The NLI cross-encoder is the only one method
+which has predicts \textsc{Subsumption} at all, for the reason given in
 Section~\ref{sec:nlimethod}: over the full corpus it emits 123 subsumption labels
-where every other method emits none. Its macro-F1 of 0.161 is nonetheless
-unremarkable, because the method is extremely conservative. It flags 142 of
+where other methods did not produce any subsumtion. Its macro-F1 lies in 0.161 which is 
+unremarkable low because the method is extremely conservative. It flags 142 of
 4{,}968 pairs, and so reaches the directional label on too few pairs to score
-well. This is the one gap in the taxonomy that a change of architecture closes and
-a better-calibrated threshold does not.
+well. This is the one gap in the taxonomy that a change of model can bring new class while other method would have missed. Although, better threshold calibration alone may not be sufficient. 
 
 The scarcity documented in Section~\ref{sec:setup} bounds what any of this can
 establish. \textsc{Equivalence} is supported by three pairs and
@@ -440,7 +438,7 @@ large amounts on a single prediction and the macro-F1 that averages them inherit
 that instability. The failure is measured on the classes where the reference set
 has real support, \textsc{Overlap}, \textsc{Complementarity} and \textsc{No
 relation}, and it is on the overlap/complementarity boundary that both the methods
-and the annotators disagree most. The validation study below quantifies that.
+and the annotators disagree most. The validation study below examines this issue with more details. 
 
 \section{What supervision buys}\label{sec:supervised}
 
