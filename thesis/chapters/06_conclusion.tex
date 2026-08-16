@@ -3,73 +3,49 @@
 This thesis was based on how far the mapping of security requirements between
 \standardA{} and \standardB{} can be automated with current NLP and LLM
 techniques. A five-stage pipeline was set for this thesisi project that extracts 141 normative
-provisions from the two standards, maps them with eleven methods spanning
-lexical, sentence-embedding, contextual-embedding, cross-encoder and hosted API
-approaches, and evaluates all of them against a 200-pair reference set assembled
-from three rounds of LLM-assisted annotation totalling 1{,}027 judged pairs. Every
-label drafted by one frontier model, those of the later two rounds verified by a
-second from an unrelated developer, with the pilot round read pair by pair by both
-authors and the later rounds adjudicated by them wherever the two models diverged.
+provisions from the two standards, compare and maps them with eleven different methods and 
+evaluate their performance. The methods covers lexical similarity, sentence-embedding, contextual-embedding, cross-encoder and hosted API approaches. The evaluation was based on  a 200-pair reference set assembled
+from three rounds of LLM-assisted annotation with totalling 1{,}027 judged pairs. 
+Every label drafted by one frontier model, after that the annotations were analyzed and reviewed 
+when necessary, adjudicated by the authors wherever the two models diverged.
 
-The answer the evidence supports is a split one. Finding \emph{that} two
-provisions relate is partly feasible; determining \emph{how} they relate is not.
 
-The detection result turns on calibration. The reference set was built to be half
-related and half not, so the classifier that calls every pair related scores
-$F_1 = 0.667$ on it, and that figure is the bar every method has to clear. At the
-thresholds they ship with, four of the eleven methods do not clear it at all.
-SecureBERT, CySecBERT, Gemini embeddings and, to within one pair, BERT mark
-\emph{every} annotated pair as related and reproduce the trivial score exactly.
-Re-selecting each threshold by cross-validation changes that picture, though less
-than the collapse might suggest. Gemini embeddings reach F1 0.782 at precision
-0.774, a margin of $+0.116$ [0.050, 0.188] over the baseline; BGE and CySecBERT
-clear it by smaller margins whose intervals also exclude zero, though at a
-reference set measuring $\kappa = 0.51$ on that decision those two margins are
-smaller than the label noise and are not read as method differences; and the
-remaining methods gain something whose interval does not. Calibration is therefore worth
-having. The practical lesson is stronger than a warning about optimistic
-benchmarks: a threshold fixed without knowing where a model's scores fall can
-turn a working model into a constant function. It does not, however, turn a
-modest margin into a large one.
+The results shows that automated mapping can help to identify whether two provisions are related,
+but it is not yet reliable enough to determine the exact type of relationship between them. 
+In other words, finding potentially provisions is partly feasible, while assigning a meaningful relationship between them still requires human judgement.
 
-Determining how two provisions relate is not solved by any of the eleven. The best
-typed accuracy, 0.505, is what predicting the majority class for every pair
-achieves, and no evaluated method exceeds it. The reason is the framing rather
-than the representations: a control trained on the 827 judged pairs held out of
-the reference set, using only the scores those same eleven methods produce,
-reaches 0.580 accuracy and macro-F1 0.321 against a trivial 0.500 and 0.133. The
-typed signal is in the scores and the fixed similarity bands do not extract it.
+
+The detection result turns on calibration. The reference set was built to be an equal number of related and unrelated pairs, so the classifier that calls every pair related scores $F_1 = 0.667$ on it, and 
+that figure is the bar every method has to clear. When their default thresholds are used 
+four of the eleven methods does not exceed this baseline. SecureBERT, CySecBERT, Gemini embeddings and, to within one pair, BERT mark \emph{every} annotated pair as related and reproduce the trivial score exactly and performs no better 
+than the simple baseline.
+
+Choosing each threshold by cross-validation improves the results.
+Gemini embeddings reach F1 0.782 at precision 0.774, a margin of $+0.116$ [0.050, 0.188] over the baseline; BGE and CySecBERT improves its baseline by smaller margins whose intervals also exclude zero. As per the given though at a
+reference set measuring $\kappa = 0.51$, these smaller differences should not be interpreted as strong evidence that one method is better than another. The major practical finding is that calibration can help to prevent optimistic benchmarks; a model from behaving like an almost constant classifier. However, calibration alone does not turn the relatively small improvements into highly reliable automation mapping.
+
+Determining how two provisions relate is not solved by any of the eleven evaluated methods performs better than the majority-class baseline, which achieves a typed accuracy of 0.505. 
+This suggests that a single similarity score is not sufficient to distinguish between different semantic relationships. The reason is the framing rather than the representations: a control trained on the 827 judged pairs held out of the reference set, using only the scores those same eleven methods produce,
+reaches 0.580 accuracy and macro-F1 0.321 against a trivial 0.500 and 0.133 for the majority-class baseline. This indicates that the similarity scores contain some information about relationship types, but that the fixed similarity thresholds used by the individual methods do not capture this information effectively.
+
 What that control does not do is resolve the overlap/complementarity boundary,
-where it errs as the annotators do, so typed mapping remains well short of what
+where it erorrs as the annotators do, so typed mapping remains well short of what
 compliance documentation requires. No similarity-based method can represent
-directional
-subsumption even in principle, and the cross-encoder added here to test that limit
-confirms both halves of it: reading each pair in both directions does recover
-subsumption, producing 123 such labels where the other ten methods produce none,
-but at a recall too low to be useful and at roughly sixty times the compute.
+directional subsumption even in principle, and Unlike the other methods, the cross-encoder was calculated in both directions which will able to identify subsumption relationships. It produced 123 subsumption labels, whereas the other ten methods produced none. However, its recall was too low for the method to be practically useful, and its computational cost was approximately sixty times higher. This proves that more complex models can capture information that scalar similarity methods miss, but it shows that with higher model complexity does not automatically provide sufficiently reliable results.
 
-Two failure mechanisms recur across the experiments: the anisotropy of
-general-purpose embedding spaces, which drives BERT-family models into degenerate
-``everything is similar'' behaviour, and the mismatch between scalar similarity
-and a typed relationship taxonomy. Cybersecurity-specific pretraining did not help
-in either of the two independent attempts tested (SecureBERT, CySecBERT), while
-task-specific training for sentence comparison did help in all three
-(Sentence-BERT, MPNet, BGE). What the model was trained to do predicts its
-behaviour here; what it was trained on does not.
+Two main technical mechanisms are observed across the experiments. First the
+general-purpose embedding spaces suffer from anisotropy, which drives BERT-family models to assign high similarity to almost all pairs and secondly, the mismatch between scalar similarity and a typed relationship taxonomy. Cybersecurity-specific pretraining did not help in either of the two independent attempts tested (SecureBERT, CySecBERT), while task-specific training for sentence comparison including Sentence-BERT, MPNet, and BGE, generally performed better. Within the models evaluated in this thesis, this suggests that how a model was trained for the comparison task was more important than whether it was specifically trained on cybersecurity text.
 
 A third finding came from the annotation rather than the models. Equivalence and
-subsumption are close to absent from the corpus: 13 pairs among the 1{,}027
+subsumption are close to absent from the collective data. Only 13 pairs among the 1{,}027
 judged, and none at all among the 300 highest-ranked unjudged pairs annotated
-specifically to find more. A device-level standard and a lifecycle-level standard
+specifically to identify more examples. A device-level standard and a lifecycle-level standard
 produce overlapping and complementary obligations in quantity, and identical or
-strictly-containing ones almost never. For this pair of standards the six-label
-taxonomy is effectively a three-label one.
+strictly-containing ones almost never. For this particular pair of standards, the six-label relationship taxonomy effectively behaves as a three-label taxonomy.
 
-For practice, the results position automated compliance mapping as decision
-support: rank candidates automatically, let humans assign the relationship
-labels. Even that reduced role is valuable to a compliance team, since the
-ranking step compresses 4{,}968 candidate pairs into a short review list in under
-a minute of computation.
+Overall, the results indicates that automated compliance mapping should currently used as decision
+support rather than humans assign the relationship labels or judgement. Even that reduced role is valuable to a compliance team, since the ranking step compresses 4{,}968 candidate pairs into a short review list in under
+a minute of computation which can provide substantial practical value to compliance teams.
 
 \subsection*{Critical discussion}
 
