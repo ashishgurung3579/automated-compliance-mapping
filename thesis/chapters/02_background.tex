@@ -52,8 +52,8 @@ position.
 \subsection{Compliance mapping}
 
 Compliance mapping is the activity of relating the requirements of one
-framework to those of another, so that evidence collected for one can be
-used again for the other and gaps become visible. Studies of security standards
+framework to those of another, so that proofs collected for one can be
+reused for the other and gaps become noticeable. Studies of security standards
 report that overlapping controls, inconsistent terminology, and fragmented
 requirements are common across frameworks, and that mapping them requires
 interpretation of purpose and security objective, not just wording
@@ -171,25 +171,25 @@ standard-to-standard setting.
 
 Sapkota et al.~\cite{sapkota2016regcmantic} present RegCMantic, a framework
 that maps regulatory guidelines to organizational processes. Regulatory
-documents are parsed into a uniform XML structure, requirement entities
-(subject, obligation, action) are extracted into an ontology, and mapping uses
+documents are processed into a uniform XML structure, requirement entities like 
+subject, obligation, action are extracted into an ontology, and mapping uses
 three similarity measures over topics, core entities, and auxiliary entities.
 In a pharmaceutical case study the extended framework improves extraction
 F-measure from 0.83 to 0.91 and performs mapping evaluated against
 expert-created references at a 0.85 similarity threshold. The study
-demonstrates that ontology-supported NLP can automate requirement mapping,
-while noting that ambiguity and implicit, domain-specific meaning remain the
-hard part. The same difficulties appear with the standards studied here.
+showcase that ontology supported NLP can automate requirement mapping.
+however, that ambiguity and implicit, domain specific meaning remain the
+hard part in unclear document. The same difficulties appear with the standards studied here.
 
 \subsection{LLM-based compliance analysis}
 
 Rodríguez et al.~\cite{rodriguez2024llm} investigate LLMs for large-scale
-privacy policy analysis, comparing ChatGPT and Llama~2 against earlier
-symbolic and machine-learning baselines on the MAPP and OPP-115 datasets.
+privacy policy analysis, comparing ChatGPT and Llama2 against earlier
+symbolic and machine learning baselines on the MAPP and OPP 115 datasets.
 With a two-shot prompt design their best configuration exceeds 93\% F1,
-outperforming prior techniques while requiring less annotated data and
-engineering effort. The study is limited to privacy policies, but it provides
-strong evidence that prompted LLMs can support compliance-oriented text
+surpassing prior techniques while requiring less annotated data and
+engineering effort. The study is constrained to privacy policies, but it provides
+strong proof that prompted LLMs can support compliance oriented text
 analysis, motivating the inclusion of an LLM classification method in this
 project.
 
@@ -207,7 +207,7 @@ plainly, because this thesis attempts by machine what that study did by hand.
 It takes the same interpretive task to a standard pair that study does not
 cover, \standardA{} against \standardB{}; it refines the Equivalent/Related
 distinction into six typed relations, so that partial and directional
-alignment can be expressed instead of collapsed; and it asks a question a manual
+alignment can be expressed instead of collapsed and it asks a question a manual
 study cannot answer about itself, namely how much of that judgement survives
 automation and at what error rate. Where the manual study reports its mapping,
 this one reports a mapping together with a measurement of how often it is wrong,
