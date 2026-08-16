@@ -77,24 +77,20 @@ threshold happens to sit.
 
 \subsection*{Generalisation of the results}
 
-The specific numbers belong to this standard pair, this reference set and these
-model versions. The structural findings travel further: anisotropy of mean-pooled
-contextual embeddings is a documented model property, not a dataset accident; the
-inability of symmetric scores to express asymmetric relationships holds for any
-standard pair; and the observation that detection is calibration-limited while
-typed classification fails outright should recur wherever two related security
-frameworks are mapped. The pipeline itself is standard-agnostic, and any pair of
-documents with identifiable normative clauses can be substituted.
+The specific numbers belongs to this standard pair, reference set and these
+model versions. The structural findings travel further. An isotropy of mean pooled
+contextual embeddings is a documented model property. The symmetric based method cant not express asymmetric relationships when one particular requirement is more detailed and specific than another requirement. The limitation can be easily easily visible wherever two related security
+frameworks are mapped. The pipeline itself is standard agnostic, and any pair of
+documents with identifiable normative clauses can be replaced.
 
 \subsection*{Future work}\label{sec:futurework}
 
-Four directions follow naturally, and the first is a direct repair of this
-design's principal limitation.
+Four directions follows naturally, and the first is a direct repair of this design's principal limitation.
 
-First, measure performance at the corpus base rate. Every figure here is
+First, model measures the performance at the corpus base rate. Every figure here is
 conditioned on a reference set built to be half positive, and the gap between
-that and the sparse reality of 4{,}968 candidate pairs is currently unquantified.
-Drawing a sample with known inclusion probabilities over the full space and
+that and the sparse reality of 4{,}968 candidate pairs is currently unquantified. Due to this difference, the current outcomes may not cover whole real world performance. The better approaches might be
+drawing a sample with known inclusion probabilities over the full space and
 estimating precision, recall and prevalence from it would convert the upper
 bounds reported here into estimates, and would put a number on how far the
 calibrated thresholds of Table~\ref{tab:calibrated} drift when applied where
